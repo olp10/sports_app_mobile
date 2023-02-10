@@ -1,4 +1,4 @@
-package com.example.sports_app;
+package com.example.sports_app.entities;
 
 import com.google.gson.annotations.SerializedName;
 
