@@ -69,7 +69,7 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
-    /***        GET REQUESTUR hér fyrir neðan          ***/
+    /***         GET REQUESTUR hér fyrir neðan          ***/
 
     public void getThreadById(NetworkCallback<Thread> callback) {
         // TODO
@@ -103,7 +103,7 @@ public class NetworkManager {
         // TODO
     }
 
-    /****    POST REQUESTUR hér fyrir neðan      ****/
+    /****     POST REQUESTUR hér fyrir neðan      ****/
 
     public void postUserSignUp(User user, NetworkCallback<User> callback) {
         // TODO
