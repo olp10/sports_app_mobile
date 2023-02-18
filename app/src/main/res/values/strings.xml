@@ -16,4 +16,7 @@
     <string name="test_text">Test</string>
     <string name="menu_home">Heim</string>
     <string name="menu_login">Innskráning</string>
+    <string name="login_username">Notendanafn</string>
+    <string name="login_button">Skrá inn</string>
+    <string name="menu_settings">Stillingar</string>
 </resources>

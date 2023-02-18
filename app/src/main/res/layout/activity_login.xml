@@ -6,13 +6,33 @@
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".LoginActivity">
 
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
-        android:background="@color/cardview_dark_background"
-        android:layout_height="30dp"
-        android:inputType="text"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp">
+
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Notendanafn"/>
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Lykilorð"
+            android:tooltipText="@string/app_name"/>
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"/>
+    </LinearLayout>
+
 </LinearLayout>
