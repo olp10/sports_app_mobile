@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Íþróttaappið</string>
-    <string name="geggja">Geggjað</string>
     <string name="true_button">TRUE</string>
     <string name="false_button">FALSE</string>
     <string name="correct_toast">Correct!</string>
@@ -15,4 +14,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="test_text">Test</string>
+    <string name="menu_home">Heim</string>
+    <string name="menu_login">Innskráning</string>
 </resources>
