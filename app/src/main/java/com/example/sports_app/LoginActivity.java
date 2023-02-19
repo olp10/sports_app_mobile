@@ -3,6 +3,8 @@ package com.example.sports_app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,12 +17,14 @@ import android.widget.Toast;
 import com.example.sports_app.networking.NetworkManager;
 
 public class LoginActivity extends Activity {
+    private final String TAG = "LoginActivity";
     ActionMenuView mActionMenuView;
     NetworkManager mNetworkManager;
     EditText mUsernameTextField;
     EditText mPasswordTextField;
     Button mLoginButton;
     TextView mNewAccountLink;
+    MenuItem mMenuLogin;
 
 
     /**
@@ -62,7 +66,17 @@ public class LoginActivity extends Activity {
                 t.setDuration(Toast.LENGTH_SHORT);
                 t.setText("Innskráning tókst");
                 t.show();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                i.putExtra("com.example.sports_app.isLoggedIn", true);
+                startActivity(i);
+            }
+            else {
+                Toast t = new Toast(getApplicationContext());
+                t.setDuration(Toast.LENGTH_SHORT);
+                t.setText("Notendanafn og lykilorð passa ekki");
+                t.show();
+                mUsernameTextField.setText("");
+                mPasswordTextField.setText("");
             }
         });
     }
@@ -79,6 +93,7 @@ public class LoginActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.menu_home:
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

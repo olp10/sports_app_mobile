@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private List<Thread> threads;
     ActionMenuView mActionMenuView;
+    MenuItem mMenuItemLogin;
+    MenuItem mMenuItemLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_actionview, menu);
+        mMenuItemLogin = menu.findItem(R.id.menu_login);
+        mMenuItemLogout = menu.findItem(R.id.menu_logout);
+
+        try {
+            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn") == true) {
+                mMenuItemLogin.setVisible(false);
+                mMenuItemLogout.setVisible(true);
+            } else {
+                mMenuItemLogin.setVisible(true);
+                mMenuItemLogout.setVisible(false);
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "onCreateOptionsMenu: " + e.toString());
+        }
         return true;
     }
 
@@ -57,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_login:
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                break;
+            case R.id.menu_logout:
+                Intent i = new Intent(MainActivity.this, MainActivity.class);
+                i.putExtra("com.example.sports_app.isLoggedIn", false);
+                startActivity(i);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
