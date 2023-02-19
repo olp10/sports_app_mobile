@@ -19,4 +19,5 @@
     <string name="login_username">Notendanafn</string>
     <string name="login_button">Skrá inn</string>
     <string name="menu_settings">Stillingar</string>
+    <string name="login_new_user"><a href="#">Stofna nýjan aðgang</a></string>
 </resources>

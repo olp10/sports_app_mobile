@@ -2,27 +2,61 @@ package com.example.sports_app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.MailTo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ActionMenuView;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sports_app.networking.NetworkManager;
 
 public class LoginActivity extends Activity {
     ActionMenuView mActionMenuView;
-    NetworkManager networkManager;
+    NetworkManager mNetworkManager;
+    EditText mUsernameTextField;
+    EditText mPasswordTextField;
+    Button mLoginButton;
+    TextView mNewAccountLink;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mActionMenuView = findViewById(R.id.toolbar_bottom);
-        networkManager = NetworkManager.getInstance(this);
+
+
+        mActionMenuView = findViewById(R.id.toolbar_bottom); // Action bar
+
+        mNetworkManager = NetworkManager.getInstance(this);
+
+        // Tengt login
+        mUsernameTextField = (EditText) findViewById(R.id.login_username);
+        mPasswordTextField = (EditText) findViewById(R.id.login_password);
+        mLoginButton = (Button) findViewById(R.id.login_button);
+        mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
+
+        // Listener fyrir "Stofna nýjan aðgang" hlekk á login skjá
+        mNewAccountLink.setOnClickListener(v -> {
+            // TODO búa til signup layout/fragment og láta þetta fara þangað
+            Toast t = new Toast(getApplicationContext());
+            t.setDuration(Toast.LENGTH_SHORT);
+            t.setText("Nýr aðgangur");
+            t.show();
+        });
+
+        // Feik login með dummy gögnum - user: admin, pass: admin
+        mLoginButton.setOnClickListener(v -> {
+            // TODO sækja notendaupplýsingar í gegnum REST þjónustu og verify-a
+            if (mUsernameTextField.getText().toString().equals("admin") && mPasswordTextField.getText().toString().equals("admin")) {
+                Toast t = new Toast(getApplicationContext());
+                t.setDuration(Toast.LENGTH_SHORT);
+                t.setText("Innskráning tókst");
+                t.show();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            }
+        });
     }
 
     @Override
