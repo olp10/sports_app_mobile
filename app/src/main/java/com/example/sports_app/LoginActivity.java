@@ -21,14 +21,16 @@ public class LoginActivity extends Activity {
     EditText mPasswordTextField;
     Button mLoginButton;
     TextView mNewAccountLink;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
 
-        mActionMenuView = findViewById(R.id.toolbar_bottom); // Action bar
+    /**
+     * Method for instantiating all UI variables to keep onCreate less crowded
+     */
+    private void InstantiateUIElements() {
+        // Action bar
+        mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
 
+        // Network tengt
         mNetworkManager = NetworkManager.getInstance(this);
 
         // Tengt login
@@ -36,6 +38,12 @@ public class LoginActivity extends Activity {
         mPasswordTextField = (EditText) findViewById(R.id.login_password);
         mLoginButton = (Button) findViewById(R.id.login_button);
         mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        InstantiateUIElements();
 
         // Listener fyrir "Stofna nýjan aðgang" hlekk á login skjá
         mNewAccountLink.setOnClickListener(v -> {
