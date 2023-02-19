@@ -16,10 +16,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private List<Thread> threads;
+
+    // Breytur fyrir aðalvalmynd //
     ActionMenuView mActionMenuView;
     MenuItem mMenuItemLogin;
     MenuItem mMenuItemLogout;
+    // ------------------------ //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

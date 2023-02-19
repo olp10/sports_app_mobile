@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.tabs.TabLayout;
 
+/**
+ *
+ */
 public class SportActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ActionMenuView mActionMenuView;
@@ -24,7 +27,6 @@ public class SportActivity extends AppCompatActivity {
 
         // Adding tabs (Threads/Events/Clubs) for sport
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-
         TabLayout.Tab threadsTab = tabLayout.newTab();
         threadsTab.setText("Threads");
         TabLayout.Tab eventsTab = tabLayout.newTab();
