@@ -1,6 +1,5 @@
 package com.example.sports_app;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,17 +13,18 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sports_app.entities.Thread;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.sports_app.services.ThreadService;
 
-import java.util.List;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private static final int REQUEST_THREAD_OPEN = 0;
     private ArrayList<Thread> threads;
     ActionMenuView mActionMenuView;
     ListView mThreadList;
-    private static ThreadListAdapter threadListAdapter;
+    private static ThreadListAdapter sThreadListAdapter;
+    private ThreadService mThreadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +35,20 @@ public class MainActivity extends AppCompatActivity {
         mThreadList = (ListView) findViewById(R.id.threadList);
 
         // DUMMY GÖGN FYRIR Þráða listann
-        threads = new ArrayList<Thread>();
-        for (int i = 0; i < 20; i++) {
-            threads.add(new Thread(i, "someUser", false, "Dummy thread " + String.valueOf(i), "Blabla", "Badminton"));
-        }
+        mThreadService = new ThreadService();
+        threads = mThreadService.getThreads();
 
         // Smíða Layout element fyrir þræði
-        threadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
-        mThreadList.setAdapter(threadListAdapter);
+        sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
+        mThreadList.setAdapter(sThreadListAdapter);
 
         // TODO: Opna þráð sem clickað er á
         mThreadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Thread thread = threads.get(i);
-
-                Snackbar.make(view, thread.getmHeader(), Snackbar.LENGTH_LONG)
-                        .setAction("No action", null).show();
+                long threadToOpenId = threads.get(i).getId();
+                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
+                startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
 
