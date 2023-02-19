@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +30,8 @@ public class ThreadActivity extends AppCompatActivity {
     TextView mThreadSport;
     TextView mThreadHeader;
     TextView mThreadBody;
+    EditText mNewCommentText;
+    Button mNewCommentButton;
 
     private static final String EXTRA_THREAD_ID = "com.example.sports_app.thread_id";
 
@@ -55,6 +60,17 @@ public class ThreadActivity extends AppCompatActivity {
         sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments);
         mCommentList = (ListView) findViewById(R.id.commentList);
         mCommentList.setAdapter(sCommentListAdapter);
+
+        // Sækja texta og búa til nýtt comment
+        // TODO: User þarf að vera logged. Búa til nýtt comment og adda í þráð!
+        mNewCommentText = (EditText) findViewById(R.id.newComment_text);
+        mNewCommentButton = (Button) findViewById(R.id.newComment_button);
+        mNewCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newCommentBody = String.valueOf(mNewCommentText.getText());
+            }
+        });
     }
 
     public static Intent newIntent(Context packageContext, long threadId) {

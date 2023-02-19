@@ -14,6 +14,11 @@ import com.example.sports_app.entities.Comment;
 
 import java.util.ArrayList;
 
+/**
+ * CommentListAdapter retrieves a collection of Comment entities and creates a custom view for
+ * each Comment in the collection. To do this CommentListAdapter extends the ArrayAdapter class
+ * and overrides its getView method.
+ */
 public class CommentListAdapter extends ArrayAdapter<Comment> {
 
     private ArrayList<Comment> mComments;
