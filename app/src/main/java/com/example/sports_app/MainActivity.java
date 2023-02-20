@@ -18,9 +18,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     // Breytur fyrir aðalvalmynd //
-    ActionMenuView mActionMenuView;
-    MenuItem mMenuItemLogin;
-    MenuItem mMenuItemLogout;
+    private ActionMenuView mActionMenuView;
+    private MenuItem mMenuItemLogin;
+    private MenuItem mMenuItemLogout;
     // ------------------------ //
 
     @Override
@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -86,9 +84,5 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void login() {
-
     }
 }

@@ -69,43 +69,4 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
-    /***         GET REQUESTUR hér fyrir neðan          ***/
-
-    public void getThreadById(NetworkCallback<Thread> callback) {
-        // TODO
-    }
-
-    public void getThreadsBySport(NetworkCallback<List<Thread>> callback) {
-        // TODO
-    }
-
-    public void getThreadsByUser(NetworkCallback<List<Thread>> callback) {
-        // TODO
-    }
-
-    public void getCommentsByThreadId(NetworkCallback<List<Comment>> callback) {
-        // TODO
-    }
-
-    public void getAllEvents(NetworkCallback<List<Event>> callback) {
-        // TODO
-    }
-
-    public void getEventsBySport(NetworkCallback<List<Event>> callback) {
-        // TODO
-    }
-
-    public void getEventById(NetworkCallback<Event> callback) {
-        // TODO
-    }
-
-    public void getTodaysEvents(NetworkCallback<List<Event>> callback) {
-        // TODO
-    }
-
-    /****     POST REQUESTUR hér fyrir neðan      ****/
-
-    public void postUserSignUp(User user, NetworkCallback<User> callback) {
-        // TODO
-    }
 }
