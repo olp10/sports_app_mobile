@@ -14,9 +14,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sports_app.networking.NetworkManager;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
     ActionMenuView mActionMenuView;
     NetworkManager mNetworkManager;
@@ -44,7 +46,7 @@ public class LoginActivity extends Activity {
         mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
     }
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         InstantiateUIElements();
