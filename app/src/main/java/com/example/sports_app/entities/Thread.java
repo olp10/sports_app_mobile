@@ -2,9 +2,7 @@ package com.example.sports_app.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Thread {
     @SerializedName("id")
@@ -20,51 +18,70 @@ public class Thread {
     @SerializedName("sport")
     private String mSport;
 
-    public long getmId() {
+    private ArrayList<Comment> comments = new ArrayList<Comment>();
+
+    public ArrayList<Comment> getComments() {
+
+        if (comments != null){
+            return comments;
+        } else {
+            return new ArrayList<Comment>();
+        }
+    }
+
+    public int getNumberOfComments() {
+        return getComments().size();
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public long getId() {
         return mId;
     }
 
-    public void setmId(long mId) {
+    public void setId(long mId) {
         this.mId = mId;
     }
 
-    public String getmUsername() {
+    public String getUsername() {
         return mUsername;
     }
 
-    public void setmUsername(String mUsername) {
+    public void setUsername(String mUsername) {
         this.mUsername = mUsername;
     }
 
-    public boolean ismIsPinned() {
+    public boolean isIsPinned() {
         return mIsPinned;
     }
 
-    public void setmIsPinned(boolean mIsPinned) {
+    public void setIsPinned(boolean mIsPinned) {
         this.mIsPinned = mIsPinned;
     }
 
-    public String getmHeader() {
+    public String getHeader() {
         return mHeader;
     }
 
-    public void setmHeader(String mHeader) {
+    public void setHeader(String mHeader) {
         this.mHeader = mHeader;
     }
 
-    public String getmBody() {
+    public String getBody() {
         return mBody;
     }
 
-    public void setmBody(String mBody) {
+    public void setBody(String mBody) {
         this.mBody = mBody;
     }
 
-    public String getmSport() {
+    public String getSport() {
         return mSport;
     }
 
-    public void setmSport(String mSport) {
+    public void setSport(String mSport) {
         this.mSport = mSport;
     }
 
