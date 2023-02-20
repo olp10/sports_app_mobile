@@ -1,6 +1,5 @@
 package com.example.sports_app;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,10 +8,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ActionMenuView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.example.sports_app.entities.Thread;
-import java.util.List;
+import com.example.sports_app.services.ThreadService;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -22,12 +26,36 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem mMenuItemLogin;
     private MenuItem mMenuItemLogout;
     // ------------------------ //
+    private static final int REQUEST_THREAD_OPEN = 0;
+    private ArrayList<Thread> threads;
+    ListView mThreadList;
+    private static ThreadListAdapter sThreadListAdapter;
+    private ThreadService mThreadService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
+        mThreadList = (ListView) findViewById(R.id.threadList);
+
+        // DUMMY GÖGN FYRIR Þráða listann
+        mThreadService = new ThreadService();
+        threads = mThreadService.getThreads();
+
+        // Smíða Layout element fyrir þræði
+        sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
+        mThreadList.setAdapter(sThreadListAdapter);
+
+        // TODO: Opna þráð sem clickað er á
+        mThreadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                long threadToOpenId = threads.get(i).getId();
+                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
+                startActivityForResult(intent, REQUEST_THREAD_OPEN);
+            }
+        });
 
         /*
         NetworkManager networkManager = NetworkManager.getInstance(this);
