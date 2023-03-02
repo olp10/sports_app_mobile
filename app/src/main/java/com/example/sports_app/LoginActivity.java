@@ -95,27 +95,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         threadService = new ThreadService();
-        mNetworkManager.getAllThreads(new NetworkCallback<List<Thread>>() {
-            @Override
-            public void onSuccess(List<Thread> result) {
-                mThreadBank = result;
-                for (Thread t : mThreadBank) {
-                    System.out.println(t.getHeader());
-                }
-            }
-
-            @Override
-            public void onFailure(String errorString) {
-                Log.e(TAG, errorString);
-            }
-        });
-
-        if (mThreadBank != null) {
-            for (Thread t : mThreadBank) {
-                System.out.println(t.getHeader());
-            }
-        }
-        else System.out.println("ERROR WITH THREADS:");
 
     }
 
