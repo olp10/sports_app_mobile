@@ -23,11 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
     </LinearLayout>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> fdc254da3ca749275453abd90250356782f98bca
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -42,9 +37,5 @@
         android:id="@+id/threadList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-<<<<<<< HEAD
+
 </LinearLayout>
-=======
->>>>>>> feature/threads
-</LinearLayout>
->>>>>>> fdc254da3ca749275453abd90250356782f98bca
