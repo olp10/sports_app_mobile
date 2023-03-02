@@ -1,10 +1,8 @@
 package com.example.sports_app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +14,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sports_app.entities.Thread;
+import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
+import com.example.sports_app.services.ThreadService;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
@@ -28,27 +31,34 @@ public class LoginActivity extends AppCompatActivity {
     TextView mNewAccountLink;
     MenuItem mMenuLogin;
 
+    ThreadService threadService;
+
+    private List<Thread> mThreadBank;
 
     /**
-     * Method for instantiating all UI variables to keep onCreate less crowded
+     * Instantiate all UI variables to keep onCreate less crowded
      */
     private void InstantiateUIElements() {
         // Action bar
         mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
 
         // Network tengt
-        mNetworkManager = NetworkManager.getInstance(this);
+        mNetworkManager = NetworkManager.getInstance(LoginActivity.this);
 
         // Tengt login
         mUsernameTextField = (EditText) findViewById(R.id.login_username);
         mPasswordTextField = (EditText) findViewById(R.id.login_password);
         mLoginButton = (Button) findViewById(R.id.login_button);
         mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
+
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         InstantiateUIElements();
 
         // Listener fyrir "Stofna nýjan aðgang" hlekk á login skjá
@@ -59,6 +69,8 @@ public class LoginActivity extends AppCompatActivity {
             t.setText("Nýr aðgangur");
             t.show();
         });
+
+        System.out.println(mThreadBank);
 
         // Feik login með dummy gögnum - user: admin, pass: admin
         mLoginButton.setOnClickListener(v -> {
@@ -81,6 +93,30 @@ public class LoginActivity extends AppCompatActivity {
                 mPasswordTextField.setText("");
             }
         });
+
+        threadService = new ThreadService();
+        mNetworkManager.getAllThreads(new NetworkCallback<List<Thread>>() {
+            @Override
+            public void onSuccess(List<Thread> result) {
+                mThreadBank = result;
+                for (Thread t : mThreadBank) {
+                    System.out.println(t.getHeader());
+                }
+            }
+
+            @Override
+            public void onFailure(String errorString) {
+                Log.e(TAG, errorString);
+            }
+        });
+
+        if (mThreadBank != null) {
+            for (Thread t : mThreadBank) {
+                System.out.println(t.getHeader());
+            }
+        }
+        else System.out.println("ERROR WITH THREADS:");
+
     }
 
     @Override

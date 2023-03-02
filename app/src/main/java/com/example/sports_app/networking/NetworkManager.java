@@ -27,7 +27,7 @@ public class NetworkManager {
     private static final String TAG = "NetworkManager";
     // Þessi IP tala er til þess að appið noti localhost á tölvunni, ekki á símanum/emulatornum
     // Breyta þessu þegar verið að nota á live (Railway) þjón
-    private static final String BASE_URL = "https://hugbunadarverkefni2-production.up.railway.app/";
+    private static final String BASE_URL = "http://10.0.2.2:8080";
 
     private static NetworkManager mInstance;
     private static RequestQueue mQueue;
@@ -52,20 +52,22 @@ public class NetworkManager {
         return mQueue;
     }
 
-    public void getAllThreads(NetworkCallback<List<Thread>> callback) {
+    public void getAllThreads(final NetworkCallback<List<Thread>> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.GET, BASE_URL + "allThreads", response -> {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Thread>>(){}.getType();
-                    List<Thread> threads = gson.fromJson(response, listType);
-                    callback.onSuccess(threads);
-                }, new Response.ErrorListener() {
+                Request.Method.GET, BASE_URL + "/allThreads", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Thread>>(){}.getType();
+                List<Thread> threads = gson.fromJson(response, listType);
+                callback.onSuccess(threads);
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 callback.onFailure(error.toString());
             }
-        }
-        );
+        });
         mQueue.add(request);
     }
 

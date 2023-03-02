@@ -1,15 +1,22 @@
 package com.example.sports_app.services;
 
+import android.util.Log;
+
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
+import com.example.sports_app.networking.NetworkCallback;
+import com.example.sports_app.networking.NetworkManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ThreadService {
 
     private ArrayList<Thread> threads;
+    NetworkManager mNetworkManager;
+    private List<Thread> mThreadBank;
 
     public ThreadService() {
 
@@ -34,10 +41,6 @@ public class ThreadService {
         threads.add(testThread);
     }
 
-
-
-
-
     // ÞETTA ER ALLT FYRIR DUMMY GÖGNIN
     // TODO: Láta föll kalla á NetworkManager
     public void addComment(Comment comment, Thread thread) {
@@ -56,4 +59,24 @@ public class ThreadService {
     public ArrayList<Thread> getThreads() {
         return threads;
     }
+
+
+    public void getAllThreads() {
+        mNetworkManager.getAllThreads(new NetworkCallback<List<Thread>>() {
+            @Override
+            public void onSuccess(List<Thread> result) {
+                mThreadBank = result;
+            }
+
+            @Override
+            public void onFailure(String errorString) {
+                Log.d("ThreadService", errorString);
+            }
+        });
+    }
+
+    public void updateThreads(List<Thread> res) {
+
+    }
+
 }
