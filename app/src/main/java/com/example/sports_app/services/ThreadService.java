@@ -1,42 +1,61 @@
 package com.example.sports_app.services;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
+import com.example.sports_app.networking.NetworkCallback;
+import com.example.sports_app.networking.NetworkManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ThreadService {
 
-    private ArrayList<Thread> threads;
+    private ArrayList<Thread> threads = new ArrayList<Thread>();;
+    private NetworkManager sNetworkManager;
 
     public ThreadService() {
 
         // Búa til dummy gögn
-        threads = new ArrayList<Thread>();
-        for (int i = 0; i < 20; i++) {
-            threads.add(new Thread(i, "someUser", false,
-                    "Dummy thread " + i, "Blabla", "Badminton"));
-        }
-
-        // Setja comments inn í dummy þráð
-        Thread testThread = new Thread(50, "Jakob", false, "Dummy thread " + 50,
-                "Blabla og já blalbalblalabalba. oOOOOOooooooadakdaodkaosdkaodkaosdkasodaodkaosdkaosdkaodadasivjaidvaoivdasoiv", "Polo");
-        User testUser = new User("TestUser", "test");
-        LocalDate date = LocalDate.now();
-        String c = "Blablablablablablablablablablablabal";
-        long l = 0;
-        Comment comment = new Comment(l, testUser, date, date, c, testThread);
-        Comment comment2 = new Comment(l+1, testUser, date, date, c, testThread);
-        testThread.addComment(comment);
-        testThread.addComment(comment2);
-        threads.add(testThread);
+//        for (int i = 0; i < 20; i++) {
+//            threads.add(new Thread(i, "someUser", false,
+//                    "Dummy thread " + i, "Blabla", "Badminton"));
+//        }
+//
+//        // Setja comments inn í dummy þráð
+//        Thread testThread = new Thread(50, "Jakob", false, "Dummy thread " + 50,
+//                "Blabla og já blalbalblalabalba. oOOOOOooooooadakdaodkaosdkaodkaosdkasodaodkaosdkaosdkaodadasivjaidvaoivdasoiv", "Polo");
+//        User testUser = new User("TestUser", "test");
+//        LocalDate date = LocalDate.now();
+//        String c = "Blablablablablablablablablablablabal";
+//        long l = 0;
+//        Comment comment = new Comment(l, testUser, date, date, c, testThread);
+//        Comment comment2 = new Comment(l+1, testUser, date, date, c, testThread);
+//        testThread.addComment(comment);
+//        testThread.addComment(comment2);
+//        threads.add(testThread);
     }
 
+    // Test: kalla á RESTFUL bakendann
+    public ArrayList<Thread> getAllThreads(Context context) {
+        sNetworkManager = NetworkManager.getInstance(context);
+        sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
+            @Override
+            public void onSuccess(ArrayList<Thread> result) {
+                Log.d("Threadservice","I got the threads!");
+                threads = result;
+            }
 
-
-
+            @Override
+            public void onFailure(String errorString) {
+                Log.e("Threadservice", "Failed to get threads via REST");
+            }
+        });
+        return threads;
+    }
 
     // ÞETTA ER ALLT FYRIR DUMMY GÖGNIN
     // TODO: Láta föll kalla á NetworkManager
