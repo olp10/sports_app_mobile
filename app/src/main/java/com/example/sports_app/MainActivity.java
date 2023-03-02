@@ -22,9 +22,6 @@ import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
