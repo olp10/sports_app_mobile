@@ -2,6 +2,7 @@ package com.example.sports_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sports_app.entities.Thread;
+import com.example.sports_app.networking.NetworkCallback;
+import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
 import java.util.ArrayList;
@@ -39,15 +42,9 @@ public class MainActivity extends AppCompatActivity {
         mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
         mThreadList = (ListView) findViewById(R.id.threadList);
 
-        // DUMMY GÖGN FYRIR Þráða listann
-        mThreadService = new ThreadService();
-        threads = mThreadService.getThreads();
+        getAllThreads();
 
-        // Smíða Layout element fyrir þræði
-        sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
-        mThreadList.setAdapter(sThreadListAdapter);
-
-        // TODO: Opna þráð sem clickað er á
+        // TODO: laga að getComments() á Dummy þræði frá bakenda valda NullPointerException
         mThreadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -76,6 +73,24 @@ public class MainActivity extends AppCompatActivity {
         });
         Log.d(TAG, "end");
         */
+    }
+
+    private void getAllThreads() {
+        NetworkManager sNetworkManager = NetworkManager.getInstance(this);
+        sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
+            @Override
+            public void onSuccess(ArrayList<Thread> result) {
+                Log.d("Threadservice","I got the threads!");
+                threads = result;
+                sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
+                mThreadList.setAdapter(sThreadListAdapter);
+            }
+
+            @Override
+            public void onFailure(String errorString) {
+                Log.e("Threadservice", "Failed to get threads via REST");
+            }
+        });
     }
 
     @Override
