@@ -14,6 +14,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Superclass fyrir network köll
@@ -82,6 +84,22 @@ public class NetworkManager {
         );
         mQueue.add(request);
         return null;
+    }
+
+    public void login(String username, String password, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, BASE_URL + "/login", response ->
+                callback.onSuccess(response), error ->
+                callback.onFailure(error.toString())) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
+        };
+        mQueue.add(request);
     }
 
 }
