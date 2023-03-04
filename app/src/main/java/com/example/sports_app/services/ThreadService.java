@@ -40,7 +40,7 @@ public class ThreadService {
     }
 
     // Test: kalla á RESTFUL bakendann
-    public ArrayList<Thread> getAllThreads(Context context) {
+    public void getAllThreads(Context context, NetworkCallback<ArrayList<Thread>> callback) {
         sNetworkManager = NetworkManager.getInstance(context);
         sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
             @Override
@@ -54,7 +54,6 @@ public class ThreadService {
                 Log.e("Threadservice", "Failed to get threads via REST");
             }
         });
-        return threads;
     }
 
     // ÞETTA ER ALLT FYRIR DUMMY GÖGNIN

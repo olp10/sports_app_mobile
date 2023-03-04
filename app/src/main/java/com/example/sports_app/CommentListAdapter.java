@@ -35,7 +35,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         TextView txtUsername;
         TextView txtDate;
         TextView txtBody;
-    }
+}
 
     public View getView(int position, View convertView, ViewGroup container) {
         Comment comment = getItem(position);

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getAllThreads() {
         NetworkManager sNetworkManager = NetworkManager.getInstance(this);
+        mThreadService = new ThreadService();
         sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Threadservice", "Failed to get threads via REST");
             }
         });
-
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
@@ -94,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        threadService = new ThreadService();
 
     }
 
