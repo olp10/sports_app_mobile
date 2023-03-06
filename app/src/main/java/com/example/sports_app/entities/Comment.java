@@ -7,8 +7,8 @@ import java.time.LocalDate;
 public class Comment {
     @SerializedName("comment_id")
     private long mId;
-    @SerializedName("userid")
-    private long mUserId;
+    @SerializedName("username")
+    private String mUsername;
     @SerializedName("date_commented")
     private LocalDate mDateCommented;
     @SerializedName("time_commented")
@@ -22,9 +22,9 @@ public class Comment {
 
     }
 
-    public Comment(long Id, long userId, LocalDate dateCommented, LocalDate timeCommented, String comment, long threadId) {
+    public Comment(long Id, String userName, LocalDate dateCommented, LocalDate timeCommented, String comment, long threadId) {
         this.mId = Id;
-        this.mUserId = userId;
+        this.mUsername = userName;
         this.mDateCommented = dateCommented;
         this.mTimeCommented = timeCommented;
         this.mComment = comment;
@@ -39,13 +39,13 @@ public class Comment {
         mId = id;
     }
 
-    public long getUser() {
-        return mUserId;
+    public String getUser() {
+        return mUsername;
 
     }
 
-    public void setUser(long userId) {
-        mUserId = userId;
+    public void setUser(String userName) {
+        mUsername = userName;
     }
 
     public LocalDate getDateCommented() {
