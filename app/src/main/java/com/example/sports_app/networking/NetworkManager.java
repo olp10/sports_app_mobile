@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -59,11 +60,49 @@ public class NetworkManager {
                 Type arrayListType = new TypeToken<ArrayList<Thread>>() {
                 }.getType();
                 ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
+
                 callback.onSuccess(threads);
             }
         }, error -> callback.onFailure(error.toString())
         );
         mQueue.add(request);
+    }
+
+    public void getAllCommentsForThread(long threadId, String sport, final NetworkCallback<ArrayList<Comment>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/thread/" + threadId + "/comments", response -> {
+            Gson gson = new Gson();
+            Type arrayListType = new TypeToken<ArrayList<Comment>>() {
+            }.getType();
+            ArrayList<Comment> comments = gson.fromJson(response, arrayListType);
+            callback.onSuccess(comments);
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callback.onFailure(error.toString());
+            }
+        }
+        );
+        mQueue.add(request);
+    }
+
+    public Thread getThreadById(long id, String sport, final NetworkCallback<Thread> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/thread/" + id, response -> {
+            Gson gson = new Gson();
+            Type arrayListType = new TypeToken<Thread>() {
+            }.getType();
+            Thread thread = gson.fromJson(response, arrayListType);
+            callback.onSuccess(thread);
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }
+        );
+        mQueue.add(request);
+        return null;
     }
 
     public ArrayList<Thread> getAllThreads(NetworkCallback<ArrayList<Thread>> callback) {

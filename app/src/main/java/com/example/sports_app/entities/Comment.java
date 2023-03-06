@@ -1,26 +1,34 @@
 package com.example.sports_app.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDate;
 
 public class Comment {
-    private Long mId;
-    private User mUser;
+    @SerializedName("comment_id")
+    private long mId;
+    @SerializedName("userid")
+    private long mUserId;
+    @SerializedName("date_commented")
     private LocalDate mDateCommented;
+    @SerializedName("time_commented")
     private LocalDate mTimeCommented;
+    @SerializedName("comment")
     private String mComment;
-    private Thread mThread;
+    @SerializedName("threadid")
+    private long mThreadId;
 
     public Comment() {
 
     }
 
-    public Comment(Long Id, User user, LocalDate dateCommented, LocalDate timeCommented, String comment, Thread thread) {
+    public Comment(long Id, long userId, LocalDate dateCommented, LocalDate timeCommented, String comment, long threadId) {
         this.mId = Id;
-        this.mUser = user;
+        this.mUserId = userId;
         this.mDateCommented = dateCommented;
         this.mTimeCommented = timeCommented;
         this.mComment = comment;
-        this.mThread = thread;
+        this.mThreadId = threadId;
     }
 
     public Long getId() {
@@ -31,12 +39,13 @@ public class Comment {
         mId = id;
     }
 
-    public User getUser() {
-        return mUser;
+    public long getUser() {
+        return mUserId;
+
     }
 
-    public void setUser(User user) {
-        mUser = user;
+    public void setUser(long userId) {
+        mUserId = userId;
     }
 
     public LocalDate getDateCommented() {
@@ -63,11 +72,11 @@ public class Comment {
         mComment = comment;
     }
 
-    public Thread getThread() {
-        return mThread;
+    public long getThreadId() {
+        return mThreadId;
     }
 
-    public void setThread(Thread thread) {
-        mThread = thread;
+    public void setThread(long threadId) {
+        mThreadId = threadId;
     }
 }
