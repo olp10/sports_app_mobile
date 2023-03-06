@@ -1,10 +1,8 @@
 package com.example.sports_app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +14,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sports_app.entities.Thread;
+import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
+import com.example.sports_app.services.ThreadService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
@@ -28,28 +32,36 @@ public class LoginActivity extends AppCompatActivity {
     TextView mNewAccountLink;
     MenuItem mMenuLogin;
 
+    ThreadService threadService;
+
+    private List<Thread> mThreadBank;
 
     /**
-     * Method for instantiating all UI variables to keep onCreate less crowded
+     * Instantiate all UI variables to keep onCreate less crowded
      */
     private void InstantiateUIElements() {
         // Action bar
         mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
 
         // Network tengt
-        mNetworkManager = NetworkManager.getInstance(this);
+        mNetworkManager = NetworkManager.getInstance(LoginActivity.this);
 
         // Tengt login
         mUsernameTextField = (EditText) findViewById(R.id.login_username);
         mPasswordTextField = (EditText) findViewById(R.id.login_password);
         mLoginButton = (Button) findViewById(R.id.login_button);
         mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
+
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         InstantiateUIElements();
+        createLoginButton();
 
         // Listener fyrir "Stofna nýjan aðgang" hlekk á login skjá
         mNewAccountLink.setOnClickListener(v -> {
@@ -59,27 +71,37 @@ public class LoginActivity extends AppCompatActivity {
             t.setText("Nýr aðgangur");
             t.show();
         });
+    }
 
-        // Feik login með dummy gögnum - user: admin, pass: admin
+    public void createLoginButton() {
+        // Login virkar á móti bakenda
         mLoginButton.setOnClickListener(v -> {
-            // TODO sækja notendaupplýsingar í gegnum REST þjónustu og verify-a
-            if (mUsernameTextField.getText().toString().equals("admin") && mPasswordTextField.getText().toString().equals("admin")) {
-                Toast t = new Toast(getApplicationContext());
-                t.setDuration(Toast.LENGTH_SHORT);
-                t.setText("Innskráning tókst");
-                t.show();
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                i.putExtra("com.example.sports_app.isLoggedIn", true);
-                startActivity(i);
-            }
-            else {
-                Toast t = new Toast(getApplicationContext());
-                t.setDuration(Toast.LENGTH_SHORT);
-                t.setText("Notendanafn og lykilorð passa ekki");
-                t.show();
-                mUsernameTextField.setText("");
-                mPasswordTextField.setText("");
-            }
+            mNetworkManager.login(mUsernameTextField.getText().toString(), mPasswordTextField.getText().toString(), new NetworkCallback() {
+                @Override
+                public void onSuccess(Object result) {
+                    Log.d(TAG, "onSuccess: " + result);
+                    String loginSuccessful = (String) result;
+                    Toast t = new Toast(getApplicationContext());
+                    t.setDuration(Toast.LENGTH_SHORT);
+                    if (loginSuccessful.equals("true")) {
+                        t.setText("Login successful");
+                        t.show();
+                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        i.putExtra("com.example.sports_app.isLoggedIn", true);
+                        startActivity(i);
+                    } else {
+                        t.setText("Notendanafn og lykilorð passa ekki");
+                        t.show();
+                        mUsernameTextField.setText("");
+                        mPasswordTextField.setText("");
+                    }
+                }
+
+                @Override
+                public void onFailure(String errorString) {
+                    Log.d(TAG, "onFailure: " + "Failed to connect to backend");
+                }
+            });
         });
     }
 

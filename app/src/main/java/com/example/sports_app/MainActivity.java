@@ -1,5 +1,7 @@
 package com.example.sports_app;
 
+import static java.lang.Thread.sleep;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -14,6 +16,7 @@ import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
@@ -54,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long threadToOpenId = threads.get(i).getId();
-                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
+                String sport = threads.get(i).getSport();
+                System.out.println(sport);
+                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId, sport);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
@@ -62,10 +67,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void getAllThreads() {
         NetworkManager sNetworkManager = NetworkManager.getInstance(this);
+        mThreadService = new ThreadService();
         sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
                 threads = result;
+
+                for (Thread t : threads) {
+                    for (Comment c : t.getComments()) {
+                        System.out.println(c.getComment());
+                    }
+                }
                 sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
                 mThreadList.setAdapter(sThreadListAdapter);
             }

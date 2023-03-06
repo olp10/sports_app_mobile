@@ -125,4 +125,21 @@ public class NetworkManager {
         };
         mQueue.add(request);
     }
+
+    public void login(String username, String password, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, BASE_URL + "/login", response ->
+                callback.onSuccess(response), error ->
+                callback.onFailure(error.toString())) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
+
 }
