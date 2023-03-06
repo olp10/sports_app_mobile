@@ -23,6 +23,10 @@ import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
         mThreadList = (ListView) findViewById(R.id.threadList);
 
+        // TODO: Sækja og geyma þræði í ThreadService. EÐA: Geyma hér og vinna með þá í ThreadService?
         getAllThreads();
 
         // TODO: laga að getComments() á Dummy þræði frá bakenda valda NullPointerException
@@ -54,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 long threadToOpenId = threads.get(i).getId();
                 String sport = threads.get(i).getSport();
                 System.out.println(sport);
-                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId, sport);
+                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
@@ -66,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
-                Log.d("Threadservice","I got the threads!");
                 threads = result;
 
                 for (Thread t : threads) {
