@@ -1,12 +1,20 @@
 package com.example.sports_app.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Comment {
+    @SerializedName("id")
     private Long mId;
-    private User mUser;
-    private LocalDate mDateCommented;
-    private LocalDate mTimeCommented;
+    @SerializedName("userName")
+    private String mUser;
+//    @SerializedName("dateCommented")
+//    private LocalDate mDateCommented;
+    @SerializedName("timeCommented")
+    private LocalDateTime mTimeCommented;
+    @SerializedName("comment")
     private String mComment;
     private Thread mThread;
 
@@ -14,10 +22,10 @@ public class Comment {
 
     }
 
-    public Comment(Long Id, User user, LocalDate dateCommented, LocalDate timeCommented, String comment, Thread thread) {
+    public Comment(Long Id, String user, LocalDateTime timeCommented, String comment, Thread thread) {
         this.mId = Id;
         this.mUser = user;
-        this.mDateCommented = dateCommented;
+//        this.mDateCommented = dateCommented;
         this.mTimeCommented = timeCommented;
         this.mComment = comment;
         this.mThread = thread;
@@ -31,27 +39,27 @@ public class Comment {
         mId = id;
     }
 
-    public User getUser() {
+    public String getUser() {
         return mUser;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         mUser = user;
     }
 
-    public LocalDate getDateCommented() {
-        return mDateCommented;
-    }
+//    public LocalDate getDateCommented() {
+//        return mDateCommented;
+//    }
+//
+//    public void setDateCommented(LocalDate dateCommented) {
+//        mDateCommented = dateCommented;
+//    }
 
-    public void setDateCommented(LocalDate dateCommented) {
-        mDateCommented = dateCommented;
-    }
-
-    public LocalDate getTimeCommented() {
+    public LocalDateTime getTimeCommented() {
         return mTimeCommented;
     }
 
-    public void setTimeCommented(LocalDate timeCommented) {
+    public void setTimeCommented(LocalDateTime timeCommented) {
         mTimeCommented = timeCommented;
     }
 

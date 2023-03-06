@@ -59,9 +59,11 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
 
         lastPosition = position;
 
-        viewHolder.txtUsername.setText(comment.getUser().getmUsername());
-        viewHolder.txtDate.setText(comment.getDateCommented().toString());
-        viewHolder.txtBody.setText(comment.getComment());
+        if (comment != null) {
+            viewHolder.txtUsername.setText(comment.getUser());
+            viewHolder.txtDate.setText(comment.getTimeCommented().toString());
+            viewHolder.txtBody.setText(comment.getComment());
+        }
 
         // TODO: Útfæra localDate, skoða Listener + fullt af öðru sem þarf að skoða hér.
         viewHolder.txtBody.setTag(position);

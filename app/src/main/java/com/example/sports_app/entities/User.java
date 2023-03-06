@@ -45,9 +45,10 @@ public class User {
         this.mComments = mComments;
     }
 
-    public User(String mUsername, String mUserPassword) {
+    public User(String mUsername, String mUserPassword, boolean isAdmin) {
         this.mUsername = mUsername;
         this.mUserPassword = mUserPassword;
+        this.mIsAdmin = isAdmin;
     }
 
     private String mUsername;

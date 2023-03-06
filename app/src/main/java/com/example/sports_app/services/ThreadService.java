@@ -11,10 +11,12 @@ import com.example.sports_app.networking.NetworkManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class ThreadService {
 
-    private ArrayList<Thread> threads = new ArrayList<Thread>();;
+    private ArrayList<Thread> threads;;
     private NetworkManager sNetworkManager;
 
     public ThreadService() {
@@ -40,13 +42,13 @@ public class ThreadService {
     }
 
     // Test: kalla á RESTFUL bakendann
-    public ArrayList<Thread> getAllThreads(Context context) {
+    public void getAllThreads(Context context) {
         sNetworkManager = NetworkManager.getInstance(context);
         sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
                 Log.d("Threadservice","I got the threads!");
-                threads = result;
+                setThreads(result);
             }
 
             @Override
@@ -54,13 +56,16 @@ public class ThreadService {
                 Log.e("Threadservice", "Failed to get threads via REST");
             }
         });
-        return threads;
     }
 
     // ÞETTA ER ALLT FYRIR DUMMY GÖGNIN
     // TODO: Láta föll kalla á NetworkManager
     public void addComment(Comment comment, Thread thread) {
 
+    }
+
+    public void setThreads(ArrayList<Thread> threads) {
+        this.threads = threads;
     }
 
     public Thread findThreadById(long id) {
@@ -70,6 +75,11 @@ public class ThreadService {
             }
         }
         return null;
+    }
+
+    private String S = "blabla";
+    public String getString(){
+        return S;
     }
 
     public ArrayList<Thread> getThreads() {

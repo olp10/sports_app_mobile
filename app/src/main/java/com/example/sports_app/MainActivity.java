@@ -20,6 +20,10 @@ import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
         mThreadList = (ListView) findViewById(R.id.threadList);
 
+        // TODO: Sækja og geyma þræði í ThreadService. EÐA: Geyma hér og vinna með þá í ThreadService?
         getAllThreads();
 
         // TODO: laga að getComments() á Dummy þræði frá bakenda valda NullPointerException
@@ -53,26 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
-
-        /*
-        NetworkManager networkManager = NetworkManager.getInstance(this);
-
-        // Prufa að tengjast við vefþjónustuna - Má eyða
-        networkManager.getAllThreads(new NetworkCallback<List<Thread>>() {
-            @Override
-            public void onSuccess(List<Thread> result) {
-                threads = result;
-                for (Thread t : threads) {
-                    Log.d(TAG, t.getmHeader());
-                }
-            }
-            @Override
-            public void onFailure(String errorString) {
-                Log.d(TAG, "onFailure: Error");
-            }
-        });
-        Log.d(TAG, "end");
-        */
     }
 
     private void getAllThreads() {
@@ -80,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
-                Log.d("Threadservice","I got the threads!");
                 threads = result;
                 sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
                 mThreadList.setAdapter(sThreadListAdapter);
