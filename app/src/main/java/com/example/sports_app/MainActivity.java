@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 long threadToOpenId = threads.get(i).getId();
                 String sport = threads.get(i).getSport();
                 System.out.println(sport);
-                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId, sport);
+                Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
