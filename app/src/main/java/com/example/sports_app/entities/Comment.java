@@ -4,31 +4,54 @@ import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class Comment {
     @SerializedName("id")
     private Long mId;
     @SerializedName("userName")
     private String mUser;
-//    @SerializedName("dateCommented")
-//    private LocalDate mDateCommented;
     @SerializedName("timeCommented")
-    private LocalDateTime mTimeCommented;
+    private String mTimeCommented;
     @SerializedName("comment")
     private String mComment;
     private Thread mThread;
+    private LocalDateTime mLocalDateTime;
 
     public Comment() {
 
     }
 
-    public Comment(Long Id, String user, LocalDateTime timeCommented, String comment, Thread thread) {
+    public Comment(Long Id, String user, String timeCommented, String comment, Thread thread) {
         this.mId = Id;
         this.mUser = user;
-//        this.mDateCommented = dateCommented;
         this.mTimeCommented = timeCommented;
         this.mComment = comment;
         this.mThread = thread;
+    }
+
+    private LocalDateTime createLocalDateTime(String timeCommented) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        LocalDateTime localDateTime = LocalDateTime.parse(timeCommented, formatter);
+        return localDateTime;
+    }
+
+    public String getFormattedDate() {
+        this.mLocalDateTime = createLocalDateTime(mTimeCommented);
+        String date = mLocalDateTime.getYear() + " "
+                + mLocalDateTime.getDayOfMonth() + "."
+                + mLocalDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " "
+                + mLocalDateTime.getHour() + ":"
+                + mLocalDateTime.getMinute();
+
+        return date;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return mLocalDateTime;
     }
 
     public Long getId() {
@@ -55,11 +78,11 @@ public class Comment {
 //        mDateCommented = dateCommented;
 //    }
 
-    public LocalDateTime getTimeCommented() {
+    public String getTimeCommented() {
         return mTimeCommented;
     }
 
-    public void setTimeCommented(LocalDateTime timeCommented) {
+    public void setTimeCommented(String timeCommented) {
         mTimeCommented = timeCommented;
     }
 

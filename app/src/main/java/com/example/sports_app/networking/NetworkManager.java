@@ -65,7 +65,7 @@ public class NetworkManager {
                 Request.Method.GET, BASE_URL + "/allThreads", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Gson gson = getLocalDateTimeAdapter();
+                Gson gson = new Gson();
                 Type arrayListType = new TypeToken<ArrayList<Thread>>() {
                 }.getType();
                 ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
@@ -86,22 +86,12 @@ public class NetworkManager {
                 Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Gson gson = getLocalDateTimeAdapter();
+                Gson gson = new Gson();
                 Thread thread = gson.fromJson(response, Thread.class);
                 callback.onSuccess(thread);
             }
         }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
-    }
-
-    private Gson getLocalDateTimeAdapter() {
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-            @Override
-            public LocalDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSS"));
-            }
-        }).create();
-        return gson;
     }
 
     public void postNewComment(
@@ -142,4 +132,14 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    // Líklega ekki þörf fyrir þetta lengur en gæti mögulega komið að notum í öðru samhengi?
+//    private Gson getLocalDateTimeAdapter() {
+//        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+//            @Override
+//            public LocalDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+//                return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSS"));
+//            }
+//        }).create();
+//        return gson;
+//    }
 }
