@@ -8,11 +8,7 @@ import android.view.MenuItem;
 import android.widget.ActionMenuView;
 
 import androidx.annotation.LayoutRes;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentContainer;
-import androidx.fragment.app.FragmentManager;
-
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.UUID;
@@ -41,9 +37,7 @@ public class SportActivity extends FragmentActivity {
         tabLayout.addTab(threadsTab);
         tabLayout.addTab(eventsTab);
         tabLayout.addTab(clubsTab);
-
     }
-
 
     @LayoutRes
     public int getLayoutResID() {
