@@ -69,6 +69,7 @@ public class NetworkManager {
                 Type arrayListType = new TypeToken<ArrayList<Thread>>() {
                 }.getType();
                 ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
+                System.out.println(threads);
                 callback.onSuccess(threads);
             }
         }, error -> callback.onFailure(error.toString()));

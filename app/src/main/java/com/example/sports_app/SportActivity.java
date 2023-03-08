@@ -2,22 +2,26 @@ package com.example.sports_app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ActionMenuView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.LayoutRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentContainer;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.UUID;
 
 /**
  *
  */
-public class SportActivity extends AppCompatActivity {
+public class SportActivity extends FragmentActivity {
+    private final String EXTRA_SPORT_ID = "com.example.sports_app.sport_id";
     TabLayout tabLayout;
     ActionMenuView mActionMenuView;
     private static final String TAG = "MainActivity";
@@ -37,13 +41,17 @@ public class SportActivity extends AppCompatActivity {
         tabLayout.addTab(threadsTab);
         tabLayout.addTab(eventsTab);
         tabLayout.addTab(clubsTab);
+
     }
 
+
+    @LayoutRes
+    public int getLayoutResID() {
+        return R.layout.fragment_events;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sport);
-        InstantiateUIElements();
     }
 
     @Override
