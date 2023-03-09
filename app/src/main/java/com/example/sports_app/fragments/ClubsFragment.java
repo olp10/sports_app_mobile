@@ -4,10 +4,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.example.sports_app.ClubListAdapter;
 import com.example.sports_app.R;
 import com.example.sports_app.entities.Club;
 import com.example.sports_app.entities.Event;
@@ -23,20 +26,24 @@ import java.util.ArrayList;
  */
 public class ClubsFragment extends Fragment {
     private static final String EXTRA_SPORT_NAME = "com.example.sports_app.sport_name";
-
+    private final String TAG = "ClubsFragment";
+    private static ClubListAdapter sClubListAdapter;
+    private ListView mListView;
     public ClubsFragment() {
         // Required empty public constructor
     }
     public static ClubsFragment newInstance(String param1, String param2) {
         ClubsFragment fragment = new ClubsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getAllClubsBySport();
+    }
+
+    private void getAllClubsBySport() {
         String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
         NetworkManager sNetworkManager = NetworkManager.getInstance(ClubsFragment.this.getContext());
 
@@ -44,24 +51,14 @@ public class ClubsFragment extends Fragment {
         sNetworkManager.getAllClubsForSport(sport, new NetworkCallback<ArrayList<Club>>() {
             @Override
             public void onSuccess(ArrayList<Club> result) {
-                // VIRKAR - Þarf bara að setja þetta inn í lista núna
                 ArrayList<Club> clubs = result;
-                for (Club club : clubs) {
-                    System.out.println(club.getmId());
-                    System.out.println(club.getmClubName());
-                    System.out.println(club.getmClubEmail());
-                    System.out.println(club.getmClubLocation());
-                    System.out.println(club.getmClubUrl());
-                    System.out.println(club.getmDescription());
-                    System.out.println(club.getmSport());
-                }
-                // VIRKAR - Þarf bara að setja þetta inn í lista núna
-
+                sClubListAdapter = new ClubListAdapter(clubs, getActivity().getApplicationContext());
+                mListView.setAdapter(sClubListAdapter);
             }
 
             @Override
             public void onFailure(String error) {
-                System.out.println(error);
+                Log.d(TAG, "onFailure: ");
             }
         });
     }
@@ -70,6 +67,8 @@ public class ClubsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_clubs, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_clubs, container, false);
+        mListView = (ListView) rootView.findViewById(R.id.list_of_clubs);
+        return rootView;
     }
 }

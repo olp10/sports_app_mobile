@@ -108,6 +108,21 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void getAllThreadsForSport(String sport, final NetworkCallback<ArrayList<Thread>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<Thread>>() {
+                }.getType();
+                ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
+                callback.onSuccess(threads);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void getThreadById(Long id, final NetworkCallback<Thread> callback) {
         String url = Uri.parse(BASE_URL)
                 .buildUpon()

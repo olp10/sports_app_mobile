@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class EventsFragment extends Fragment {
-
+    private static final String EXTRA_SPORT_NAME = "com.example.sports_app.sport_name";
     private final String TAG = "EventsFragment";
     private static EventListAdapter sEventListAdapter;
     private ListView mListView;
@@ -35,7 +35,6 @@ public class EventsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static EventsFragment newInstance(String param1, String param2) {
         EventsFragment fragment = new EventsFragment();
         return fragment;
@@ -44,8 +43,6 @@ public class EventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         getAllEventsBySport();
     }
 
@@ -62,7 +59,7 @@ public class EventsFragment extends Fragment {
     private void getAllEventsBySport() {
 
         NetworkManager sNetworkManager = NetworkManager.getInstance(getContext());
-        String sport = getActivity().getIntent().getExtras().getString("com.example.sports_app.sport_name");
+        String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
         sNetworkManager.getAllEventsForSport(sport, new NetworkCallback<ArrayList<Event>>() {
             @Override
             public void onSuccess(ArrayList<Event> result) {
