@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionMenuView mActionMenuView;
     private MenuItem mMenuItemLogin;
     private MenuItem mMenuItemLogout;
+    private MenuItem mMenuItemSport;
     // ------------------------ //
     private static final int REQUEST_THREAD_OPEN = 0;
     private ArrayList<Thread> threads;
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_actionview, menu);
         mMenuItemLogin = menu.findItem(R.id.menu_login);
         mMenuItemLogout = menu.findItem(R.id.menu_logout);
+        mMenuItemSport = menu.findItem(R.id.menu_sport);
 
         try {
             if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
@@ -120,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, MainActivity.class);
                 i.putExtra("com.example.sports_app.isLoggedIn", false);
                 startActivity(i);
+                break;
+            case R.id.menu_sport:  // Fixme: Bara hér til að geta farið í sport úr main activity og sent extra með
+                Intent j = new Intent(MainActivity.this, SportActivity.class);
+                j.putExtra("com.example.sports_app.sport_name", "pilukast");
+                startActivity(j);
                 break;
         }
         return super.onOptionsItemSelected(item);

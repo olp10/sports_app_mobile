@@ -7,9 +7,9 @@ import java.time.LocalDate;
 public class Event {
     @SerializedName("id")
     private long mId;
-    @SerializedName("event_name")
+    @SerializedName("eventName")
     private String mEventName;
-    @SerializedName("event_description")
+    @SerializedName("eventDescription")
     private String mEventDescription;
     @SerializedName("sport")
     private String mSport;

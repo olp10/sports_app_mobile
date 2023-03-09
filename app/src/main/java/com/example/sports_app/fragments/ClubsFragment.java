@@ -9,6 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sports_app.R;
+import com.example.sports_app.entities.Club;
+import com.example.sports_app.entities.Event;
+import com.example.sports_app.networking.NetworkCallback;
+import com.example.sports_app.networking.NetworkManager;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,34 +22,14 @@ import com.example.sports_app.R;
  * create an instance of this fragment.
  */
 public class ClubsFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String EXTRA_SPORT_NAME = "com.example.sports_app.sport_name";
 
     public ClubsFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ClubsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ClubsFragment newInstance(String param1, String param2) {
         ClubsFragment fragment = new ClubsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,10 +37,33 @@ public class ClubsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
+        NetworkManager sNetworkManager = NetworkManager.getInstance(ClubsFragment.this.getContext());
+
+        // TODO: Laga svo að sport sé ekki harðkóðað
+        sNetworkManager.getAllClubsForSport(sport, new NetworkCallback<ArrayList<Club>>() {
+            @Override
+            public void onSuccess(ArrayList<Club> result) {
+                // VIRKAR - Þarf bara að setja þetta inn í lista núna
+                ArrayList<Club> clubs = result;
+                for (Club club : clubs) {
+                    System.out.println(club.getmId());
+                    System.out.println(club.getmClubName());
+                    System.out.println(club.getmClubEmail());
+                    System.out.println(club.getmClubLocation());
+                    System.out.println(club.getmClubUrl());
+                    System.out.println(club.getmDescription());
+                    System.out.println(club.getmSport());
+                }
+                // VIRKAR - Þarf bara að setja þetta inn í lista núna
+
+            }
+
+            @Override
+            public void onFailure(String error) {
+                System.out.println(error);
+            }
+        });
     }
 
     @Override

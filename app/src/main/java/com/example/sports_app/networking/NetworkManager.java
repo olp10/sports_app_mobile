@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sports_app.entities.Club;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.Thread;
 import com.google.gson.Gson;
@@ -87,6 +88,21 @@ public class NetworkManager {
                 }.getType();
                 ArrayList<Event> events = gson.fromJson(response, arrayListType);
                 callback.onSuccess(events);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void getAllClubsForSport(String sport, final NetworkCallback<ArrayList<Club>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/clubs", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<Club>>() {
+                }.getType();
+                ArrayList<Club> clubs = gson.fromJson(response, arrayListType);
+                callback.onSuccess(clubs);
             }
         }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);

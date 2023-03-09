@@ -66,6 +66,8 @@ public class EventsFragment extends Fragment {
             public void onSuccess(ArrayList<Event> result) {
                 ArrayList<Event> events = result;
                 System.out.println(events.get(0).getEventName());
+                System.out.println(events.get(0).getEventDescription());
+                System.out.println(events.get(0).getSport());
             }
 
             @Override
