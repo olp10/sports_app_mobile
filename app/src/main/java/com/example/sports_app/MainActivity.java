@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         mMenuItemLogout = menu.findItem(R.id.menu_logout);
 
         try {
-            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn") == true) {
+            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
                 mMenuItemLogin.setVisible(false);
                 mMenuItemLogout.setVisible(true);
             } else {

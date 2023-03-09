@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.Thread;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -71,6 +72,21 @@ public class NetworkManager {
                 ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
                 System.out.println(threads);
                 callback.onSuccess(threads);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void getAllEventsForSport(String sport, final NetworkCallback<ArrayList<Event>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/events", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<Event>>() {
+                }.getType();
+                ArrayList<Event> events = gson.fromJson(response, arrayListType);
+                callback.onSuccess(events);
             }
         }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
