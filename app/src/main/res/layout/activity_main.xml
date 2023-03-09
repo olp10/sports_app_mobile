@@ -10,11 +10,11 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-<ActionMenuView
-    android:id="@+id/toolbar_bottom"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-</ActionMenuView>
+    <ActionMenuView
+        android:id="@+id/toolbar_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ActionMenuView>
 
     <LinearLayout
         android:layout_height="wrap_content"

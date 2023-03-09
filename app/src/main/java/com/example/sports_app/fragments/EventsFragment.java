@@ -4,11 +4,15 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.example.sports_app.EventListAdapter;
 import com.example.sports_app.R;
+import com.example.sports_app.SportActivity;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
@@ -22,66 +26,55 @@ import java.util.ArrayList;
  */
 public class EventsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private final String TAG = "EventsFragment";
+    private static EventListAdapter sEventListAdapter;
+    private ListView mListView;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public EventsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EventFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static EventsFragment newInstance(String param1, String param2) {
         EventsFragment fragment = new EventsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        NetworkManager sNetworkManager = NetworkManager.getInstance(EventsFragment.this.getContext());
-        sNetworkManager.getAllEventsForSport("badminton", new NetworkCallback<ArrayList<Event>>() {
-            @Override
-            public void onSuccess(ArrayList<Event> result) {
-                ArrayList<Event> events = result;
-                System.out.println(events.get(0).getEventName());
-                System.out.println(events.get(0).getEventDescription());
-                System.out.println(events.get(0).getSport());
-            }
 
-            @Override
-            public void onFailure(String error) {
-                System.out.println(error);
-            }
-        });
+
+        getAllEventsBySport();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_events, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_events, container, false);
+        mListView = (ListView) rootView.findViewById(R.id.list_of_events);
+        return rootView;
+    }
+
+    private void getAllEventsBySport() {
+
+        NetworkManager sNetworkManager = NetworkManager.getInstance(getContext());
+        String sport = getActivity().getIntent().getExtras().getString("com.example.sports_app.sport_name");
+        sNetworkManager.getAllEventsForSport(sport, new NetworkCallback<ArrayList<Event>>() {
+            @Override
+            public void onSuccess(ArrayList<Event> result) {
+                ArrayList<Event> events = result;
+                sEventListAdapter = new EventListAdapter(events, getActivity().getApplicationContext());
+                mListView.setAdapter(sEventListAdapter);
+            }
+
+            @Override
+            public void onFailure(String errorString) {
+                Log.d(TAG, "onFailure: " + errorString);
+            }
+        });
     }
 }

@@ -7,26 +7,38 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ActionMenuView;
+import android.widget.ListView;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.sports_app.entities.Event;
 import com.example.sports_app.fragments.ClubsFragment;
 import com.example.sports_app.fragments.EventsFragment;
 import com.example.sports_app.fragments.ThreadsFragment;
+import com.example.sports_app.networking.NetworkCallback;
+import com.example.sports_app.networking.NetworkManager;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 /**
  *
  */
 public class SportActivity extends FragmentActivity {
-    private final String EXTRA_SPORT_ID = "com.example.sports_app.sport_id";
+    private final String EXTRA_SPORT_ID = "com.example.sports_app.sport_name";
 
     // Breytur fyrir aðalvalmynd //
     private ActionMenuView mActionMenuView;
+    private ActionMenuView mSportMenuView;
     private MenuItem mMenuItemLogin;
     private MenuItem mMenuItemLogout;
+    private MenuItem mMenuItemSport;
+    private ListView mListView;
     TabLayout tabLayout;
+
     private static final String TAG = "SportActivity";
 
     public void InstantiateUIElements() {
@@ -90,22 +102,34 @@ public class SportActivity extends FragmentActivity {
         });
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sport);
 
         InstantiateUIElements();
-        mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        System.out.println("ACTION MENU");
         inflater.inflate(R.menu.menu_actionview, menu);
-        return true;
+        Log.d(TAG, "onCreateOptionsMenu: asdf");
+        try {
+            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
+                mMenuItemLogin.setVisible(false);
+                mMenuItemLogout.setVisible(true);
+            } else {
+                mMenuItemLogin.setVisible(true);
+                mMenuItemLogout.setVisible(false);
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "onCreateOptionsMenu: " + e.toString());
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

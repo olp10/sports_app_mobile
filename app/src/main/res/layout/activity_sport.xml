@@ -2,19 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayoutMain"
+    android:id="@+id/relativeLayout"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
-
-    <ActionMenuView
-        android:id="@+id/toolbar_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-    </ActionMenuView>
+    tools:context=".SportActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -38,6 +32,4 @@
 
         </androidx.fragment.app.FragmentContainerView>
     </LinearLayout>
-
-
 </LinearLayout>
