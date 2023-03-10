@@ -3,23 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
-    android:background="@color/white"
+    android:background="@color/light_green"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
-
-    <ActionMenuView
-        android:id="@+id/toolbar_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ActionMenuView>
-
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
-    </LinearLayout>
+    tools:context=".SportActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -31,8 +20,16 @@
     </com.google.android.material.tabs.TabLayout>
 
     <LinearLayout
-        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerView"
+            android:name="com.example.sports_app.fragments.ThreadsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.fragment.app.FragmentContainerView>
+    </LinearLayout>
 </LinearLayout>

@@ -20,5 +20,8 @@
     <string name="login_button">Skrá inn</string>
     <string name="menu_settings">Stillingar</string>
     <string name="login_new_user"><a href="#">Stofna nýjan aðgang</a></string>
+    <string name="menu_sport">Sport</string>
     <string name="menu_logout">Skrá út</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -6,8 +6,11 @@ import android.net.Uri;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sports_app.entities.Club;
+import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.Thread;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,6 +63,22 @@ public class NetworkManager {
         return mQueue;
     }
 
+    public void getAllSports(final NetworkCallback<ArrayList<String>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/sports", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                ArrayList<String> sports = gson.fromJson(response, arrayListType);
+                System.out.println(sports);
+                callback.onSuccess(sports);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void getAllTheThreads(final NetworkCallback<ArrayList<Thread>> callback) {
         StringRequest request = new StringRequest(
                 Request.Method.GET, BASE_URL + "/allThreads", new Response.Listener<String>() {
@@ -70,6 +89,51 @@ public class NetworkManager {
                 }.getType();
                 ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
                 System.out.println(threads);
+                callback.onSuccess(threads);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void getAllEventsForSport(String sport, final NetworkCallback<ArrayList<Event>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/events", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<Event>>() {
+                }.getType();
+                ArrayList<Event> events = gson.fromJson(response, arrayListType);
+                callback.onSuccess(events);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void getAllClubsForSport(String sport, final NetworkCallback<ArrayList<Club>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/clubs", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<Club>>() {
+                }.getType();
+                ArrayList<Club> clubs = gson.fromJson(response, arrayListType);
+                callback.onSuccess(clubs);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void getAllThreadsForSport(String sport, final NetworkCallback<ArrayList<Thread>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/home/" + sport, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<Thread>>() {
+                }.getType();
+                ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
                 callback.onSuccess(threads);
             }
         }, error -> callback.onFailure(error.toString()));

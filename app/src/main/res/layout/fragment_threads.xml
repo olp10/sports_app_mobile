@@ -5,8 +5,8 @@
     android:background="#A8B6FF">
 
     <ListView
-        android:id="@+id/list_of_events"
+        android:id="@+id/list_of_threads"
         android:layout_width="wrap_content"
-        android:layout_height="659dp" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>

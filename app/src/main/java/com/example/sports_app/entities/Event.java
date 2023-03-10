@@ -1,12 +1,19 @@
 package com.example.sports_app.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDate;
 
 public class Event {
+    @SerializedName("id")
     private long mId;
+    @SerializedName("eventName")
     private String mEventName;
+    @SerializedName("eventDescription")
     private String mEventDescription;
+    @SerializedName("sport")
     private String mSport;
+    @SerializedName("event_date")
     private LocalDate mEventDate;
 
     public Event(long mId, String mEventName, String mEventDescription, String mSport, LocalDate mEventDate) {
@@ -21,43 +28,43 @@ public class Event {
 
     }
 
-    public long getmId() {
+    public long getId() {
         return mId;
     }
 
-    public void setmId(long mId) {
+    public void setId(long mId) {
         this.mId = mId;
     }
 
-    public String getmEventName() {
+    public String getEventName() {
         return mEventName;
     }
 
-    public void setmEventName(String mEventName) {
+    public void setEventName(String mEventName) {
         this.mEventName = mEventName;
     }
 
-    public String getmEventDescription() {
+    public String getEventDescription() {
         return mEventDescription;
     }
 
-    public void setmEventDescription(String mEventDescription) {
+    public void setEventDescription(String mEventDescription) {
         this.mEventDescription = mEventDescription;
     }
 
-    public String getmSport() {
+    public String getSport() {
         return mSport;
     }
 
-    public void setmSport(String mSport) {
+    public void setSport(String mSport) {
         this.mSport = mSport;
     }
 
-    public LocalDate getmEventDate() {
+    public LocalDate getEventDate() {
         return mEventDate;
     }
 
-    public void setmEventDate(LocalDate mEventDate) {
+    public void setEventDate(LocalDate mEventDate) {
         this.mEventDate = mEventDate;
     }
 }
