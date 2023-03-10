@@ -55,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
     ListView mThreadList;
     private static ThreadListAdapter sThreadListAdapter;
     private ThreadService mThreadService;
-
     private FragmentContainerView mFragmentContainerView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
