@@ -68,6 +68,7 @@ public class SportActivity extends AppCompatActivity {
                     case 0:
                         System.out.println("Clicked threads tab");
                         fragmentManager.beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
                                 .replace(R.id.fragmentContainerView, ThreadsFragment.class, null)
                                 .setReorderingAllowed(true)
                                 .addToBackStack("name")
@@ -76,6 +77,7 @@ public class SportActivity extends AppCompatActivity {
                     case 1:
                         System.out.println("Clicked events tab");
                         fragmentManager.beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
                                 .replace(R.id.fragmentContainerView, EventsFragment.class, null)
                                 .setReorderingAllowed(true)
                                 .addToBackStack("name")
@@ -84,6 +86,7 @@ public class SportActivity extends AppCompatActivity {
                     case 2:
                         System.out.println("Clicked clubs tab");
                         fragmentManager.beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
                                 .replace(R.id.fragmentContainerView, ClubsFragment.class, null)
                                 .setReorderingAllowed(true)
                                 .addToBackStack("name")

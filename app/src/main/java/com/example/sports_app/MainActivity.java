@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainer;
 import androidx.fragment.app.FragmentContainerView;
 
@@ -28,6 +29,7 @@ import android.widget.ListView;
 
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
+import com.example.sports_app.fragments.SelectSportFragment;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
@@ -139,14 +141,17 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("com.example.sports_app.isLoggedIn", false);
                 startActivity(i);
                 break;
-            case R.id.menu_sport:  // Fixme: Þetta er bara hér til að geta farið í sport úr main activity og sent extra með
-                //Intent j = new Intent(MainActivity.this, SportActivity.class);
-                //j.putExtra("com.example.sports_app.sport_name", "pilukast");
-                // startActivity(j);
-
-                if (mFragmentContainerView.getVisibility() == View.GONE)
+            case R.id.menu_sport:
+                if (mFragmentContainerView.getVisibility() == View.GONE) {
                     mFragmentContainerView.setVisibility(View.VISIBLE);
-                else mFragmentContainerView.setVisibility(View.GONE);
+                    Fragment fragment = new SelectSportFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                            .replace(R.id.fragmentContainerView, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else mFragmentContainerView.setVisibility(View.GONE);
+
                 notifyClickedSport(); // TODO: Eyða þessu - bara til að prufa notifications
                 break;
         }
