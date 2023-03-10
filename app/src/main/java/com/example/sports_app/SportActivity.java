@@ -152,3 +152,5 @@ public class SportActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
+// FIXME: Prufa að pusha aftur, dno
