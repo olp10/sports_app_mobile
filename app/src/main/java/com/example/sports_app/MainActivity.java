@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.FragmentContainer;
+import androidx.fragment.app.FragmentContainerView;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -51,12 +53,16 @@ public class MainActivity extends AppCompatActivity {
     private static ThreadListAdapter sThreadListAdapter;
     private ThreadService mThreadService;
 
+    private FragmentContainerView mFragmentContainerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
         mThreadList = (ListView) findViewById(R.id.threadList);
+        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
+
 
         // TODO: Sækja og geyma þræði í ThreadService. EÐA: Geyma hér og vinna með þá í ThreadService?
         getAllThreads();
@@ -95,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String errorString) {
-                Log.e("Threadservice", "Failed to get threads via REST");
+                Log.e("Threadservice", "Failed to get threads dvia REST");
             }
         });
     }
@@ -133,11 +139,15 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("com.example.sports_app.isLoggedIn", false);
                 startActivity(i);
                 break;
-            case R.id.menu_sport:  // Fixme: Bara hér til að geta farið í sport úr main activity og sent extra með
-                Intent j = new Intent(MainActivity.this, SportActivity.class);
-                j.putExtra("com.example.sports_app.sport_name", "pilukast");
+            case R.id.menu_sport:  // Fixme: Þetta er bara hér til að geta farið í sport úr main activity og sent extra með
+                //Intent j = new Intent(MainActivity.this, SportActivity.class);
+                //j.putExtra("com.example.sports_app.sport_name", "pilukast");
+                // startActivity(j);
+
+                if (mFragmentContainerView.getVisibility() == View.GONE)
+                    mFragmentContainerView.setVisibility(View.VISIBLE);
+                else mFragmentContainerView.setVisibility(View.GONE);
                 notifyClickedSport(); // TODO: Eyða þessu - bara til að prufa notifications
-                startActivity(j);
                 break;
         }
         return super.onOptionsItemSelected(item);

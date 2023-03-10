@@ -6,6 +6,7 @@ import android.net.Uri;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sports_app.entities.Club;
@@ -60,6 +61,22 @@ public class NetworkManager {
             mQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }
         return mQueue;
+    }
+
+    public void getAllSports(final NetworkCallback<ArrayList<String>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/sports", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Type arrayListType = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                ArrayList<String> sports = gson.fromJson(response, arrayListType);
+                System.out.println(sports);
+                callback.onSuccess(sports);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
     }
 
     public void getAllTheThreads(final NetworkCallback<ArrayList<Thread>> callback) {

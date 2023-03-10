@@ -10,6 +10,8 @@
         android:title="@string/menu_logout"
         android:visible="false"/>
     <item android:id="@+id/menu_sport"
-        android:title="Sport"
-        android:visible="true" />
+        android:title="Select Sport"
+        app:showAsAction="always"
+        android:visible="true">
+    </item>
 </menu>

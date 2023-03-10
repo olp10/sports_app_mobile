@@ -64,8 +64,11 @@ public class EventsFragment extends Fragment {
             @Override
             public void onSuccess(ArrayList<Event> result) {
                 ArrayList<Event> events = result;
-                sEventListAdapter = new EventListAdapter(events, getActivity().getApplicationContext());
-                mListView.setAdapter(sEventListAdapter);
+                if (events != null) {
+                    sEventListAdapter = new EventListAdapter(events, getActivity().getApplicationContext());
+                    mListView.setAdapter(sEventListAdapter);
+                }
+
             }
 
             @Override

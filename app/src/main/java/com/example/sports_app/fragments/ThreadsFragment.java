@@ -63,8 +63,11 @@ public class ThreadsFragment extends Fragment {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
                 ArrayList<Thread> threads = result;
-                sThreadListAdapter = new ThreadListAdapter(threads, getActivity().getApplicationContext());
-                mListView.setAdapter(sThreadListAdapter);
+
+                if (threads != null) {
+                    sThreadListAdapter = new ThreadListAdapter(threads, getActivity().getApplicationContext());
+                    mListView.setAdapter(sThreadListAdapter);
+                }
             }
 
             @Override

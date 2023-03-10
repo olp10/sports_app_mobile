@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.ActionMenuView;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 /**
  *
  */
-public class SportActivity extends FragmentActivity {
+public class SportActivity extends AppCompatActivity {
     private final String EXTRA_SPORT_ID = "com.example.sports_app.sport_name";
 
     // Breytur fyrir aðalvalmynd //
@@ -42,6 +43,7 @@ public class SportActivity extends FragmentActivity {
     private static final String TAG = "SportActivity";
 
     public void InstantiateUIElements() {
+
 
         // Adding tabs (Threads/Events/Clubs) for sport
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);

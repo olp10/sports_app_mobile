@@ -52,6 +52,10 @@ public class ClubsFragment extends Fragment {
             @Override
             public void onSuccess(ArrayList<Club> result) {
                 ArrayList<Club> clubs = result;
+                if (clubs != null) {
+                    sClubListAdapter = new ClubListAdapter(clubs, getActivity().getApplicationContext());
+                    mListView.setAdapter(sClubListAdapter);
+                }
                 sClubListAdapter = new ClubListAdapter(clubs, getActivity().getApplicationContext());
                 mListView.setAdapter(sClubListAdapter);
             }
