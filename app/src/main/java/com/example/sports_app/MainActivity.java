@@ -30,6 +30,7 @@ import android.widget.ListView;
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.fragments.SelectSportFragment;
+import com.example.sports_app.networking.LoginManagement;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
@@ -57,11 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
     private FragmentContainerView mFragmentContainerView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
+
         mThreadList = (ListView) findViewById(R.id.threadList);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
@@ -127,7 +129,40 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(TAG, "onCreateOptionsMenu: " + e.toString());
         }
+        //mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
+        //mActionMenuView.setBackgroundColor(304032);
         return true;
+    }
+
+
+
+    // TODO: Spurnig ef header er gerður að fragmenti, þá þarf ekki að implementa þetta
+    // TODO: í öllum activities.
+    public void logout() {
+        if (getIntent().getExtras().getString("com.example.sports_app.username") != null &&
+                getIntent().getExtras().getString("com.example.sports_app.password") != null &&
+                getIntent().getExtras().getString("com.example.sports_app.username") != "" &&
+                getIntent().getExtras().getString("com.example.sports_app.password") != "") {
+
+            NetworkManager sNetworkManager = NetworkManager.getInstance(this);
+            String username = getIntent().getExtras().getString("com.example.sports_app.username");
+            String password = getIntent().getExtras().getString("com.example.sports_app.password");
+            sNetworkManager.logout(username, password, new NetworkCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    intent.putExtra("com.example.sports_app.isLoggedIn", false);
+                    intent.putExtra("com.example.sports_app.username", "");
+                    intent.putExtra("com.example.sports_app.password", "");
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(String errorString) {
+                    Log.e("Threadservice", "Failed to logout via REST");
+                }
+            });
+        }
     }
 
     @Override
@@ -138,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.menu_logout:
                 Intent i = new Intent(MainActivity.this, MainActivity.class);
+                LoginManagement loginManagement = LoginManagement.getInstance(MainActivity.this);
+                logout();
                 i.putExtra("com.example.sports_app.isLoggedIn", false);
                 startActivity(i);
                 break;
