@@ -3,9 +3,17 @@ package com.example.sports_app;
 import static java.lang.Thread.sleep;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -64,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
+
+        createNotificationChannel();
     }
 
     private void getAllThreads() {
@@ -126,9 +136,45 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_sport:  // Fixme: Bara hér til að geta farið í sport úr main activity og sent extra með
                 Intent j = new Intent(MainActivity.this, SportActivity.class);
                 j.putExtra("com.example.sports_app.sport_name", "pilukast");
+                notifyClickedSport(); // TODO: Eyða þessu - bara til að prufa notifications
                 startActivity(j);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Þetta er bara til að prufa að búa til notification
+    private void notifyClickedSport() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        // Það activity sem á að opnast þegar ýtt er á notificationið
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+        } else {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "myChannel");
+            builder.setContentTitle("Sport!");
+            builder.setContentText("You clicked Sport!");
+            builder.setSmallIcon(R.drawable.ic_launcher_background);
+            builder.setContentIntent(pendingIntent); // Opnar pendingIntent þegar klikkað á notification
+            builder.setAutoCancel(true);
+            NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainActivity.this);
+            managerCompat.notify(1, builder.build());
+        }
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "CharSequence name"; // TODO: Bæta þessu við í resources -> getString(R.string.channel_name);
+            String description = "Description"; // TODO: Bæta þessu líka við í resources -> getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("myChannel", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
