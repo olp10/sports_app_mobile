@@ -2,6 +2,7 @@ package com.example.sports_app.networking;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sports_app.entities.Club;
+import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
@@ -62,6 +64,25 @@ public class NetworkManager {
             mQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }
         return mQueue;
+    }
+
+    public void deleteComment(Long id, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.DELETE, BASE_URL + "/comments/"+id+"/delete", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callback.onSuccess(response);
+            }
+        }, error -> callback.onFailure(error.toString())){
+            @Override
+            protected Map<String,String> getParams() {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("id", id.toString());
+                System.out.println("Params: " + params.get("commentId"));
+                return params;
+            }
+        };
+        mQueue.add(request);
     }
 
     public void getAllSports(final NetworkCallback<ArrayList<String>> callback) {

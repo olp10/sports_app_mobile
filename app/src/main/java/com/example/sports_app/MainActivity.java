@@ -75,8 +75,15 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long threadToOpenId = threads.get(i).getId();
                 String sport = threads.get(i).getSport();
-                System.out.println(sport);
+                boolean loggedIn;
+                try {
+                    loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+                } catch (Exception e) {
+                    loggedIn = false;
+                }
+                System.err.println(loggedIn);
                 Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
+                intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
@@ -91,12 +98,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
                 threads = result;
-
-                for (Thread t : threads) {
-                    for (Comment c : t.getComments()) {
-                        System.out.println(c.getComment());
-                    }
-                }
                 sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
                 mThreadList.setAdapter(sThreadListAdapter);
             }
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         mMenuItemSport = menu.findItem(R.id.menu_sport);
 
         try {
-            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
+            if (getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
                 mMenuItemLogin.setVisible(false);
                 mMenuItemLogout.setVisible(true);
             } else {
@@ -131,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
         //mActionMenuView.setBackgroundColor(304032);
         return true;
     }
-
 
 
     // TODO: Spurnig ef header er gerður að fragmenti, þá þarf ekki að implementa þetta
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(String result) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    intent.putExtra("com.example.sports_app.isLoggedIn", false);
+                    intent.putExtra("com.example.sports_app.loggedIn", false);
                     intent.putExtra("com.example.sports_app.username", "");
                     intent.putExtra("com.example.sports_app.password", "");
                     startActivity(intent);
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, MainActivity.class);
                 LoginManagement loginManagement = LoginManagement.getInstance(MainActivity.this);
                 logout();
-                i.putExtra("com.example.sports_app.isLoggedIn", false);
+                i.putExtra("com.example.sports_app.loggedIn", false);
                 startActivity(i);
                 break;
             case R.id.menu_sport:

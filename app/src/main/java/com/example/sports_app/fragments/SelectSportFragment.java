@@ -77,8 +77,8 @@ public class SelectSportFragment extends Fragment {
                 boolean loggedIn = false;
 
                 try {
-                    if (getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
-                        loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn");
+                    if (getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
+                        loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -87,7 +87,7 @@ public class SelectSportFragment extends Fragment {
                 String sport = (String) mListView.getItemAtPosition(position);
 
                 Intent j = new Intent(getActivity(), SportActivity.class);
-                j.putExtra("com.example.sports_app.isLoggedIn", loggedIn);
+                j.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 j.putExtra("com.example.sports_app.sport_name", sport);
                 startActivity(j);
             }

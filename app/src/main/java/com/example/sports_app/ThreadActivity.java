@@ -56,6 +56,13 @@ public class ThreadActivity extends AppCompatActivity {
         mNewCommentText = (EditText) findViewById(R.id.newComment_text);
         mNewCommentButton = (Button) findViewById(R.id.newComment_button);
 
+        boolean loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+
+        if (!loggedIn) {
+            mNewCommentButton.setVisibility(View.GONE);
+            mNewCommentText.setVisibility(View.GONE);
+        }
+
 
         // Sækja þráð gegnum ThreadService og commentin
 //        mThreadService = new ThreadService();
@@ -74,6 +81,7 @@ public class ThreadActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String result) {
                         Log.d(TAG, result);
+                        mNewCommentText.setText("");
                     }
 
                     @Override
@@ -103,7 +111,9 @@ public class ThreadActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Thread result) {
                 mThread = result;
-                mComments = mThread.getComments();
+
+                // TODO: Laga þetta -> Kemur null pointer exception ef öllum commentum er eytt af þræði og svo reynt að opna hann aftur
+                mComments = mThread.getComments() != null ? mThread.getComments() : new ArrayList<Comment>();
                 populateUI();
             }
             @Override

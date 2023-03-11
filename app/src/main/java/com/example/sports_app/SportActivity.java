@@ -135,7 +135,7 @@ public class SportActivity extends AppCompatActivity {
         mMenuItemSport = menu.findItem(R.id.menu_sport);
 
         try {
-            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
+            if (getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
                 mMenuItemLogin.setVisible(false);
                 mMenuItemLogout.setVisible(true);
             } else {
@@ -151,19 +151,19 @@ public class SportActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
-        boolean currentlyLoggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn");
+        boolean currentlyLoggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
         switch (item.getItemId()) {
             case R.id.menu_login:
                 startActivity(new Intent(SportActivity.this, LoginActivity.class));
                 break;
             case R.id.menu_home:
                 i = new Intent(SportActivity.this, MainActivity.class);
-                i.putExtra("com.example.sports_app.isLoggedIn", currentlyLoggedIn);
+                i.putExtra("com.example.sports_app.loggedIn", currentlyLoggedIn);
                 startActivity(i);
                 break;
             case R.id.menu_logout:
                 i = new Intent(SportActivity.this, LoginActivity.class);
-                i.putExtra("com.example.sports_app.isLoggedIn", false);
+                i.putExtra("com.example.sports_app.loggedIn", false);
                 logout();
                 startActivity(i);
                 break;
@@ -195,7 +195,7 @@ public class SportActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(String result) {
                     Intent intent = new Intent(SportActivity.this, LoginActivity.class);
-                    intent.putExtra("com.example.sports_app.isLoggedIn", false);
+                    intent.putExtra("com.example.sports_app.loggedIn", false);
                     intent.putExtra("com.example.sports_app.username", "");
                     intent.putExtra("com.example.sports_app.password", "");
                     startActivity(intent);

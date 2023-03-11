@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (user.ismIsAdmin()) {
                             i.putExtra("com.example.sports_app.isAdmin", true);
                         }
-                        i.putExtra("com.example.sports_app.isLoggedIn", true);
+                        i.putExtra("com.example.sports_app.loggedIn", true);
                         i.putExtra("com.example.sports_app.password", user.getmUserPassword());
                         startActivity(i);
                     } else {

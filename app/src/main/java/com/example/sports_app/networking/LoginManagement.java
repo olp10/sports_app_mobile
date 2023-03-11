@@ -42,7 +42,7 @@ public class LoginManagement {
                 @Override
                 public void onSuccess(String result) {
                     Intent intent = new Intent(context, LoginActivity.class);
-                    intent.putExtra("com.example.sports_app.isLoggedIn", false);
+                    intent.putExtra("com.example.sports_app.loggedIn", false);
                     intent.putExtra("com.example.sports_app.username", "");
                     intent.putExtra("com.example.sports_app.password", "");
                     // startActivity(intent); // FIXME plz

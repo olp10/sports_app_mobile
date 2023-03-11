@@ -6,11 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.example.sports_app.entities.Comment;
+import com.example.sports_app.networking.NetworkCallback;
+import com.example.sports_app.networking.NetworkManager;
+import com.google.android.material.snackbar.Snackbar;
 
 
 import java.time.format.DateTimeFormatter;
@@ -21,7 +25,7 @@ import java.util.ArrayList;
  * each Comment in the collection. To do this CommentListAdapter extends the ArrayAdapter class
  * and overrides its getView method.
  */
-public class CommentListAdapter extends ArrayAdapter<Comment> {
+public class CommentListAdapter extends ArrayAdapter<Comment> implements View.OnClickListener {
 
     private ArrayList<Comment> mComments;
     Context mContext;
@@ -37,6 +41,12 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         TextView txtUsername;
         TextView txtDate;
         TextView txtBody;
+        Button mBtnDeleteComment;
+    }
+
+    private void deleteComment(long id) {
+        mComments.remove(id);
+        notifyDataSetChanged();
     }
 
     public View getView(int position, View convertView, ViewGroup container) {
@@ -51,6 +61,26 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             viewHolder.txtUsername = (TextView) convertView.findViewById(R.id.comment_username);
             viewHolder.txtDate = (TextView) convertView.findViewById(R.id.comment_date);
             viewHolder.txtBody = (TextView) convertView.findViewById(R.id.comment_body);
+            viewHolder.mBtnDeleteComment = (Button) convertView.findViewById(R.id.button_delete_comment);
+            viewHolder.mBtnDeleteComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NetworkManager networkManager = NetworkManager.getInstance(getContext());
+                    networkManager.deleteComment(comment.getId(), new NetworkCallback<String>() {
+                        @Override
+                        public void onSuccess(String result) {
+                            //deleteComment(comment.getId());
+                            System.out.println("On success: " + comment.getId());
+                        }
+
+                        @Override
+                        public void onFailure(String errorString) {
+                            System.out.println("On failure: " + comment.getId());
+                            Snackbar.make(v, errorString, Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
 
             result = convertView;
             convertView.setTag(viewHolder);
@@ -71,5 +101,14 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         // TODO: Útfæra localDate, skoða Listener + fullt af öðru sem þarf að skoða hér.
         viewHolder.txtBody.setTag(position);
         return convertView;
+    }
+
+
+    public void onClick(View v) {
+        int position = (Integer) v.getTag();
+        Object obj = getItem(position);
+        ViewHolder viewHolder = (ViewHolder) v.getTag();
+
+
     }
 }
