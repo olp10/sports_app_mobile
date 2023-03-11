@@ -111,10 +111,12 @@ public class ThreadActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Thread result) {
                 mThread = result;
-
-                // TODO: Laga þetta -> Kemur null pointer exception ef öllum commentum er eytt af þræði og svo reynt að opna hann aftur
-                mComments = mThread.getComments() != null ? mThread.getComments() : new ArrayList<Comment>();
-                populateUI();
+                if (mThread != null) {
+                    mComments = mThread.getComments();
+                    populateUI();
+                } else {
+                    mComments = new ArrayList<Comment>();
+                }
             }
             @Override
             public void onFailure(String errorString) {
