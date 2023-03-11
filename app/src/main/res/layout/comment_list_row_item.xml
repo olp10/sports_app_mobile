@@ -19,6 +19,7 @@
             android:text="This is the comment body"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black" />
+
     </LinearLayout>
 
     <TextView
@@ -39,5 +40,13 @@
         android:layout_marginTop="5dp"
         android:text="1.apríl 2023"
         android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/button_delete_comment"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="2dp"
+        android:text="Remove"/>
 
 </RelativeLayout>

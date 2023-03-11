@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sports_app.entities.Thread;
+import com.example.sports_app.entities.User;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void InstantiateUIElements() {
         // Action bar
-        mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
+        //mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
 
         // Network tengt
         mNetworkManager = NetworkManager.getInstance(LoginActivity.this);
@@ -80,14 +81,18 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Object result) {
                     Log.d(TAG, "onSuccess: " + result);
-                    String loginSuccessful = (String) result;
+                    User user = (User) result;
                     Toast t = new Toast(getApplicationContext());
                     t.setDuration(Toast.LENGTH_SHORT);
-                    if (loginSuccessful.equals("true")) {
+                    if (user != null && user.loggedIn()) {
                         t.setText("Login successful");
                         t.show();
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                        i.putExtra("com.example.sports_app.isLoggedIn", true);
+                        if (user.ismIsAdmin()) {
+                            i.putExtra("com.example.sports_app.isAdmin", true);
+                        }
+                        i.putExtra("com.example.sports_app.loggedIn", true);
+                        i.putExtra("com.example.sports_app.password", user.getmUserPassword());
                         startActivity(i);
                     } else {
                         t.setText("Notendanafn og lykilorð passa ekki");

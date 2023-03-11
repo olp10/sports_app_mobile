@@ -30,6 +30,7 @@ import android.widget.ListView;
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.fragments.SelectSportFragment;
+import com.example.sports_app.networking.LoginManagement;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
@@ -54,14 +55,13 @@ public class MainActivity extends AppCompatActivity {
     ListView mThreadList;
     private static ThreadListAdapter sThreadListAdapter;
     private ThreadService mThreadService;
-
     private FragmentContainerView mFragmentContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
+
         mThreadList = (ListView) findViewById(R.id.threadList);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
@@ -75,8 +75,15 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long threadToOpenId = threads.get(i).getId();
                 String sport = threads.get(i).getSport();
-                System.out.println(sport);
+                boolean loggedIn;
+                try {
+                    loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+                } catch (Exception e) {
+                    loggedIn = false;
+                }
+                System.err.println(loggedIn);
                 Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
+                intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
@@ -91,12 +98,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
                 threads = result;
-
-                for (Thread t : threads) {
-                    for (Comment c : t.getComments()) {
-                        System.out.println(c.getComment());
-                    }
-                }
                 sThreadListAdapter = new ThreadListAdapter(threads, getApplicationContext());
                 mThreadList.setAdapter(sThreadListAdapter);
             }
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         mMenuItemSport = menu.findItem(R.id.menu_sport);
 
         try {
-            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
+            if (getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
                 mMenuItemLogin.setVisible(false);
                 mMenuItemLogout.setVisible(true);
             } else {
@@ -127,7 +128,39 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(TAG, "onCreateOptionsMenu: " + e.toString());
         }
+        //mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
+        //mActionMenuView.setBackgroundColor(304032);
         return true;
+    }
+
+
+    // TODO: Spurnig ef header er gerður að fragmenti, þá þarf ekki að implementa þetta
+    // TODO: í öllum activities.
+    public void logout() {
+        if (getIntent().getExtras().getString("com.example.sports_app.username") != null &&
+                getIntent().getExtras().getString("com.example.sports_app.password") != null &&
+                getIntent().getExtras().getString("com.example.sports_app.username") != "" &&
+                getIntent().getExtras().getString("com.example.sports_app.password") != "") {
+
+            NetworkManager sNetworkManager = NetworkManager.getInstance(this);
+            String username = getIntent().getExtras().getString("com.example.sports_app.username");
+            String password = getIntent().getExtras().getString("com.example.sports_app.password");
+            sNetworkManager.logout(username, password, new NetworkCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    intent.putExtra("com.example.sports_app.loggedIn", false);
+                    intent.putExtra("com.example.sports_app.username", "");
+                    intent.putExtra("com.example.sports_app.password", "");
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(String errorString) {
+                    Log.e("Threadservice", "Failed to logout via REST");
+                }
+            });
+        }
     }
 
     @Override
@@ -138,7 +171,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.menu_logout:
                 Intent i = new Intent(MainActivity.this, MainActivity.class);
-                i.putExtra("com.example.sports_app.isLoggedIn", false);
+                LoginManagement loginManagement = LoginManagement.getInstance(MainActivity.this);
+                logout();
+                i.putExtra("com.example.sports_app.loggedIn", false);
                 startActivity(i);
                 break;
             case R.id.menu_sport:

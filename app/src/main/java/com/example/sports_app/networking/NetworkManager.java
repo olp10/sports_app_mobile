@@ -2,6 +2,7 @@ package com.example.sports_app.networking;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,8 +11,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sports_app.entities.Club;
+import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.Thread;
+import com.example.sports_app.entities.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -61,6 +64,25 @@ public class NetworkManager {
             mQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }
         return mQueue;
+    }
+
+    public void deleteComment(Long id, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.DELETE, BASE_URL + "/comments/"+id+"/delete", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callback.onSuccess(response);
+            }
+        }, error -> callback.onFailure(error.toString())){
+            @Override
+            protected Map<String,String> getParams() {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("id", id.toString());
+                System.out.println("Params: " + params.get("commentId"));
+                return params;
+            }
+        };
+        mQueue.add(request);
     }
 
     public void getAllSports(final NetworkCallback<ArrayList<String>> callback) {
@@ -181,6 +203,49 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void logout(String username, String password, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, BASE_URL + "/logout", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callback.onSuccess(response);
+            }
+        }, error -> callback.onFailure(error.toString())) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("password", password);
+                params.put("username", username);
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
+
+    public void login(String username, String password, final NetworkCallback<User> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, BASE_URL + "/login", new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Gson gson = new Gson();
+                    User user = gson.fromJson(response, User.class);
+                    callback.onSuccess(user);
+                }
+            }, error -> callback.onFailure(error.toString())) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
+
+
+    // TODO: Þetta virkar, er að stússast í öðru
+    /*
     public void login(String username, String password, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(
                 Request.Method.POST, BASE_URL + "/login", response ->
@@ -196,6 +261,8 @@ public class NetworkManager {
         };
         mQueue.add(request);
     }
+
+     */
 
     // Líklega ekki þörf fyrir þetta lengur en gæti mögulega komið að notum í öðru samhengi?
 //    private Gson getLocalDateTimeAdapter() {

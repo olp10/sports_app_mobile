@@ -68,16 +68,26 @@ public class SelectSportFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View rootView = inflater.inflate(R.layout.fragment_select_sport, container, false);
         mListView = (ListView) rootView.findViewById(R.id.list_of_sports);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                boolean loggedIn = false;
+
+                try {
+                    if (getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
+                        loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 String sport = (String) mListView.getItemAtPosition(position);
 
                 Intent j = new Intent(getActivity(), SportActivity.class);
+                j.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 j.putExtra("com.example.sports_app.sport_name", sport);
                 startActivity(j);
             }

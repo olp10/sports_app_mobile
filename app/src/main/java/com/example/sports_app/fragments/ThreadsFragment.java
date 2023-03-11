@@ -1,5 +1,6 @@
 package com.example.sports_app.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,10 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sports_app.EventListAdapter;
+import com.example.sports_app.MainActivity;
 import com.example.sports_app.R;
+import com.example.sports_app.ThreadActivity;
 import com.example.sports_app.ThreadListAdapter;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.networking.NetworkCallback;
@@ -19,6 +23,7 @@ import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.entities.Thread;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +35,8 @@ public class ThreadsFragment extends Fragment {
     private final String TAG = "ThreadsFragment";
     private static ThreadListAdapter sThreadListAdapter;
     private ListView mListView;
+
+    private List<Thread> mThreads;
 
     public ThreadsFragment() {
         // Required empty public constructor
@@ -43,7 +50,6 @@ public class ThreadsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getAllThreadsBySport();
     }
 
     @Override
@@ -52,6 +58,17 @@ public class ThreadsFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_threads, container, false);
         mListView = (ListView) rootView.findViewById(R.id.list_of_threads);
+        getAllThreadsBySport();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                long threadToOpenId = mThreads.get(i).getId();
+                String sport = mThreads.get(i).getSport();
+                System.out.println(sport);
+                Intent intent = ThreadActivity.newIntent(getActivity(), threadToOpenId);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 
@@ -63,6 +80,7 @@ public class ThreadsFragment extends Fragment {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
                 ArrayList<Thread> threads = result;
+                mThreads = threads;
 
                 if (threads != null) {
                     sThreadListAdapter = new ThreadListAdapter(threads, getActivity().getApplicationContext());
