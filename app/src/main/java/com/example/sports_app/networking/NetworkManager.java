@@ -159,6 +159,25 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void getEventById(Long id, final NetworkCallback<Event> callback) {
+        String url = Uri.parse(BASE_URL)
+                .buildUpon()
+                .appendPath("event")
+                .appendPath(String.valueOf(id))
+                .build().toString();
+
+        StringRequest request = new StringRequest(
+                Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Event event = gson.fromJson(response, Event.class);
+                callback.onSuccess(event);
+            }
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void postNewComment(
             Long userId, String commentBody, Long threadId, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(

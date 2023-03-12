@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Sækja og geyma þræði í ThreadService. EÐA: Geyma hér og vinna með þá í ThreadService?
         getAllThreads();
 
-        // TODO: laga að getComments() á Dummy þræði frá bakenda valda NullPointerException
         mThreadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

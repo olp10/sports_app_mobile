@@ -85,17 +85,17 @@ public class ThreadActivity extends AppCompatActivity {
         });
     }
 
-    private class newComment {
-        public User mUser;
-        public String commentBody;
-        public Thread mThread;
-
-        public newComment(User user, String body, Thread thread) {
-            mUser = user;
-            commentBody = body;
-            mThread = thread;
-        }
-    }
+//    private class newComment {
+//        public User mUser;
+//        public String commentBody;
+//        public Thread mThread;
+//
+//        public newComment(User user, String body, Thread thread) {
+//            mUser = user;
+//            commentBody = body;
+//            mThread = thread;
+//        }
+//    }
 
     private void getThreadById(Long id) {
         NetworkManager networkManager = NetworkManager.getInstance(this);
