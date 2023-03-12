@@ -1,8 +1,12 @@
 package com.example.sports_app.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class User {
+
+    @SerializedName("userid")
     private Long mId;
 
     public Long getmId() {
@@ -41,18 +45,33 @@ public class User {
         return mComments;
     }
 
+    public void setLoggedIn(boolean loggedIn) {
+        this.isLoggedIn = loggedIn;
+    }
+
+
+    public boolean loggedIn() {
+        return isLoggedIn;
+    }
+
     public void setmComments(List<Comment> mComments) {
         this.mComments = mComments;
     }
 
-    public User(String mUsername, String mUserPassword, boolean isAdmin) {
+    public User(String mUsername, String mUserPassword, boolean isAdmin, boolean isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
         this.mUsername = mUsername;
         this.mUserPassword = mUserPassword;
         this.mIsAdmin = isAdmin;
     }
 
+    @SerializedName("username")
     private String mUsername;
+    @SerializedName("userPassword")
     private String mUserPassword;
+    @SerializedName("isAdmin")
     private boolean mIsAdmin;
     private List<Comment> mComments;
+    @SerializedName("loggedIn")
+    private boolean isLoggedIn;
 }

@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
     <!--
     Hugmynd að litapalettu
     -->
     <color name="orange">#ff6700</color>
-    <color name="light_grey">#ebebeb</color>
-    <color name="darker_grey">#c0c0c0</color>
-    <color name="blue">#3a6ea5</color>
-    <color name="darker_blue">#004e98</color>
 
 
     <!-- Hugmynd að aðeins væmnari litapalettu -->
     <color name="light_green">#d3f8e2</color>
-    <color name="light_purple">#e4c1f9</color>
-    <color name="pink">#f694c1</color>
     <color name="light_yellow">#ede7b1</color>
     <color name="light_blue">#a9def9</color>
 </resources>

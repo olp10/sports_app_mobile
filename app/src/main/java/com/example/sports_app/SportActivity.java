@@ -6,11 +6,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ActionMenuView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.fragments.ClubsFragment;
 import com.example.sports_app.fragments.EventsFragment;
+import com.example.sports_app.fragments.SelectSportFragment;
 import com.example.sports_app.fragments.ThreadsFragment;
+import com.example.sports_app.networking.LoginManagement;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.google.android.material.tabs.TabLayout;
@@ -37,14 +42,17 @@ public class SportActivity extends AppCompatActivity {
     private MenuItem mMenuItemLogin;
     private MenuItem mMenuItemLogout;
     private MenuItem mMenuItemSport;
+    private MenuItem mAdmin;
     private ListView mListView;
+
+    private FragmentContainerView mFragmentContainerView;
     TabLayout tabLayout;
 
     private static final String TAG = "SportActivity";
 
     public void InstantiateUIElements() {
 
-
+        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
         // Adding tabs (Threads/Events/Clubs) for sport
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         TabLayout.Tab threadsTab = tabLayout.newTab();
@@ -122,9 +130,12 @@ public class SportActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_actionview, menu);
-        Log.d(TAG, "onCreateOptionsMenu: asdf");
+        mMenuItemLogin = menu.findItem(R.id.menu_login);
+        mMenuItemLogout = menu.findItem(R.id.menu_logout);
+        mMenuItemSport = menu.findItem(R.id.menu_sport);
+
         try {
-            if (getIntent().getExtras().getBoolean("com.example.sports_app.isLoggedIn")) {
+            if (getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
                 mMenuItemLogin.setVisible(false);
                 mMenuItemLogout.setVisible(true);
             } else {
@@ -134,21 +145,67 @@ public class SportActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(TAG, "onCreateOptionsMenu: " + e.toString());
         }
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
+        boolean currentlyLoggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
         switch (item.getItemId()) {
             case R.id.menu_login:
                 startActivity(new Intent(SportActivity.this, LoginActivity.class));
                 break;
-            case R.id.menu_logout:
-                Intent i = new Intent(SportActivity.this, MainActivity.class);
-                i.putExtra("com.example.sports_app.isLoggedIn", false);
+            case R.id.menu_home:
+                i = new Intent(SportActivity.this, MainActivity.class);
+                i.putExtra("com.example.sports_app.loggedIn", currentlyLoggedIn);
                 startActivity(i);
+                break;
+            case R.id.menu_logout:
+                i = new Intent(SportActivity.this, LoginActivity.class);
+                i.putExtra("com.example.sports_app.loggedIn", false);
+                logout();
+                startActivity(i);
+                break;
+            case R.id.menu_sport:
+                if (mFragmentContainerView.getVisibility() == View.GONE) {
+                    mFragmentContainerView.setVisibility(View.VISIBLE);
+                    Fragment fragment = new SelectSportFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                            .replace(R.id.fragmentContainerView, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else mFragmentContainerView.setVisibility(View.GONE);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void logout() {
+        if (getIntent().getExtras().getString("com.example.sports_app.username") != null &&
+                getIntent().getExtras().getString("com.example.sports_app.password") != null &&
+                getIntent().getExtras().getString("com.example.sports_app.username") != "" &&
+                getIntent().getExtras().getString("com.example.sports_app.password") != "") {
+
+            NetworkManager sNetworkManager = NetworkManager.getInstance(this);
+            String username = getIntent().getExtras().getString("com.example.sports_app.username");
+            String password = getIntent().getExtras().getString("com.example.sports_app.password");
+            sNetworkManager.logout(username, password, new NetworkCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Intent intent = new Intent(SportActivity.this, LoginActivity.class);
+                    intent.putExtra("com.example.sports_app.loggedIn", false);
+                    intent.putExtra("com.example.sports_app.username", "");
+                    intent.putExtra("com.example.sports_app.password", "");
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(String errorString) {
+                    Log.e("Threadservice", "Failed to logout via REST");
+                }
+            });
+        }
     }
 }
