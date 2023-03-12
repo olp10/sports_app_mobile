@@ -2,9 +2,7 @@ package com.example.sports_app.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -25,7 +23,7 @@ public class Comment {
     @SerializedName("comment")
     private String mComment;
     private Thread mThread;
-    private LocalDateTime mLocalDateTime;
+    private LocalDateTime mCommentDate;
 
     public Comment() {
 
@@ -53,18 +51,18 @@ public class Comment {
     }
 
     public String getFormattedDate() {
-        this.mLocalDateTime = createLocalDateTime(mTimeCommented);
-        String date = mLocalDateTime.getYear() + " "
-                + mLocalDateTime.getDayOfMonth() + "."
-                + mLocalDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " "
-                + mLocalDateTime.getHour() + ":"
-                + mLocalDateTime.getMinute();
+        this.mCommentDate = createLocalDateTime(mTimeCommented);
+        String date = mCommentDate.getYear() + " "
+                + mCommentDate.getDayOfMonth() + "."
+                + mCommentDate.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " "
+                + mCommentDate.getHour() + ":"
+                + mCommentDate.getMinute();
 
         return date;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return mLocalDateTime;
+    public LocalDateTime getCommentDate() {
+        return mCommentDate;
     }
 
     public Long getId() {

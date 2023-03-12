@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.sports_app.entities.Event;
@@ -20,6 +22,7 @@ public class EventActivity extends AppCompatActivity {
     TextView mEventName;
     TextView mEventDate;
     TextView mEventDescription;
+    Button mSubscribeToEvent;
 
     private static final String EXTRA_EVENT_ID = "com.example.sports_app.event_id";
 
@@ -31,9 +34,28 @@ public class EventActivity extends AppCompatActivity {
         mEventName = (TextView) findViewById(R.id.event_title);
         mEventDate = (TextView) findViewById(R.id.event_date);
         mEventDescription = (TextView)  findViewById(R.id.event_description);
+        mSubscribeToEvent = (Button) findViewById(R.id.event_subscribe_button);
 
         long thisEventId = getIntent().getLongExtra(EXTRA_EVENT_ID, 0);
         getEventById(thisEventId);
+
+        mSubscribeToEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NetworkManager networkManager = NetworkManager.getInstance(EventActivity.this);
+                networkManager.subscribeToEvent(1L, mEvent.getId(), new NetworkCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Log.d(TAG, result);
+                    }
+
+                    @Override
+                    public void onFailure(String errorString) {
+
+                    }
+                });
+            }
+        });
     }
 
     private void getEventById(Long id) {
@@ -54,7 +76,7 @@ public class EventActivity extends AppCompatActivity {
 
     private void populateUI() {
         mEventName.setText(mEvent.getEventName());
-        mEventDate.setText("Dateobj");
+        mEventDate.setText(mEvent.getFormattedDate());
         mEventDescription.setText(mEvent.getEventDescription());
     }
 

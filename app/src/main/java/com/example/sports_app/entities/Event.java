@@ -3,6 +3,11 @@ package com.example.sports_app.entities;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.List;
+import java.util.Locale;
 
 public class Event {
     @SerializedName("id")
@@ -14,18 +19,38 @@ public class Event {
     @SerializedName("sport")
     private String mSport;
     @SerializedName("event_date")
-    private LocalDate mEventDate;
+    private LocalDateTime mEventDate;
+    @SerializedName("eventStartTime")
+    private String mEventStartDate;
+    private List<Long> mSubscribers;
 
-    public Event(long mId, String mEventName, String mEventDescription, String mSport, LocalDate mEventDate) {
+    public Event(long mId, String mEventName, String mEventDescription, String mSport, String startDate) {
         this.mId = mId;
         this.mEventName = mEventName;
         this.mEventDescription = mEventDescription;
         this.mSport = mSport;
-        this.mEventDate = mEventDate;
+        this.mEventStartDate = startDate;
     }
 
     public Event() {
 
+    }
+
+    private LocalDateTime createLocalDateTime(String timeCommented) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd HH:mm");;
+        LocalDateTime localDateTime = LocalDateTime.parse(timeCommented, formatter);
+        return localDateTime;
+    }
+
+    public String getFormattedDate() {
+        this.mEventDate = createLocalDateTime(mEventStartDate);
+        String date = mEventDate.getYear() + " "
+                + mEventDate.getDayOfMonth() + "."
+                + mEventDate.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " "
+                + mEventDate.getHour() + ":"
+                + mEventDate.getMinute();
+
+        return date;
     }
 
     public long getId() {
@@ -60,11 +85,14 @@ public class Event {
         this.mSport = mSport;
     }
 
-    public LocalDate getEventDate() {
-        return mEventDate;
+    public String getmEventStartDate() {
+        return mEventStartDate;
     }
 
-    public void setEventDate(LocalDate mEventDate) {
-        this.mEventDate = mEventDate;
+    public void setmEventStartDate(String startDate) {
+        this.mEventStartDate = startDate;
     }
+
+    public List<Long> getSubscribers() { return mSubscribers; }
+
 }

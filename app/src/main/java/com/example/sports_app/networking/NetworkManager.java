@@ -200,6 +200,31 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void subscribeToEvent(Long eventId, Long userId, final NetworkCallback<String> callback) {
+        String url = Uri.parse(BASE_URL)
+                .buildUpon()
+                .appendPath("event")
+                .appendPath(String.valueOf(eventId))
+                .build().toString();
+
+        StringRequest request = new StringRequest(
+                Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callback.onSuccess(response);
+            }
+        }, error -> callback.onFailure(error.toString())){
+            @Override
+            protected Map<String,String> getParams() {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("userId", userId.toString());
+
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
+
     public void postNewComment(
             Long userId, String commentBody, Long threadId, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(
