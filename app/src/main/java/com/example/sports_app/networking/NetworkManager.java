@@ -41,7 +41,11 @@ public class NetworkManager {
     // Breyta þessu þegar verið að nota á live (Railway) þjón
 //    private static final String BASE_URL = "https://hugbunadarverkefni2-production.up.railway.app/";
 
+    //Nota fyrir localhost
     private static final String BASE_URL = "http://10.0.2.2:8080";
+
+    // Nota þennan fyrir live (Railway) þjón
+    //private static final String BASE_URL = "https://hugbunadarverkefni2-production.up.railway.app";
 
     private static NetworkManager mInstance;
     private static RequestQueue mQueue;

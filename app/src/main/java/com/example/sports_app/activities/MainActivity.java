@@ -10,8 +10,10 @@ import androidx.fragment.app.FragmentContainerView;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,6 +49,12 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
+
+        try {
+            System.out.println("Mod: " + getIntent().getExtras().getBoolean("com.example.sports_app.isModerator"));
+        } catch (Exception e) {
+            System.out.println("Catch - Mod: " + false);
+        }
 
         try {
             isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
@@ -132,6 +140,14 @@ public class MainActivity extends Activity {
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private boolean checkCameraHardware(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

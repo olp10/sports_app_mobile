@@ -2,6 +2,8 @@ package com.example.sports_app.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.example.sports_app.services.ThreadService;
 import java.util.List;
 
 public class LoginActivity extends Activity {
+    boolean doubleBackToExitPressedOnce = false;
     private final String TAG = "LoginActivity";
     ActionMenuView mActionMenuView;
     NetworkManager mNetworkManager;
@@ -82,8 +85,28 @@ public class LoginActivity extends Activity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
+
 
     public void createLoginButton() {
+
         // Login virkar á móti bakenda
         mLoginButton.setOnClickListener(v -> {
             mNetworkManager.login(mUsernameTextField.getText().toString(), mPasswordTextField.getText().toString(), new NetworkCallback() {
@@ -105,7 +128,9 @@ public class LoginActivity extends Activity {
                         i.putExtra("com.example.sports_app.loggedIn", true);
                         i.putExtra("com.example.sports_app.username", user.getmUsername());
                         i.putExtra("com.example.sports_app.password", user.getmUserPassword());
+
                         startActivity(i);
+                        finish();
                     } else {
                         t.setText("Notendanafn og lykilorð passa ekki");
                         t.show();
