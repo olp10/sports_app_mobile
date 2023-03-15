@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.sports_app.R;
@@ -29,11 +32,13 @@ import java.util.List;
  */
 public class ThreadsFragment extends Fragment {
     private static final String EXTRA_SPORT_NAME = "com.example.sports_app.sport_name";
+    private static final String EXTRA_USERNAME = "com.example.sports_app.username";
     private final String TAG = "ThreadsFragment";
     private static ThreadListAdapter sThreadListAdapter;
     private ListView mListView;
-
     private List<Thread> mThreads;
+    private Button mNewThreadButton;
+    private FragmentContainerView mFragmentContainerView;
 
     public ThreadsFragment() {
         // Required empty public constructor
@@ -47,6 +52,7 @@ public class ThreadsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -65,10 +71,42 @@ public class ThreadsFragment extends Fragment {
                 System.out.println(sport);
                 Intent intent = ThreadActivity.newIntent(getActivity(), threadToOpenId);
                 intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
+                intent.putExtra(EXTRA_USERNAME, getActivity().getIntent().getExtras().getString(EXTRA_USERNAME));
                 startActivity(intent);
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        mFragmentContainerView = (FragmentContainerView) getActivity().findViewById(R.id.fragmentContainerView);
+        mNewThreadButton = (Button) view.findViewById(R.id.new_thread_button);
+        boolean loggedIn;
+        String username;
+        try {
+            loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+        } catch (Exception e) {
+            loggedIn = false;
+        }
+        if (loggedIn) {
+            mNewThreadButton.setVisibility(View.VISIBLE);
+        }
+        mNewThreadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = getActivity().getIntent().getExtras().getString(EXTRA_USERNAME);
+                getActivity().getIntent().putExtra(EXTRA_USERNAME, username);
+                System.out.println(username);
+                mFragmentContainerView.setVisibility(View.VISIBLE);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, NewThreadFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("name")
+                        .commit();
+            }
+        });
     }
 
     private void getAllThreadsBySport() {

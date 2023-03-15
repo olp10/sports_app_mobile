@@ -46,7 +46,6 @@ public class ClubsFragment extends Fragment {
         String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
         NetworkManager sNetworkManager = NetworkManager.getInstance(ClubsFragment.this.getContext());
 
-        // TODO: Laga svo að sport sé ekki harðkóðað
         sNetworkManager.getAllClubsForSport(sport, new NetworkCallback<ArrayList<Club>>() {
             @Override
             public void onSuccess(ArrayList<Club> result) {

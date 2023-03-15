@@ -19,6 +19,7 @@ import com.google.android.material.tabs.TabLayout;
  */
 public class SportActivity extends Activity {
     private final String EXTRA_SPORT_ID = "com.example.sports_app.sport_name";
+    private final String EXTRA_USERNAME = "com.example.sports_app.username";
 
     // Breytur fyrir aðalvalmynd //
     private ActionMenuView mActionMenuView;
@@ -33,6 +34,7 @@ public class SportActivity extends Activity {
     TabLayout tabLayout;
 
     private static final String TAG = "SportActivity";
+    private String currentUsername;
 
     public void InstantiateUIElements() {
 
@@ -49,13 +51,13 @@ public class SportActivity extends Activity {
         tabLayout.addTab(threadsTab);
         tabLayout.addTab(eventsTab);
         tabLayout.addTab(clubsTab);
-
+        currentUsername = getIntent().getExtras().getString(EXTRA_USERNAME);
+        System.out.println("Current user: " + currentUsername);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
-
                 switch (tab.getPosition()) {
                     case 0:
                         System.out.println("Clicked threads tab");
@@ -89,12 +91,10 @@ public class SportActivity extends Activity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
     }

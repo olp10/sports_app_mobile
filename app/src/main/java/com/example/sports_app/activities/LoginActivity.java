@@ -103,6 +103,7 @@ public class LoginActivity extends Activity {
                             i.putExtra("com.example.sports_app.isAdmin", false);
                         }
                         i.putExtra("com.example.sports_app.loggedIn", true);
+                        i.putExtra("com.example.sports_app.username", user.getmUsername());
                         i.putExtra("com.example.sports_app.password", user.getmUserPassword());
                         startActivity(i);
                     } else {

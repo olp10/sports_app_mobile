@@ -161,6 +161,27 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void saveThread(Thread thread, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, BASE_URL + "/saveThread", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callback.onSuccess(response);
+            }
+        }, error -> callback.onFailure(error.toString())){
+            @Override
+            protected Map<String,String> getParams() {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("title", thread.getHeader());
+                params.put("body", thread.getBody());
+                params.put("sport", thread.getSport());
+                params.put("user", thread.getUsername());
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
+
     public void getThreadById(Long id, final NetworkCallback<Thread> callback) {
         String url = Uri.parse(BASE_URL)
                 .buildUpon()
