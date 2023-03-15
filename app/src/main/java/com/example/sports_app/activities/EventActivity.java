@@ -1,4 +1,4 @@
-package com.example.sports_app;
+package com.example.sports_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.sports_app.R;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;

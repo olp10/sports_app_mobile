@@ -12,12 +12,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.sports_app.EventListAdapter;
-import com.example.sports_app.MainActivity;
 import com.example.sports_app.R;
-import com.example.sports_app.ThreadActivity;
-import com.example.sports_app.ThreadListAdapter;
-import com.example.sports_app.entities.Event;
+import com.example.sports_app.activities.ThreadActivity;
+import com.example.sports_app.adapters.ThreadListAdapter;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.entities.Thread;

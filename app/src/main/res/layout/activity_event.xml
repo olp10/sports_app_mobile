@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:gravity="top|center"
     android:orientation="vertical"
-    tools:context=".EventActivity">
+    tools:context=".activities.EventActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

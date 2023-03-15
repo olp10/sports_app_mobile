@@ -1,4 +1,4 @@
-package com.example.sports_app;
+package com.example.sports_app.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.sports_app.R;
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;

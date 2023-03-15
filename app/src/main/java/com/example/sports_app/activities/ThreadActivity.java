@@ -1,4 +1,4 @@
-package com.example.sports_app;
+package com.example.sports_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,17 +12,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.sports_app.R;
+import com.example.sports_app.adapters.CommentListAdapter;
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
-import com.example.sports_app.entities.User;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
-import org.w3c.dom.Text;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class ThreadActivity extends AppCompatActivity {

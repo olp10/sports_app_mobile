@@ -1,10 +1,11 @@
-package com.example.sports_app;
+package com.example.sports_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.sports_app.R;
 import com.example.sports_app.entities.Club;
 
 public class ClubActivity extends AppCompatActivity {

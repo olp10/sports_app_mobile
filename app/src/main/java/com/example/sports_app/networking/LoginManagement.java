@@ -2,14 +2,9 @@ package com.example.sports_app.networking;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.RequestQueue;
-import com.example.sports_app.LoginActivity;
-import com.example.sports_app.MainActivity;
+import com.example.sports_app.activities.LoginActivity;
 
 
 // Tilraun til að aðskilja login/logout ferlið - gekk ekki nógu vel

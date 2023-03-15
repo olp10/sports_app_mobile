@@ -1,4 +1,4 @@
-package com.example.sports_app;
+package com.example.sports_app.activities;
 
 import static java.lang.Thread.sleep;
 
@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.sports_app.R;
+import com.example.sports_app.adapters.ThreadListAdapter;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
