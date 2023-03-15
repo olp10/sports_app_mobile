@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".SportActivity">
+    tools:context=".activities.SportActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

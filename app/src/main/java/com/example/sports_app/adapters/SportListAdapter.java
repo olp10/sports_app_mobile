@@ -1,4 +1,4 @@
-package com.example.sports_app;
+package com.example.sports_app.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.example.sports_app.R;
 
 import java.util.ArrayList;
 

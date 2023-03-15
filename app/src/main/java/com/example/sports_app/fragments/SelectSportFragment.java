@@ -2,7 +2,6 @@ package com.example.sports_app.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +10,11 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.sports_app.MainActivity;
 import com.example.sports_app.R;
-import com.example.sports_app.SportActivity;
-import com.example.sports_app.SportListAdapter;
-import com.example.sports_app.ThreadActivity;
-import com.example.sports_app.entities.Thread;
+import com.example.sports_app.activities.SportActivity;
+import com.example.sports_app.adapters.SportListAdapter;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 

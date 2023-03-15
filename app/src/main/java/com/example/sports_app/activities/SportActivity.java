@@ -1,4 +1,4 @@
-package com.example.sports_app;
+package com.example.sports_app.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,6 +8,7 @@ import android.widget.ListView;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.sports_app.R;
 import com.example.sports_app.fragments.ClubsFragment;
 import com.example.sports_app.fragments.EventsFragment;
 import com.example.sports_app.fragments.ThreadsFragment;

@@ -10,10 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.example.sports_app.ClubListAdapter;
+import com.example.sports_app.adapters.ClubListAdapter;
 import com.example.sports_app.R;
 import com.example.sports_app.entities.Club;
-import com.example.sports_app.entities.Event;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 

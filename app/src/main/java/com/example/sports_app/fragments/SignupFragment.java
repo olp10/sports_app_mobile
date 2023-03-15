@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.sports_app.MainActivity;
+import com.example.sports_app.activities.MainActivity;
 import com.example.sports_app.R;
 import com.example.sports_app.entities.User;
 import com.example.sports_app.networking.NetworkCallback;
