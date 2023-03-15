@@ -93,22 +93,43 @@ public abstract class Activity extends AppCompatActivity {
         } catch (Exception e) {
             loggedIn = false;
         }
+        String username = "";
+        try {
+            username = getIntent().getExtras().getString(EXTRA_USERNAME);
+        } catch (Exception e) {
+            username = "";
+        }
+        System.out.println("Username í Activity klasa: " + username);
         switch (item.getItemId()) {
             case R.id.menu_login:
                 i = new Intent(Activity.this, LoginActivity.class);
                 i.putExtra(EXTRA_LOGGED_IN, loggedIn);
+                i.putExtra(EXTRA_USERNAME, username);
                 startActivity(new Intent(Activity.this, LoginActivity.class));
                 break;
             case R.id.menu_logout:
                 i = new Intent(Activity.this, MainActivity.class);
                 logout();
                 i.putExtra(EXTRA_LOGGED_IN, false);
+                i.putExtra(EXTRA_USERNAME, "");
                 startActivity(i);
                 break;
             case R.id.menu_home:
                 i = new Intent(Activity.this, MainActivity.class);
                 i.putExtra(EXTRA_LOGGED_IN, loggedIn);
+                i.putExtra(EXTRA_USERNAME, username);
                 startActivity(i);
+                break;
+            case R.id.menu_settings:
+                if (mFragmentContainerView.getVisibility() == View.GONE) {
+                    mFragmentContainerView.setVisibility(View.VISIBLE);
+                    Fragment fragment = new SelectSportFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                            .replace(R.id.fragmentContainerView, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else mFragmentContainerView.setVisibility(View.GONE);
                 break;
             case R.id.menu_sport:
                 if (mFragmentContainerView.getVisibility() == View.GONE) {

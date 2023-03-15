@@ -77,10 +77,16 @@ public class SelectSportFragment extends Fragment {
                 }
 
                 String sport = (String) mListView.getItemAtPosition(position);
-
+                String username;
+                try {
+                    username = getActivity().getIntent().getExtras().getString("com.example.sports_app.username");
+                } catch (Exception e) {
+                    username = "";
+                }
                 Intent j = new Intent(getActivity(), SportActivity.class);
                 j.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 j.putExtra("com.example.sports_app.sport_name", sport);
+                j.putExtra("com.example.sports_app.username", username);
                 startActivity(j);
             }
         });

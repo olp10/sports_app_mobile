@@ -7,6 +7,20 @@
     <ListView
         android:id="@+id/list_of_threads"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+    </ListView>
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/fragmentContainerView"/>
+    <Button
+        android:id="@+id/new_thread_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Thread"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"/>
 
 </FrameLayout>
