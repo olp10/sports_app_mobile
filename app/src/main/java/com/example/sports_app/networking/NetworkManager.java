@@ -110,7 +110,6 @@ public class NetworkManager {
                 Type arrayListType = new TypeToken<ArrayList<Thread>>() {
                 }.getType();
                 ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
-                System.out.println(threads);
                 callback.onSuccess(threads);
             }
         }, error -> callback.onFailure(error.toString()));
@@ -287,17 +286,19 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
-
-    // TODO: Þetta virkar, er að stússast í öðru
-    /*
-    public void login(String username, String password, final NetworkCallback<String> callback) {
+    public void createUser(String username, String password, final NetworkCallback<User> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.POST, BASE_URL + "/login", response ->
-                callback.onSuccess(response), error ->
-                callback.onFailure(error.toString())) {
+                Request.Method.POST, BASE_URL + "/register", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                User user = gson.fromJson(response, User.class);
+                callback.onSuccess(user);
+            }
+        }, error -> callback.onFailure(error.toString())) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
+                Map<String, String> params = new HashMap<String, String>();
                 params.put("username", username);
                 params.put("password", password);
                 return params;
@@ -306,7 +307,26 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
-     */
+
+    public void checkIfUsernameTaken(String username, final NetworkCallback<Boolean> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, BASE_URL + "/checkUsername", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Boolean isTaken = gson.fromJson(response, Boolean.class);
+                callback.onSuccess(isTaken);
+            }
+        }, error -> callback.onFailure(error.toString())) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
 
     // Líklega ekki þörf fyrir þetta lengur en gæti mögulega komið að notum í öðru samhengi?
 //    private Gson getLocalDateTimeAdapter() {

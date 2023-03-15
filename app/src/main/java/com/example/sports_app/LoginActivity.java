@@ -4,16 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ActionMenuView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
+import com.example.sports_app.fragments.SignupFragment;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
@@ -33,6 +36,7 @@ public class LoginActivity extends Activity {
     ThreadService threadService;
 
     private List<Thread> mThreadBank;
+    private FragmentContainerView mSignupFragmentContainerView;
 
     /**
      * Instantiate all UI variables to keep onCreate less crowded
@@ -50,7 +54,7 @@ public class LoginActivity extends Activity {
         mLoginButton = (Button) findViewById(R.id.login_button);
         mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
-
+        mSignupFragmentContainerView = (FragmentContainerView) findViewById(R.id.sign_up_fragment_container_view);
         createLoginButton();
     }
 
@@ -64,13 +68,19 @@ public class LoginActivity extends Activity {
 
         // Listener fyrir "Stofna nýjan aðgang" hlekk á login skjá
         mNewAccountLink.setOnClickListener(v -> {
-            // TODO búa til signup layout/fragment og láta þetta fara þangað
-            Toast t = new Toast(getApplicationContext());
-            t.setDuration(Toast.LENGTH_SHORT);
-            t.setText("Nýr aðgangur");
-            t.show();
+            if (mSignupFragmentContainerView.getVisibility() == View.GONE) {
+                mSignupFragmentContainerView.setVisibility(View.VISIBLE);
+                Fragment fragment = new SignupFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.sign_up_fragment_container_view, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                mSignupFragmentContainerView.setVisibility(View.GONE);
+            }
         });
     }
+
 
     public void createLoginButton() {
         // Login virkar á móti bakenda
