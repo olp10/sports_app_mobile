@@ -3,8 +3,6 @@ package com.example.sports_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ActionMenuView;
 import android.widget.Button;
@@ -12,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
@@ -20,10 +18,9 @@ import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
     private final String TAG = "LoginActivity";
     ActionMenuView mActionMenuView;
     NetworkManager mNetworkManager;
@@ -52,7 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordTextField = (EditText) findViewById(R.id.login_password);
         mLoginButton = (Button) findViewById(R.id.login_button);
         mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
+        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
+        createLoginButton();
     }
 
     @Override
@@ -60,9 +59,8 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         InstantiateUIElements();
-        createLoginButton();
+
 
         // Listener fyrir "Stofna nýjan aðgang" hlekk á login skjá
         mNewAccountLink.setOnClickListener(v -> {
@@ -90,6 +88,8 @@ public class LoginActivity extends AppCompatActivity {
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         if (user.ismIsAdmin()) {
                             i.putExtra("com.example.sports_app.isAdmin", true);
+                        } else {
+                            i.putExtra("com.example.sports_app.isAdmin", false);
                         }
                         i.putExtra("com.example.sports_app.loggedIn", true);
                         i.putExtra("com.example.sports_app.password", user.getmUserPassword());
@@ -108,22 +108,5 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_actionview, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_home:
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

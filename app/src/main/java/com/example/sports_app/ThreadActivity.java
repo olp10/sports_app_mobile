@@ -132,8 +132,17 @@ public class ThreadActivity extends AppCompatActivity {
         mThreadHeader.setText(mThread.getHeader());
         mThreadBody.setText(mThread.getBody());
 
+        // Athuga hvort user sé loggaður inn/admin og senda inn í commentlistadapter til að gefa
+        // sýna admin takka/actions.
+        boolean isAdmin;
+        try {
+            isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
+        } catch (Exception e) {
+            isAdmin = false;
+        }
+
         // Smíða layout element fyrir comments
-        sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments);
+        sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);
         mCommentList = (ListView) findViewById(R.id.commentList);
         mCommentList.setAdapter(sCommentListAdapter);
     }

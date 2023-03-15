@@ -30,11 +30,13 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
     private ArrayList<Comment> mComments;
     Context mContext;
     private int lastPosition = -1;
+    boolean isAdmin;
 
-    public CommentListAdapter(@NonNull Context context, @NonNull ArrayList<Comment> comments) {
+    public CommentListAdapter(@NonNull Context context, @NonNull ArrayList<Comment> comments, boolean isAdmin) {
         super(context, R.layout.comment_list_row_item, comments);
         this.mComments = comments;
         this.mContext = context;
+        this.isAdmin = isAdmin;
     }
 
     private static class ViewHolder {
@@ -62,6 +64,9 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
             viewHolder.txtDate = (TextView) convertView.findViewById(R.id.comment_date);
             viewHolder.txtBody = (TextView) convertView.findViewById(R.id.comment_body);
             viewHolder.mBtnDeleteComment = (Button) convertView.findViewById(R.id.button_delete_comment);
+            if (!isAdmin) {
+                viewHolder.mBtnDeleteComment.setVisibility(View.GONE);
+            }
             viewHolder.mBtnDeleteComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

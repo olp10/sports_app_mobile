@@ -49,9 +49,6 @@ public class SelectSportFragment extends Fragment {
             @Override
             public void onSuccess(ArrayList<String> result) {
                 ArrayList<String> sports = result;
-                for(String s : sports) {
-                    System.out.println(s);
-                }
                 sSportListAdapter = new SportListAdapter(sports, getActivity());
                 mListView.setAdapter(sSportListAdapter);
                 sSportListAdapter = new SportListAdapter(sports, getActivity().getApplicationContext());
@@ -81,7 +78,7 @@ public class SelectSportFragment extends Fragment {
                         loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    loggedIn = false;
                 }
 
                 String sport = (String) mListView.getItemAtPosition(position);
