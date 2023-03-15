@@ -63,9 +63,11 @@ public class ThreadsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long threadToOpenId = mThreads.get(i).getId();
+                boolean loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
                 String sport = mThreads.get(i).getSport();
                 System.out.println(sport);
                 Intent intent = ThreadActivity.newIntent(getActivity(), threadToOpenId);
+                intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 startActivity(intent);
             }
         });

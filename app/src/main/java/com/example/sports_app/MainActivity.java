@@ -2,70 +2,57 @@ package com.example.sports_app;
 
 import static java.lang.Thread.sleep;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
 import androidx.fragment.app.FragmentContainerView;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
-import com.example.sports_app.fragments.SelectSportFragment;
-import com.example.sports_app.networking.LoginManagement;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
     // Breytur fyrir aðalvalmynd //
-    private ActionMenuView mActionMenuView;
-    private MenuItem mMenuItemLogin;
-    private MenuItem mMenuItemLogout;
-    private MenuItem mMenuItemSport;
+
     // ------------------------ //
     private static final int REQUEST_THREAD_OPEN = 0;
     private ArrayList<Thread> threads;
     ListView mThreadList;
     private static ThreadListAdapter sThreadListAdapter;
     private ThreadService mThreadService;
-    private FragmentContainerView mFragmentContainerView;
+    private boolean isAdmin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mThreadList = (ListView) findViewById(R.id.threadList);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
+        try {
+            isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
+        } catch (Exception e) {
+            isAdmin = false;
+        }
 
+        mThreadList = (ListView) findViewById(R.id.threadList);
         // TODO: Sækja og geyma þræði í ThreadService. EÐA: Geyma hér og vinna með þá í ThreadService?
         getAllThreads();
 
@@ -80,9 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     loggedIn = false;
                 }
-                System.err.println(loggedIn);
+
+
+
                 Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
                 intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
+                intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
@@ -106,90 +96,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Threadservice", "Failed to get threads dvia REST");
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_actionview, menu);
-        mMenuItemLogin = menu.findItem(R.id.menu_login);
-        mMenuItemLogout = menu.findItem(R.id.menu_logout);
-        mMenuItemSport = menu.findItem(R.id.menu_sport);
-
-        try {
-            if (getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
-                mMenuItemLogin.setVisible(false);
-                mMenuItemLogout.setVisible(true);
-            } else {
-                mMenuItemLogin.setVisible(true);
-                mMenuItemLogout.setVisible(false);
-            }
-        } catch (Exception e) {
-            Log.d(TAG, "onCreateOptionsMenu: " + e.toString());
-        }
-        //mActionMenuView = (ActionMenuView) findViewById(R.id.toolbar_bottom);
-        //mActionMenuView.setBackgroundColor(304032);
-        return true;
-    }
-
-
-    // TODO: Spurnig ef header er gerður að fragmenti, þá þarf ekki að implementa þetta
-    // TODO: í öllum activities.
-    public void logout() {
-        if (getIntent().getExtras().getString("com.example.sports_app.username") != null &&
-                getIntent().getExtras().getString("com.example.sports_app.password") != null &&
-                getIntent().getExtras().getString("com.example.sports_app.username") != "" &&
-                getIntent().getExtras().getString("com.example.sports_app.password") != "") {
-
-            NetworkManager sNetworkManager = NetworkManager.getInstance(this);
-            String username = getIntent().getExtras().getString("com.example.sports_app.username");
-            String password = getIntent().getExtras().getString("com.example.sports_app.password");
-            sNetworkManager.logout(username, password, new NetworkCallback<String>() {
-                @Override
-                public void onSuccess(String result) {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    intent.putExtra("com.example.sports_app.loggedIn", false);
-                    intent.putExtra("com.example.sports_app.username", "");
-                    intent.putExtra("com.example.sports_app.password", "");
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(String errorString) {
-                    Log.e("Threadservice", "Failed to logout via REST");
-                }
-            });
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_login:
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                break;
-            case R.id.menu_logout:
-                Intent i = new Intent(MainActivity.this, MainActivity.class);
-                LoginManagement loginManagement = LoginManagement.getInstance(MainActivity.this);
-                logout();
-                i.putExtra("com.example.sports_app.loggedIn", false);
-                startActivity(i);
-                break;
-            case R.id.menu_sport:
-                if (mFragmentContainerView.getVisibility() == View.GONE) {
-                    mFragmentContainerView.setVisibility(View.VISIBLE);
-                    Fragment fragment = new SelectSportFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                            .replace(R.id.fragmentContainerView, fragment)
-                            .addToBackStack(null)
-                            .commit();
-                } else mFragmentContainerView.setVisibility(View.GONE);
-
-                notifyClickedSport(); // TODO: Eyða þessu - bara til að prufa notifications
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     // Þetta er bara til að prufa að búa til notification

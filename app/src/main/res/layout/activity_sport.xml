@@ -19,6 +19,13 @@
         app:layout_constraintTop_toTopOf="parent">
     </com.google.android.material.tabs.TabLayout>
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.sports_app.fragments.ThreadsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.fragment.app.FragmentContainerView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +33,7 @@
         android:orientation="vertical">
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainerView"
+            android:id="@+id/tabsFragmentContainerView"
             android:name="com.example.sports_app.fragments.ThreadsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
