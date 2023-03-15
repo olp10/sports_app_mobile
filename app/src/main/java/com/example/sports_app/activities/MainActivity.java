@@ -49,6 +49,12 @@ public class MainActivity extends Activity {
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
         try {
+            System.out.println("Mod: " + getIntent().getExtras().getBoolean("com.example.sports_app.isModerator"));
+        } catch (Exception e) {
+            System.out.println("Catch - Mod: " + false);
+        }
+
+        try {
             isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
         } catch (Exception e) {
             isAdmin = false;

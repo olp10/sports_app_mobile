@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.R;
 import com.example.sports_app.fragments.SelectSportFragment;
+import com.example.sports_app.fragments.UserSettingsFragment;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 
@@ -123,9 +124,9 @@ public abstract class Activity extends AppCompatActivity {
             case R.id.menu_settings:
                 if (mFragmentContainerView.getVisibility() == View.GONE) {
                     mFragmentContainerView.setVisibility(View.VISIBLE);
-                    Fragment fragment = new SelectSportFragment();
+                    Fragment fragment = new UserSettingsFragment();
                     getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_in, R.anim.slide_out)
                             .replace(R.id.fragmentContainerView, fragment)
                             .addToBackStack(null)
                             .commit();

@@ -9,6 +9,21 @@ public class User {
     @SerializedName("userid")
     private Long mId;
 
+    @SerializedName("is_moderator")
+    private boolean isModerator;
+
+    public boolean isModerator() {
+        return isModerator;
+    }
+
+    public void setModerator(boolean moderator) {
+        isModerator = moderator;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
     public Long getmId() {
         return mId;
     }
