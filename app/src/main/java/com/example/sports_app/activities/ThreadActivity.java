@@ -49,6 +49,10 @@ public class ThreadActivity extends AppCompatActivity {
         mThreadHeader = (TextView) findViewById(R.id.thread_head);
         mThreadBody = (TextView) findViewById(R.id.thread_body);
 
+        addCommentSection();
+    }
+
+    public void addCommentSection() {
         // TODO: User þarf að vera logged til að commenta!
         mNewCommentText = (EditText) findViewById(R.id.newComment_text);
         mNewCommentButton = (Button) findViewById(R.id.newComment_button);
@@ -78,7 +82,8 @@ public class ThreadActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String result) {
                         Log.d(TAG, result);
-                        mNewCommentText.setText("");
+                        finish();
+                        startActivity(getIntent());
                     }
 
                     @Override

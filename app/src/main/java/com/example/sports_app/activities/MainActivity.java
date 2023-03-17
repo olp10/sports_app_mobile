@@ -59,26 +59,6 @@ public class MainActivity extends Activity {
             handler.postDelayed(this, 10000);
         }
     };
-    public void getToken() {
-        FirebaseApp.initializeApp(this);
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-                        String msg = token;
-                        Log.d(TAG, msg);
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
 
     @Override
@@ -88,8 +68,6 @@ public class MainActivity extends Activity {
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
         handler.post(runnableCode);
-
-        getToken();
         // Breytur fyrir aðalvalmynd //
         try {
             System.out.println("Mod: " + getIntent().getExtras().getBoolean("com.example.sports_app.isModerator"));

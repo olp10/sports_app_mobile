@@ -6,29 +6,15 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sports_app.entities.Club;
-import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +37,7 @@ public class NetworkManager {
 
     private static NetworkManager mInstance;
     private static RequestQueue mQueue;
-    private Context mContext;
+    private final Context mContext;
 
     public static synchronized NetworkManager getInstance(Context context) {
         if (mInstance == null) {
@@ -74,17 +60,13 @@ public class NetworkManager {
 
     public void deleteComment(Long id, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.DELETE, BASE_URL + "/comments/"+id+"/delete", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                callback.onSuccess(response);
-            }
-        }, error -> callback.onFailure(error.toString())){
+                Request.Method.DELETE, BASE_URL + "/comments/"+id+"/delete", callback::onSuccess, error -> callback.onFailure(error.toString())){
             @Override
             protected Map<String,String> getParams() {
-                Map<String,String> params = new HashMap<String,String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("id", id.toString());
                 System.out.println("Params: " + params.get("commentId"));
+                Log.d(TAG, "getParams: " + params.get("commentId"));
                 return params;
             }
         };
@@ -93,94 +75,74 @@ public class NetworkManager {
 
     public void getAllSports(final NetworkCallback<ArrayList<String>> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.GET, BASE_URL + "/sports", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Type arrayListType = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                ArrayList<String> sports = gson.fromJson(response, arrayListType);
-                System.out.println(sports);
-                callback.onSuccess(sports);
-            }
-        }, error -> callback.onFailure(error.toString()));
+                Request.Method.GET, BASE_URL + "/sports", response -> {
+                    Gson gson = new Gson();
+                    Type arrayListType = new TypeToken<ArrayList<String>>() {
+                    }.getType();
+                    ArrayList<String> sports = gson.fromJson(response, arrayListType);
+                    System.out.println(sports);
+                    callback.onSuccess(sports);
+                }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
     public void getAllTheThreads(final NetworkCallback<ArrayList<Thread>> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.GET, BASE_URL + "/allThreads", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Type arrayListType = new TypeToken<ArrayList<Thread>>() {
-                }.getType();
-                ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
-                for (Thread t : threads) {
-                    System.out.println("Username: " + t.getUsername());
-                }
-                callback.onSuccess(threads);
-            }
-        }, error -> callback.onFailure(error.toString()));
+                Request.Method.GET, BASE_URL + "/allThreads", response -> {
+                    Gson gson = new Gson();
+                    Type arrayListType = new TypeToken<ArrayList<Thread>>() {
+                    }.getType();
+                    ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
+                    for (Thread t : threads) {
+                        System.out.println("Username: " + t.getUsername());
+                    }
+                    callback.onSuccess(threads);
+                }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
     public void getAllEventsForSport(String sport, final NetworkCallback<ArrayList<Event>> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.GET, BASE_URL + "/home/" + sport + "/events", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Type arrayListType = new TypeToken<ArrayList<Event>>() {
-                }.getType();
-                ArrayList<Event> events = gson.fromJson(response, arrayListType);
-                callback.onSuccess(events);
-            }
-        }, error -> callback.onFailure(error.toString()));
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/events", response -> {
+                    Gson gson = new Gson();
+                    Type arrayListType = new TypeToken<ArrayList<Event>>() {
+                    }.getType();
+                    ArrayList<Event> events = gson.fromJson(response, arrayListType);
+                    callback.onSuccess(events);
+                }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
     public void getAllClubsForSport(String sport, final NetworkCallback<ArrayList<Club>> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.GET, BASE_URL + "/home/" + sport + "/clubs", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Type arrayListType = new TypeToken<ArrayList<Club>>() {
-                }.getType();
-                ArrayList<Club> clubs = gson.fromJson(response, arrayListType);
-                callback.onSuccess(clubs);
-            }
-        }, error -> callback.onFailure(error.toString()));
+                Request.Method.GET, BASE_URL + "/home/" + sport + "/clubs", response -> {
+                    Gson gson = new Gson();
+                    Type arrayListType = new TypeToken<ArrayList<Club>>() {
+                    }.getType();
+                    ArrayList<Club> clubs = gson.fromJson(response, arrayListType);
+                    callback.onSuccess(clubs);
+                }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
     public void getAllThreadsForSport(String sport, final NetworkCallback<ArrayList<Thread>> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.GET, BASE_URL + "/home/" + sport, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Type arrayListType = new TypeToken<ArrayList<Thread>>() {
-                }.getType();
-                ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
-                callback.onSuccess(threads);
-            }
-        }, error -> callback.onFailure(error.toString()));
+                Request.Method.GET, BASE_URL + "/home/" + sport, response -> {
+                    Gson gson = new Gson();
+                    Type arrayListType = new TypeToken<ArrayList<Thread>>() {
+                    }.getType();
+                    ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
+                    callback.onSuccess(threads);
+                }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
     public void saveThread(Thread thread, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.POST, BASE_URL + "/saveThread", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                callback.onSuccess(response);
-            }
-        }, error -> callback.onFailure(error.toString())){
+                Request.Method.POST, BASE_URL + "/saveThread", callback::onSuccess, error -> callback.onFailure(error.toString())){
             @Override
             protected Map<String,String> getParams() {
-                Map<String,String> params = new HashMap<String,String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("title", thread.getHeader());
                 params.put("body", thread.getBody());
                 params.put("sport", thread.getSport());
@@ -199,14 +161,11 @@ public class NetworkManager {
                 .build().toString();
 
         StringRequest request = new StringRequest(
-                Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Thread thread = gson.fromJson(response, Thread.class);
-                callback.onSuccess(thread);
-            }
-        }, error -> callback.onFailure(error.toString()));
+                Request.Method.GET, url, response -> {
+                    Gson gson = new Gson();
+                    Thread thread = gson.fromJson(response, Thread.class);
+                    callback.onSuccess(thread);
+                }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
@@ -218,14 +177,11 @@ public class NetworkManager {
                 .build().toString();
 
         StringRequest request = new StringRequest(
-                Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Event event = gson.fromJson(response, Event.class);
-                callback.onSuccess(event);
-            }
-        }, error -> callback.onFailure(error.toString()));
+                Request.Method.GET, url, response -> {
+                    Gson gson = new Gson();
+                    Event event = gson.fromJson(response, Event.class);
+                    callback.onSuccess(event);
+                }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
@@ -237,15 +193,10 @@ public class NetworkManager {
                 .build().toString();
 
         StringRequest request = new StringRequest(
-                Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                callback.onSuccess(response);
-            }
-        }, error -> callback.onFailure(error.toString())){
+                Request.Method.POST, url, callback::onSuccess, error -> callback.onFailure(error.toString())){
             @Override
             protected Map<String,String> getParams() {
-                Map<String,String> params = new HashMap<String,String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("userId", userId.toString());
 
                 return params;
@@ -257,15 +208,10 @@ public class NetworkManager {
     public void postNewComment(
             Long userId, String commentBody, Long threadId, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.POST, BASE_URL + "/newComment", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                callback.onSuccess(response);
-            }
-        }, error -> callback.onFailure(error.toString())){
+                Request.Method.POST, BASE_URL + "/newComment", callback::onSuccess, error -> callback.onFailure(error.toString())){
             @Override
             protected Map<String,String> getParams() {
-                Map<String,String> params = new HashMap<String,String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("userId", userId.toString());
                 params.put("commentBody", commentBody);
                 params.put("threadId", threadId.toString());
@@ -278,15 +224,10 @@ public class NetworkManager {
 
     public void logout(String username, String password, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.POST, BASE_URL + "/logout", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                callback.onSuccess(response);
-            }
-        }, error -> callback.onFailure(error.toString())) {
+                Request.Method.POST, BASE_URL + "/logout", callback::onSuccess, error -> callback.onFailure(error.toString())) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("password", password);
                 params.put("username", username);
                 return params;
@@ -297,17 +238,14 @@ public class NetworkManager {
 
     public void login(String username, String password, final NetworkCallback<User> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.POST, BASE_URL + "/login", new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
+                Request.Method.POST, BASE_URL + "/login", response -> {
                     Gson gson = new Gson();
                     User user = gson.fromJson(response, User.class);
                     callback.onSuccess(user);
-                }
-            }, error -> callback.onFailure(error.toString())) {
+                }, error -> callback.onFailure(error.toString())) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("username", username);
                 params.put("password", password);
                 return params;
@@ -318,17 +256,14 @@ public class NetworkManager {
 
     public void createUser(String username, String password, final NetworkCallback<User> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.POST, BASE_URL + "/register", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                User user = gson.fromJson(response, User.class);
-                callback.onSuccess(user);
-            }
-        }, error -> callback.onFailure(error.toString())) {
+                Request.Method.POST, BASE_URL + "/register", response -> {
+                    Gson gson = new Gson();
+                    User user = gson.fromJson(response, User.class);
+                    callback.onSuccess(user);
+                }, error -> callback.onFailure(error.toString())) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("username", username);
                 params.put("password", password);
                 return params;
@@ -340,17 +275,14 @@ public class NetworkManager {
 
     public void checkIfUsernameTaken(String username, final NetworkCallback<Boolean> callback) {
         StringRequest request = new StringRequest(
-                Request.Method.POST, BASE_URL + "/checkUsername", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Boolean isTaken = gson.fromJson(response, Boolean.class);
-                callback.onSuccess(isTaken);
-            }
-        }, error -> callback.onFailure(error.toString())) {
+                Request.Method.POST, BASE_URL + "/checkUsername", response -> {
+                    Gson gson = new Gson();
+                    Boolean isTaken = gson.fromJson(response, Boolean.class);
+                    callback.onSuccess(isTaken);
+                }, error -> callback.onFailure(error.toString())) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("username", username);
                 return params;
             }
