@@ -1,10 +1,14 @@
 package com.example.sports_app.activities;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ActionMenuView;
 import android.widget.ListView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
@@ -36,8 +40,13 @@ public class SportActivity extends Activity {
     private static final String TAG = "SportActivity";
     private String currentUsername;
 
+    FragmentManager fragmentManager;
+
     public void InstantiateUIElements() {
 
+        fragmentManager = getSupportFragmentManager();
+        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
+        mFragmentContainerView.setVisibility(ViewGroup.GONE);
 
         // Adding tabs (Threads/Events/Clubs) for sport
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -52,12 +61,18 @@ public class SportActivity extends Activity {
         tabLayout.addTab(eventsTab);
         tabLayout.addTab(clubsTab);
         currentUsername = getIntent().getExtras().getString(EXTRA_USERNAME);
-        System.out.println("Current user: " + currentUsername);
+
+
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
+                .replace(R.id.tabsFragmentContainerView, ThreadsFragment.class, null)
+                .setReorderingAllowed(true)
+                .addToBackStack("name")
+                .commit();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
                 switch (tab.getPosition()) {
                     case 0:
                         System.out.println("Clicked threads tab");
@@ -103,7 +118,7 @@ public class SportActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sport);
-        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
+
         InstantiateUIElements();
     }
 }

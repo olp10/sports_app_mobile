@@ -18,6 +18,8 @@ import com.example.sports_app.fragments.UserSettingsFragment;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 
+import java.util.Objects;
+
 
 /**
  * Superclass that all Activities (the ones that want to have the menu bar on top) extend from.
@@ -28,11 +30,7 @@ public abstract class Activity extends AppCompatActivity {
     private static final String EXTRA_PASSWORD = "com.example.sports_app.password";
     private static final String EXTRA_LOGGED_IN = "com.example.sports_app.loggedIn";
     private static final String TAG = "Activity";
-    private MenuItem mMenuItemLogin;
-    private MenuItem mMenuItemLogout;
-    private MenuItem mMenuItemSport;
     protected FragmentContainerView mFragmentContainerView;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -41,9 +39,8 @@ public abstract class Activity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_actionview, menu);
-        mMenuItemLogin = menu.findItem(R.id.menu_login);
-        mMenuItemLogout = menu.findItem(R.id.menu_logout);
-        mMenuItemSport = menu.findItem(R.id.menu_sport);
+        MenuItem mMenuItemLogin = menu.findItem(R.id.menu_login);
+        MenuItem mMenuItemLogout = menu.findItem(R.id.menu_logout);
 
         try {
             if (getIntent().getExtras().getBoolean(EXTRA_LOGGED_IN)) {
@@ -54,15 +51,15 @@ public abstract class Activity extends AppCompatActivity {
                 mMenuItemLogout.setVisible(false);
             }
         } catch (Exception e) {
-            Log.d(TAG, "onCreateOptionsMenu: " + e.toString());
+            Log.d(TAG, "onCreateOptionsMenu: " + e.getMessage());
         }
         return true;
     }
     public void logout() {
         if (getIntent().getExtras().getString(EXTRA_USERNAME) != null &&
                 getIntent().getExtras().getString(EXTRA_PASSWORD) != null &&
-                getIntent().getExtras().getString(EXTRA_USERNAME) != "" &&
-                getIntent().getExtras().getString(EXTRA_PASSWORD) != "") {
+                !Objects.equals(getIntent().getExtras().getString(EXTRA_USERNAME), "") &&
+                !Objects.equals(getIntent().getExtras().getString(EXTRA_PASSWORD), "")) {
 
             NetworkManager sNetworkManager = NetworkManager.getInstance(this);
             String username = getIntent().getExtras().getString(EXTRA_USERNAME);
@@ -94,7 +91,7 @@ public abstract class Activity extends AppCompatActivity {
         } catch (Exception e) {
             loggedIn = false;
         }
-        String username = "";
+        String username;
         try {
             username = getIntent().getExtras().getString(EXTRA_USERNAME);
         } catch (Exception e) {
@@ -126,7 +123,6 @@ public abstract class Activity extends AppCompatActivity {
                     mFragmentContainerView.setVisibility(View.VISIBLE);
                     Fragment fragment = new UserSettingsFragment();
                     getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_in, R.anim.slide_out)
                             .replace(R.id.fragmentContainerView, fragment)
                             .addToBackStack(null)
                             .commit();
@@ -137,7 +133,6 @@ public abstract class Activity extends AppCompatActivity {
                     mFragmentContainerView.setVisibility(View.VISIBLE);
                     Fragment fragment = new SelectSportFragment();
                     getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                             .replace(R.id.fragmentContainerView, fragment)
                             .addToBackStack(null)
                             .commit();

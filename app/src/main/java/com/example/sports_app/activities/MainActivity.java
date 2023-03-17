@@ -2,24 +2,28 @@ package com.example.sports_app.activities;
 
 import static java.lang.Thread.sleep;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentContainerView;
-
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.sports_app.R;
 import com.example.sports_app.adapters.ThreadListAdapter;
@@ -27,6 +31,10 @@ import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -43,6 +51,15 @@ public class MainActivity extends Activity {
     private ThreadService mThreadService;
     private boolean isAdmin;
 
+    Handler handler = new Handler();
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+
+            handler.postDelayed(this, 10000);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +67,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
+        handler.post(runnableCode);
+        // Breytur fyrir aðalvalmynd //
         try {
             System.out.println("Mod: " + getIntent().getExtras().getBoolean("com.example.sports_app.isModerator"));
         } catch (Exception e) {
@@ -63,7 +82,7 @@ public class MainActivity extends Activity {
         }
 
         mThreadList = (ListView) findViewById(R.id.threadList);
-        // TODO: Sækja og geyma þræði í ThreadService. EÐA: Geyma hér og vinna með þá í ThreadService?
+
         getAllThreads();
 
         mThreadList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,8 +96,6 @@ public class MainActivity extends Activity {
                 } catch (Exception e) {
                     loggedIn = false;
                 }
-
-
 
                 Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
                 intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
@@ -143,11 +160,33 @@ public class MainActivity extends Activity {
         }
     }
 
-    private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            return true;
-        } else {
-            return false;
+    // Declare the launcher at the top of your Activity/Fragment:
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                } else {
+                    // TODO: Inform user that that your app will not show notifications.
+                }
+            });
+
+    private void askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // FCM SDK (and your app) can post notifications.
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                // TODO: display an educational UI explaining to the user the features that will be enabled
+                //       by them granting the POST_NOTIFICATION permission. This UI should provide the user
+                //       "OK" and "No thanks" buttons. If the user selects "OK," directly request the permission.
+                //       If the user selects "No thanks," allow the user to continue without notifications.
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
         }
     }
+
+
 }

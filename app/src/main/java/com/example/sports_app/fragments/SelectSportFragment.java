@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.R;
 import com.example.sports_app.activities.SportActivity;
@@ -63,32 +64,29 @@ public class SelectSportFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_select_sport, container, false);
         mListView = (ListView) rootView.findViewById(R.id.list_of_sports);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                boolean loggedIn = false;
+        mListView.setOnItemClickListener((adapterView, view, position, l) -> {
+            boolean loggedIn = false;
 
-                try {
-                    if (getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
-                        loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
-                    }
-                } catch (Exception e) {
-                    loggedIn = false;
+            try {
+                if (getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn")) {
+                    loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
                 }
-
-                String sport = (String) mListView.getItemAtPosition(position);
-                String username;
-                try {
-                    username = getActivity().getIntent().getExtras().getString("com.example.sports_app.username");
-                } catch (Exception e) {
-                    username = "";
-                }
-                Intent j = new Intent(getActivity(), SportActivity.class);
-                j.putExtra("com.example.sports_app.loggedIn", loggedIn);
-                j.putExtra("com.example.sports_app.sport_name", sport);
-                j.putExtra("com.example.sports_app.username", username);
-                startActivity(j);
+            } catch (Exception e) {
+                loggedIn = false;
             }
+
+            String sport = (String) mListView.getItemAtPosition(position);
+            String username;
+            try {
+                username = getActivity().getIntent().getExtras().getString("com.example.sports_app.username");
+            } catch (Exception e) {
+                username = "";
+            }
+            Intent j = new Intent(getActivity(), SportActivity.class);
+            j.putExtra("com.example.sports_app.loggedIn", loggedIn);
+            j.putExtra("com.example.sports_app.sport_name", sport);
+            j.putExtra("com.example.sports_app.username", username);
+            startActivity(j);
         });
 
         return rootView;
