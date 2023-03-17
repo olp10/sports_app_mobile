@@ -3,7 +3,6 @@ package com.example.sports_app.entities;
 import com.google.gson.annotations.SerializedName;
 
 public class Club {
-
     @SerializedName("id")
     private long mId;
     @SerializedName("clubName")

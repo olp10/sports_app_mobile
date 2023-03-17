@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.sports_app.activities.EventActivity;
@@ -33,6 +36,8 @@ public class EventsFragment extends Fragment {
     private static EventListAdapter sEventListAdapter;
     private ListView mListView;
     private List<Event> mEvents;
+    private Button mNewEventButton;
+    private FragmentContainerView mFragmentContainerView;
 
 
     public EventsFragment() {
@@ -65,7 +70,35 @@ public class EventsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        mFragmentContainerView = (FragmentContainerView) getActivity().findViewById(R.id.fragmentContainerView);
+        mNewEventButton = (Button) view.findViewById(R.id.new_event_button);
+        boolean loggedIn;
+        String username;
+        try {
+            loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+        } catch (Exception e) {
+            loggedIn = false;
+        }
+        if (loggedIn) {
+            mNewEventButton.setVisibility(View.VISIBLE);
+        }
+        mNewEventButton.setOnClickListener(view1 -> {
+            // Intents fyrir createEventFragment: engin?
+            String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
+            getActivity().getIntent().putExtra(EXTRA_SPORT_NAME, sport);
+            mFragmentContainerView.setVisibility(View.VISIBLE);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, NewEventFragment.class, null)
+                    .setReorderingAllowed(true)
+                    .commit();
+        });
     }
 
     private void getAllEventsBySport() {

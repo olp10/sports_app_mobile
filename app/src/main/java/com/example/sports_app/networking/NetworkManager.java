@@ -153,6 +153,22 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void saveEvent(Event event, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, BASE_URL + "/saveEvent", callback::onSuccess, error -> callback.onFailure(error.toString())){
+            @Override
+            protected Map<String,String> getParams() {
+                Map<String,String> params = new HashMap<>();
+                params.put("title", event.getEventName());
+                params.put("description", event.getEventDescription());
+                params.put("sport", event.getSport());
+                params.put("startingDate", event.getEventStartDate());
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
+
     public void getThreadById(Long id, final NetworkCallback<Thread> callback) {
         String url = Uri.parse(BASE_URL)
                 .buildUpon()

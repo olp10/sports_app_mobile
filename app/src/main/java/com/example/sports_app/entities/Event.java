@@ -2,7 +2,6 @@ package com.example.sports_app.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -53,6 +52,10 @@ public class Event {
         return date;
     }
 
+    public void setEventDate(String startingDate) {
+        this.mEventDate = createLocalDateTime(startingDate);
+    }
+
     public long getId() {
         return mId;
     }
@@ -85,11 +88,11 @@ public class Event {
         this.mSport = mSport;
     }
 
-    public String getmEventStartDate() {
+    public String getEventStartDate() {
         return mEventStartDate;
     }
 
-    public void setmEventStartDate(String startDate) {
+    public void setEventStartDate(String startDate) {
         this.mEventStartDate = startDate;
     }
 

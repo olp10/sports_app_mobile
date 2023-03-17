@@ -31,10 +31,10 @@ import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.messaging.FirebaseMessaging;
+//import com.google.android.gms.tasks.OnCompleteListener;
+//import com.google.android.gms.tasks.Task;
+//import com.google.firebase.FirebaseApp;
+//import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
