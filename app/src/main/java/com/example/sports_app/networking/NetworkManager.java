@@ -86,6 +86,52 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void getUserByUsername(String username, final NetworkCallback<User> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/userInfo/"+username, response -> {
+                    Gson gson = new Gson();
+                    Type userType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(response, userType);
+                    callback.onSuccess(user);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void getUserBanned(String username, final NetworkCallback<Boolean> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/userInfo/"+username+"/isBanned", response -> {
+                    Gson gson = new Gson();
+                    Boolean banned = gson.fromJson(response, Boolean.class);
+                    callback.onSuccess(banned);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void banUser(String username, final NetworkCallback<User> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.PUT, BASE_URL + "/banUser/"+username, response -> {
+                    Gson gson = new Gson();
+                    Type userType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(response, userType);
+                    callback.onSuccess(user);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void unbanUser(String username, final NetworkCallback<User> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.PUT, BASE_URL + "/unbanUser/"+username, response -> {
+                    Gson gson = new Gson();
+                    Type userType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(response, userType);
+                    callback.onSuccess(user);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void getAllTheThreads(final NetworkCallback<ArrayList<Thread>> callback) {
         StringRequest request = new StringRequest(
                 Request.Method.GET, BASE_URL + "/allThreads", response -> {

@@ -1,6 +1,7 @@
 package com.example.sports_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +37,8 @@ public class ThreadActivity extends AppCompatActivity {
     TextView mThreadBody;
     EditText mNewCommentText;
     Button mNewCommentButton;
+    boolean loggedIn;
+    boolean isAdmin;
 
     private static final String EXTRA_THREAD_ID = "com.example.sports_app.thread_id";
 
@@ -57,7 +60,7 @@ public class ThreadActivity extends AppCompatActivity {
         mNewCommentText = (EditText) findViewById(R.id.newComment_text);
         mNewCommentButton = (Button) findViewById(R.id.newComment_button);
 
-        boolean loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+        loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
 
         if (!loggedIn) {
             mNewCommentButton.setVisibility(View.GONE);
@@ -136,12 +139,23 @@ public class ThreadActivity extends AppCompatActivity {
 
         // Athuga hvort user sé loggaður inn/admin og senda inn í commentlistadapter til að gefa
         // sýna admin takka/actions.
-        boolean isAdmin;
+
         try {
             isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
         } catch (Exception e) {
             isAdmin = false;
         }
+
+        mThreadCreator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ThreadActivity.this, UserProfileActivity.class);
+                intent.putExtra("com.example.sports_app.userClicked", mThread.getUsername());
+                intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
+                intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
+                startActivity(intent);
+            }
+        });
 
         // Smíða layout element fyrir comments
         sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);

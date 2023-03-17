@@ -22,9 +22,12 @@ import java.util.ArrayList;
  */
 public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnClickListener {
 
+    private final String EXTRA_USERNAME = "com.example.sports_app.username";
+    private final String EXTRA_LOGGED_IN = "com.example.sports_app.loggedIn";
     private ArrayList<Thread> threadList;
     Context mContext;
     private int lastPosition = -1;
+    private boolean isLoggedIn;
 
     // The content of the view to be displayed
     private static class ViewHolder {
@@ -39,6 +42,8 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
         Thread thread = getItem(position);
         ViewHolder viewHolder;
         final View result;
+
+
 
         // Check whether a view object can be reused to improve performance.
         // If not, generate a new view object at this position.
@@ -65,9 +70,16 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
         viewHolder.txtHeader.setText(thread.getHeader());
         viewHolder.txtUsername.setText(thread.getUsername());
         viewHolder.txtHeader.setOnClickListener(this);
+        viewHolder.txtUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: opna fragment frekar en activity fyrir user profile?
+            }
+        });
 
         // TODO: Útfæra localDate, skoða Listener + fullt af öðru sem þarf að skoða hér.
         viewHolder.txtHeader.setTag(position);
+        viewHolder.txtUsername.setTag(position);
         return convertView;
     }
 

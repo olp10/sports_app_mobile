@@ -18,6 +18,7 @@ import com.example.sports_app.networking.NetworkManager;
 public class EventActivity extends AppCompatActivity {
 
     private static final String TAG = "EventActivity";
+    private static final String EXTRA_EVENT_ID = "com.example.sports_app.event_id";
     private Event mEvent;
 
     TextView mEventName;
@@ -25,7 +26,7 @@ public class EventActivity extends AppCompatActivity {
     TextView mEventDescription;
     Button mSubscribeToEvent;
 
-    private static final String EXTRA_EVENT_ID = "com.example.sports_app.event_id";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
