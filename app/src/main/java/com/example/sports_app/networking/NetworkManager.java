@@ -24,6 +24,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -114,6 +116,9 @@ public class NetworkManager {
                 Type arrayListType = new TypeToken<ArrayList<Thread>>() {
                 }.getType();
                 ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
+                for (Thread t : threads) {
+                    System.out.println("Username: " + t.getUsername());
+                }
                 callback.onSuccess(threads);
             }
         }, error -> callback.onFailure(error.toString()));
