@@ -73,11 +73,12 @@ public class User {
         this.mComments = mComments;
     }
 
-    public User(String mUsername, String mUserPassword, boolean isAdmin, boolean isLoggedIn) {
+    public User(String mUsername, String mUserPassword, boolean isAdmin, boolean isLoggedIn, boolean isBanned) {
         this.isLoggedIn = isLoggedIn;
         this.mUsername = mUsername;
         this.mUserPassword = mUserPassword;
         this.mIsAdmin = isAdmin;
+        this.isBanned = isBanned;
     }
 
     @SerializedName("username")
@@ -89,4 +90,15 @@ public class User {
     private List<Comment> mComments;
     @SerializedName("loggedIn")
     private boolean isLoggedIn;
+
+    public boolean isBanned() {
+        return isBanned;
+    }
+
+    public void setBanned(boolean banned) {
+        isBanned = banned;
+    }
+
+    @SerializedName("banned")
+    private boolean isBanned;
 }
