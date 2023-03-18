@@ -2,6 +2,7 @@ package com.example.sports_app.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Thread {
@@ -17,6 +18,17 @@ public class Thread {
     private String mBody;
     @SerializedName("sport")
     private String mSport;
+
+    public String getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(String mDate) {
+        this.mDate = mDate;
+    }
+
+    @SerializedName("date")
+    private String mDate;
 
     private ArrayList<Comment> comments = new ArrayList<Comment>();
 

@@ -40,6 +40,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
+    private static final String EXTRA_USER = "com.example.sports_app.username";
 
     // Breytur fyrir aðalvalmynd //
 
@@ -50,6 +51,8 @@ public class MainActivity extends Activity {
     private static ThreadListAdapter sThreadListAdapter;
     private ThreadService mThreadService;
     private boolean isAdmin;
+
+    private String loggedInUser;
 
     Handler handler = new Handler();
     private Runnable runnableCode = new Runnable() {
@@ -81,6 +84,14 @@ public class MainActivity extends Activity {
             isAdmin = false;
         }
 
+        try {
+            loggedInUser = getIntent().getStringExtra(EXTRA_USER);
+            System.out.println(loggedInUser);
+        } catch (Exception e) {
+            loggedInUser = "";
+            System.out.println("Catch - loggedInUser: " + false);
+        }
+
         mThreadList = (ListView) findViewById(R.id.threadList);
 
         getAllThreads();
@@ -100,6 +111,7 @@ public class MainActivity extends Activity {
                 Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
                 intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
+                intent.putExtra(EXTRA_USER, loggedInUser);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });

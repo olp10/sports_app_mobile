@@ -268,13 +268,13 @@ public class NetworkManager {
     }
 
     public void postNewComment(
-            Long userId, String commentBody, Long threadId, final NetworkCallback<String> callback) {
+            String username, String commentBody, Long threadId, final NetworkCallback<String> callback) {
         StringRequest request = new StringRequest(
                 Request.Method.POST, BASE_URL + "/newComment", callback::onSuccess, error -> callback.onFailure(error.toString())){
             @Override
             protected Map<String,String> getParams() {
                 Map<String,String> params = new HashMap<>();
-                params.put("userId", userId.toString());
+                params.put("username", username);
                 params.put("commentBody", commentBody);
                 params.put("threadId", threadId.toString());
 
