@@ -13,6 +13,7 @@ import com.example.sports_app.R;
 import com.example.sports_app.entities.Thread;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 
 /**
@@ -70,16 +71,17 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
         viewHolder.txtHeader.setText(thread.getHeader());
         viewHolder.txtUsername.setText(thread.getUsername());
         viewHolder.txtHeader.setOnClickListener(this);
-        viewHolder.txtUsername.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: opna fragment frekar en activity fyrir user profile?
-            }
-        });
+
+        // Birta dagsetningu á formi January 01, 2023
+        int monthNo = Integer.parseInt(thread.getmDate().substring(5, 7));
+        String month = new DateFormatSymbols().getMonths()[monthNo - 1];
+        String day = thread.getmDate().substring(8, 10);
+        String year = thread.getmDate().substring(0, 4);
+        String date = month + " " + day + ", " + year;
+        viewHolder.txtDate.setText(date);
 
         // TODO: Útfæra localDate, skoða Listener + fullt af öðru sem þarf að skoða hér.
         viewHolder.txtHeader.setTag(position);
-        viewHolder.txtUsername.setTag(position);
         return convertView;
     }
 

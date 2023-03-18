@@ -1,11 +1,12 @@
 package com.example.sports_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,15 +18,18 @@ import com.example.sports_app.R;
 import com.example.sports_app.adapters.CommentListAdapter;
 import com.example.sports_app.entities.Comment;
 import com.example.sports_app.entities.Thread;
+import com.example.sports_app.entities.User;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
 public class ThreadActivity extends AppCompatActivity {
 
     private static final String TAG = "ThreadActivity";
+    private static final String EXTRA_USER = "com.example.sports_app.username";
     private Thread mThread;
     private ArrayList<Comment> mComments;
     private ThreadService mThreadService;
@@ -35,10 +39,13 @@ public class ThreadActivity extends AppCompatActivity {
     TextView mThreadSport;
     TextView mThreadHeader;
     TextView mThreadBody;
-    EditText mNewCommentText;
+    private String loggedInUser;
     Button mNewCommentButton;
     boolean loggedIn;
     boolean isAdmin;
+    private TextInputLayout mNewCommentTextLayout;
+    EditText mNewCommentText;
+    long userId;
 
     private static final String EXTRA_THREAD_ID = "com.example.sports_app.thread_id";
 
@@ -52,12 +59,17 @@ public class ThreadActivity extends AppCompatActivity {
         mThreadHeader = (TextView) findViewById(R.id.thread_head);
         mThreadBody = (TextView) findViewById(R.id.thread_body);
 
+
+
         addCommentSection();
     }
 
     public void addCommentSection() {
         // TODO: User þarf að vera logged til að commenta!
         mNewCommentText = (EditText) findViewById(R.id.newComment_text);
+        mNewCommentTextLayout = (TextInputLayout) findViewById(R.id.new_comment_input_layout);
+        mNewCommentTextLayout.getEditText().addTextChangedListener(commentTextHandler());
+
         mNewCommentButton = (Button) findViewById(R.id.newComment_button);
 
         loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
@@ -80,7 +92,9 @@ public class ThreadActivity extends AppCompatActivity {
                 String newCommentBody = String.valueOf(mNewCommentText.getText());
 //                newComment newComment = new newComment(fakeUser, newCommentBody, mThread);
                 NetworkManager networkManager = NetworkManager.getInstance(ThreadActivity.this);
-                networkManager.postNewComment(1L, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
+
+                // FIXME: Send username instead of userid
+                networkManager.postNewComment(loggedInUser, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
 
                     @Override
                     public void onSuccess(String result) {
@@ -141,11 +155,18 @@ public class ThreadActivity extends AppCompatActivity {
         // sýna admin takka/actions.
 
         try {
+            loggedInUser = getIntent().getStringExtra(EXTRA_USER);
+            System.out.println("Logged in user: " + loggedInUser);
+        } catch (Exception e) {
+            loggedInUser = "";
+            System.out.println("Catch - loggedInUser: " + false);
+        }
+
+        try {
             isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
         } catch (Exception e) {
             isAdmin = false;
         }
-
         mThreadCreator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,6 +178,8 @@ public class ThreadActivity extends AppCompatActivity {
             }
         });
 
+
+
         // Smíða layout element fyrir comments
         sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);
         mCommentList = (ListView) findViewById(R.id.commentList);
@@ -167,5 +190,26 @@ public class ThreadActivity extends AppCompatActivity {
         Intent i = new Intent(packageContext, ThreadActivity.class);
         i.putExtra(EXTRA_THREAD_ID, threadId);
         return i;
+    }
+
+    private TextWatcher commentTextHandler() {
+        return new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 0) {
+                    mNewCommentTextLayout.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
     }
 }

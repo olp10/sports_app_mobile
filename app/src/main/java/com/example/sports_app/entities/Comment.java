@@ -8,16 +8,63 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 
 public class Comment {
-    @SerializedName("username")
+    @SerializedName("userName")
     private String mUsername;
+
+    public Long getmId() {
+        return mId;
+    }
+
+    public void setmId(Long mId) {
+        this.mId = mId;
+    }
+
+    public String getmTimeCommented() {
+        return mTimeCommented;
+    }
+
+    public void setmTimeCommented(String mTimeCommented) {
+        this.mTimeCommented = mTimeCommented;
+    }
+
+    public String getmComment() {
+        return mComment;
+    }
+
+    public void setmComment(String mComment) {
+        this.mComment = mComment;
+    }
+
+    public Thread getmThread() {
+        return mThread;
+    }
+
+    public void setmThread(Thread mThread) {
+        this.mThread = mThread;
+    }
+
+    public LocalDateTime getmCommentDate() {
+        return mCommentDate;
+    }
+
+    public void setmCommentDate(LocalDateTime mCommentDate) {
+        this.mCommentDate = mCommentDate;
+    }
+
+    public String getmUsername() {
+        return mUsername;
+    }
+
+    public void setmUsername(String mUsername) {
+        this.mUsername = mUsername;
+    }
+
     //@SerializedName("date_commented")
     //private LocalDate mDateCommented;
     //@SerializedName("time_commented")
     //private LocalDate mTimeCommented;
     @SerializedName("id")
     private Long mId;
-    @SerializedName("userName")
-    private String mUser;
     @SerializedName("timeCommented")
     private String mTimeCommented;
     @SerializedName("comment")
@@ -38,7 +85,7 @@ public class Comment {
 
     public Comment(Long Id, String user, String timeCommented, String comment, Thread thread) {
         this.mId = Id;
-        this.mUser = user;
+        this.mUsername = user;
         this.mTimeCommented = timeCommented;
         this.mComment = comment;
         this.mThread = thread;
@@ -77,9 +124,6 @@ public class Comment {
         return mUsername;
     }
 
-    public void setUser(String user) {
-        mUser = user;
-    }
 
 //    public LocalDate getDateCommented() {
 //        return mDateCommented;

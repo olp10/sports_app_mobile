@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.example.sports_app.fragments.SignupFragment;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -42,6 +45,8 @@ public class LoginActivity extends Activity {
     private List<Thread> mThreadBank;
     private FragmentContainerView mSignupFragmentContainerView;
 
+    private TextInputLayout mUsernameLabel;
+
     /**
      * Instantiate all UI variables to keep onCreate less crowded
      */
@@ -60,6 +65,9 @@ public class LoginActivity extends Activity {
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
         mSignupFragmentContainerView = (FragmentContainerView) findViewById(R.id.sign_up_fragment_container_view);
         createLoginButton();
+
+        mUsernameLabel = (TextInputLayout) findViewById(R.id.login_username_input_layout);
+        mUsernameLabel.getEditText().addTextChangedListener(usernameHandler());
     }
 
     @Override
@@ -145,5 +153,28 @@ public class LoginActivity extends Activity {
                 }
             });
         });
+    }
+
+    private TextWatcher usernameHandler() {
+        return new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 0) {
+                    mUsernameLabel.setErrorEnabled(false);
+                }
+                if (charSequence.length() > 15) {
+                    mUsernameLabel.setError("Username too long");
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
     }
 }
