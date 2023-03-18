@@ -117,6 +117,7 @@ public class NewEventFragment extends Fragment {
                             .getExtras()
                             .getString(EXTRA_SPORT_NAME));
                     saveEvent(event);
+                    startActivity(getActivity().getIntent());
                 }
 
             }

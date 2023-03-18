@@ -1,7 +1,6 @@
 package com.example.sports_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -145,7 +144,6 @@ public class ThreadActivity extends AppCompatActivity {
         } catch (Exception e) {
             isAdmin = false;
         }
-
         mThreadCreator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +154,8 @@ public class ThreadActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         // Smíða layout element fyrir comments
         sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);

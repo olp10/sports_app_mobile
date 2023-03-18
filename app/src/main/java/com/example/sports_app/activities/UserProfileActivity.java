@@ -41,7 +41,11 @@ public class UserProfileActivity extends Activity {
         sNetworkManager.getUserByUsername(user, new NetworkCallback<User>() {
             @Override
             public void onSuccess(User result) {
-                txtUsername.setText(result.getmUsername());
+                if (result != null) {
+                    txtUsername.setText(result.getmUsername());
+                } else {
+                    txtUsername.setText("User does not exist");
+                }
             }
 
             @Override

@@ -70,16 +70,9 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
         viewHolder.txtHeader.setText(thread.getHeader());
         viewHolder.txtUsername.setText(thread.getUsername());
         viewHolder.txtHeader.setOnClickListener(this);
-        viewHolder.txtUsername.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: opna fragment frekar en activity fyrir user profile?
-            }
-        });
 
         // TODO: Útfæra localDate, skoða Listener + fullt af öðru sem þarf að skoða hér.
         viewHolder.txtHeader.setTag(position);
-        viewHolder.txtUsername.setTag(position);
         return convertView;
     }
 
