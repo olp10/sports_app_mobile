@@ -30,6 +30,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.List;
 
 public class LoginActivity extends Activity {
+    private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     boolean doubleBackToExitPressedOnce = false;
     private final String TAG = "LoginActivity";
     ActionMenuView mActionMenuView;
@@ -129,9 +130,9 @@ public class LoginActivity extends Activity {
                         t.show();
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         if (user.ismIsAdmin()) {
-                            i.putExtra("com.example.sports_app.isAdmin", true);
+                            i.putExtra(EXTRA_IS_ADMIN, true);
                         } else {
-                            i.putExtra("com.example.sports_app.isAdmin", false);
+                            i.putExtra(EXTRA_IS_ADMIN, false);
                         }
                         i.putExtra("com.example.sports_app.loggedIn", true);
                         i.putExtra("com.example.sports_app.username", user.getmUsername());

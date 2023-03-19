@@ -24,6 +24,7 @@ import com.example.sports_app.networking.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,13 +33,19 @@ import java.util.List;
  */
 public class EventsFragment extends Fragment {
     private static final String EXTRA_SPORT_NAME = "com.example.sports_app.sport_name";
+    private static final String EXTRA_USERNAME = "com.example.sports_app.username";
+    private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private final String TAG = "EventsFragment";
     private static EventListAdapter sEventListAdapter;
     private ListView mListView;
     private List<Event> mEvents;
     private Button mNewEventButton;
     private FragmentContainerView mFragmentContainerView;
-
+    boolean moderatesSport;
+    NetworkManager sNetworkManager;
+    String username;
+    boolean loggedIn;
+    boolean userIsAdmin;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -52,7 +59,16 @@ public class EventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sNetworkManager = NetworkManager.getInstance(getActivity());
         getAllEventsBySport();
+
+        try {
+            userIsAdmin = getActivity().getIntent().getExtras().getBoolean(EXTRA_IS_ADMIN);
+        } catch (Exception e) {
+            userIsAdmin = false;
+        }
+
+
     }
 
     @Override
@@ -78,27 +94,48 @@ public class EventsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mFragmentContainerView = (FragmentContainerView) getActivity().findViewById(R.id.fragmentContainerView);
         mNewEventButton = (Button) view.findViewById(R.id.new_event_button);
-        boolean loggedIn;
-        String username;
+        String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
+
         try {
             loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
         } catch (Exception e) {
             loggedIn = false;
         }
-        if (loggedIn) {
-            mNewEventButton.setVisibility(View.VISIBLE);
+
+        try {
+            username = getActivity().getIntent().getStringExtra(EXTRA_USERNAME);
+            System.out.println("Username in EventsFragment: " + username);
+        } catch (Exception e) {
+            username = "";
+            System.out.println("Error: Username in EventsFragment: " + username);
         }
-        mNewEventButton.setOnClickListener(view1 -> {
-            // Intents fyrir createEventFragment: engin?
-            String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
-            getActivity().getIntent().putExtra(EXTRA_SPORT_NAME, sport);
-            mFragmentContainerView.setVisibility(View.VISIBLE);
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView, NewEventFragment.class, null)
-                    .setReorderingAllowed(true)
-                    .commit();
-        });
+
+        if (username != null && !username.equals("")) {
+            sNetworkManager.userModeratesSport(sport, username, new NetworkCallback() {
+                @Override
+                public void onSuccess(Object object) {
+                    moderatesSport = (boolean) object;
+                    if (loggedIn && moderatesSport || loggedIn && userIsAdmin) {
+                        mNewEventButton.setVisibility(View.VISIBLE);
+                    }
+                    mNewEventButton.setOnClickListener(view1 -> {
+                        // Intents fyrir createEventFragment: engin?
+                        getActivity().getIntent().putExtra(EXTRA_SPORT_NAME, sport);
+                        mFragmentContainerView.setVisibility(View.VISIBLE);
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, NewEventFragment.class, null)
+                                .setReorderingAllowed(true)
+                                .commit();
+                    });
+                }
+
+                @Override
+                public void onFailure(String errorString) {
+                    Log.d(TAG, "onFailure: " + errorString);
+                }
+            });
+        }
     }
 
     private void getAllEventsBySport() {

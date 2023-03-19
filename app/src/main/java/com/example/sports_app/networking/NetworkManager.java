@@ -108,6 +108,16 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void userModeratesSport(String sport, String username, final NetworkCallback<Boolean> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/userInfo/"+username+"/moderates/"+sport, response -> {
+                    Gson gson = new Gson();
+                    Boolean moderated = gson.fromJson(response, Boolean.class);
+                    callback.onSuccess(moderated);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void banUser(String username, final NetworkCallback<User> callback) {
         StringRequest request = new StringRequest(
                 Request.Method.PUT, BASE_URL + "/banUser/"+username, response -> {
@@ -170,6 +180,8 @@ public class NetworkManager {
                 }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
+
+
 
     public void getAllThreadsForSport(String sport, final NetworkCallback<ArrayList<Thread>> callback) {
         StringRequest request = new StringRequest(
@@ -266,6 +278,7 @@ public class NetworkManager {
         };
         mQueue.add(request);
     }
+
 
     public void postNewComment(
             String username, String commentBody, Long threadId, final NetworkCallback<String> callback) {

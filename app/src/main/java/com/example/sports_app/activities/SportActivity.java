@@ -23,6 +23,7 @@ import com.google.android.material.tabs.TabLayout;
  */
 public class SportActivity extends Activity {
     private final String EXTRA_SPORT_ID = "com.example.sports_app.sport_name";
+    private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private final String EXTRA_USERNAME = "com.example.sports_app.username";
 
     // Breytur fyrir aðalvalmynd //
@@ -61,6 +62,7 @@ public class SportActivity extends Activity {
         tabLayout.addTab(eventsTab);
         tabLayout.addTab(clubsTab);
         currentUsername = getIntent().getExtras().getString(EXTRA_USERNAME);
+        System.out.println("SportActivity: currentUsername: " + currentUsername);
 
 
         fragmentManager.beginTransaction()

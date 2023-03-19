@@ -26,13 +26,21 @@ import java.util.Objects;
  * Each activity must initialize the mFragmentContainerView variable in their onCreate method.
  */
 public abstract class Activity extends AppCompatActivity {
-    private static final String EXTRA_USERNAME = "com.example.sports_app.username";
-    private static final String EXTRA_PASSWORD = "com.example.sports_app.password";
-    private static final String EXTRA_LOGGED_IN = "com.example.sports_app.loggedIn";
+    protected static final String EXTRA_USERNAME = "com.example.sports_app.username";
+    protected static final String EXTRA_PASSWORD = "com.example.sports_app.password";
+    protected static final String EXTRA_LOGGED_IN = "com.example.sports_app.loggedIn";
+    protected static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private static final String TAG = "Activity";
     protected FragmentContainerView mFragmentContainerView;
+    boolean userIsAdmin;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            userIsAdmin = getIntent().getExtras().getBoolean(EXTRA_IS_ADMIN);
+        } catch (Exception e) {
+            userIsAdmin = false;
+        }
     }
 
     @Override
@@ -69,6 +77,7 @@ public abstract class Activity extends AppCompatActivity {
                 public void onSuccess(String result) {
                     Intent intent = new Intent(Activity.this, LoginActivity.class);
                     intent.putExtra(EXTRA_LOGGED_IN, false);
+                    intent.putExtra(EXTRA_IS_ADMIN, false);
                     intent.putExtra(EXTRA_USERNAME, "");
                     intent.putExtra(EXTRA_PASSWORD, "");
                     startActivity(intent);
