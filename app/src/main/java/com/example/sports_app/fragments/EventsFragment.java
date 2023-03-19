@@ -67,8 +67,6 @@ public class EventsFragment extends Fragment {
         } catch (Exception e) {
             userIsAdmin = false;
         }
-
-
     }
 
     @Override
