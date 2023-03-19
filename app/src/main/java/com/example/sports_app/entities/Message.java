@@ -19,6 +19,17 @@ public class Message {
     @SerializedName("x")
     private boolean read;
 
+    @SerializedName("threadCreator")
+    private String threadCreator;
+
+    public String getThreadCreator() {
+        return threadCreator;
+    }
+
+    public void setThreadCreator(String threadCreator) {
+        this.threadCreator = threadCreator;
+    }
+
     public boolean isRead() {
         return read;
     }

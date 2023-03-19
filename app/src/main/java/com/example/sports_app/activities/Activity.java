@@ -118,7 +118,7 @@ public abstract class Activity extends AppCompatActivity {
                 i = new Intent(Activity.this, MainActivity.class);
                 logout();
                 i.putExtra(EXTRA_LOGGED_IN, false);
-                i.putExtra(EXTRA_USERNAME, "");
+                i.removeExtra(EXTRA_USERNAME);
                 startActivity(i);
                 break;
             case R.id.menu_home:

@@ -21,7 +21,7 @@ import com.example.sports_app.networking.NetworkManager;
 
 public class SignupFragment extends Fragment {
     private final String TAG = "SignupFragment";
-
+    private static final String EXTRA_USERNAME = "com.example.sports_app.username";
     private EditText txtUsername;
     private String mUsername = "";
     private EditText txtPassword;
@@ -82,6 +82,7 @@ public class SignupFragment extends Fragment {
                         signUp(mUsername, mPassword);
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         intent.putExtra("com.example.sports_app.loggedIn", true);
+                        intent.putExtra(EXTRA_USERNAME, mUsername);
                         startActivity(intent);
                     }
                 }
