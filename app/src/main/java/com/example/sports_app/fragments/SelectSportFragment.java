@@ -21,8 +21,10 @@ import java.util.ArrayList;
 
 public class SelectSportFragment extends Fragment {
     private final String TAG = "SelectSportFragment";
+    private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private static SportListAdapter sSportListAdapter;
     private ListView mListView;
+    boolean userIsAdmin;
 
     public SelectSportFragment() {
         // Required empty public constructor
@@ -37,6 +39,11 @@ public class SelectSportFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getAllSports();
+        try {
+            userIsAdmin = getActivity().getIntent().getExtras().getBoolean(EXTRA_IS_ADMIN);
+        } catch (Exception e) {
+            userIsAdmin = false;
+        }
     }
 
     private void getAllSports() {
@@ -82,6 +89,7 @@ public class SelectSportFragment extends Fragment {
             } catch (Exception e) {
                 username = "";
             }
+            System.out.println("Username í select sport fragment: " + username);
             Intent j = new Intent(getActivity(), SportActivity.class);
             j.putExtra("com.example.sports_app.loggedIn", loggedIn);
             j.putExtra("com.example.sports_app.sport_name", sport);

@@ -81,14 +81,12 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
                         public void onSuccess(String result) {
                             //deleteComment(comment.getId());
                             System.out.println("On success: " + comment.getId());
-
                             // TODO: Reload UI - Er búinn að reyna eitthvað smá en lendi alltaf á vegg
-
                         }
 
                         @Override
                         public void onFailure(String errorString) {
-                            System.out.println("On failure: " + comment.getId());
+                            System.out.println("Failed to delete comment with id: " + comment.getId());
                             Snackbar.make(v, errorString, Snackbar.LENGTH_LONG).show();
                         }
                     });
