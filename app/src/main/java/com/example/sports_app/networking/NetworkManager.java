@@ -10,6 +10,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sports_app.entities.Club;
 import com.example.sports_app.entities.Event;
+import com.example.sports_app.entities.Message;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
 import com.google.gson.Gson;
@@ -104,6 +105,26 @@ public class NetworkManager {
                     Gson gson = new Gson();
                     Boolean banned = gson.fromJson(response, Boolean.class);
                     callback.onSuccess(banned);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void getMessages(String username, final NetworkCallback<ArrayList<Message>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/userInfo/"+username+"/messages", response -> {
+                    Gson gson = new Gson();
+                    Type arrayListType = new TypeToken<ArrayList<Message>>() {
+                    }.getType();
+                    ArrayList<Message> messages = gson.fromJson(response, arrayListType);
+                    callback.onSuccess(messages);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
+    public void setMessageRead(String username, long messageId, final NetworkCallback<String> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.PUT, BASE_URL + "/userInfo/"+username+"/messages/"+messageId, response -> {
+                    callback.onSuccess(response);
                 }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }

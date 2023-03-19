@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.sports_app.R;
 import com.example.sports_app.adapters.ThreadListAdapter;
+import com.example.sports_app.entities.Message;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
@@ -54,11 +55,45 @@ public class MainActivity extends Activity {
 
     private String loggedInUser;
 
+    ArrayList<Message> mMessages;
+    NetworkManager sNetworkManager;
+
     Handler handler = new Handler();
     private Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
+            if (loggedInUser != null && loggedInUser != "") {
+                System.out.println("Inni í lúppu");
+                sNetworkManager.getMessages(loggedInUser, new NetworkCallback<ArrayList<Message>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Message> messages) {
+                        if (messages != null) {
+                            for (Message message : messages) {
+                                if (!message.isRead()) {
+                                    notifyNewMessage(message);
+                                    sNetworkManager.setMessageRead(loggedInUser, message.getmId(), new NetworkCallback<String>() {
+                                        @Override
+                                        public void onSuccess(String result) {
+                                            System.out.println("Message read");
+                                        }
 
+                                        @Override
+                                        public void onFailure(String errorString) {
+                                            System.out.println("Error message read");
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String errorString) {
+                        Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+            }
             handler.postDelayed(this, 10000);
         }
     };
@@ -66,6 +101,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sNetworkManager = NetworkManager.getInstance(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
@@ -138,8 +174,9 @@ public class MainActivity extends Activity {
     }
 
     // Þetta er bara til að prufa að búa til notification
-    private void notifyClickedSport() {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void notifyNewMessage(Message message) {
+
+        Intent intent = getIntent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         // Það activity sem á að opnast þegar ýtt er á notificationið
@@ -149,17 +186,18 @@ public class MainActivity extends Activity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
         } else {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "myChannel");
-            builder.setContentTitle("Sport!");
-            builder.setContentText("You clicked Sport!");
+            builder.setContentTitle(message.getMessage());
             builder.setSmallIcon(R.drawable.ic_launcher_background);
             builder.setContentIntent(pendingIntent); // Opnar pendingIntent þegar klikkað á notification
             builder.setAutoCancel(true);
             NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainActivity.this);
             managerCompat.notify(1, builder.build());
         }
+
     }
 
     private void createNotificationChannel() {
+        askNotificationPermission();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "CharSequence name"; // TODO: Bæta þessu við í resources -> getString(R.string.channel_name);
             String description = "Description"; // TODO: Bæta þessu líka við í resources -> getString(R.string.channel_description);
