@@ -5,29 +5,30 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/thread_sport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="Badminton"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"
-        android:textStyle="bold" />
-
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/thread_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
             android:text="This is the thread header"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black" />
+            android:textColor="#556BDD"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/thread_sport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <TextView
