@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Thread {
+public class Thread implements Comparable<Thread> {
     @SerializedName("id")
     private long mId;
     @SerializedName("username")
@@ -110,5 +110,15 @@ public class Thread {
         this.mHeader = header;
         this.mBody = body;
         this.mSport = sport;
+    }
+
+    @Override
+    public int compareTo(Thread o) {
+        if (this.mDate.equals(o.getmDate())) {
+            return 0;
+        } else if (this.mDate.compareTo(o.getmDate()) > 0) {
+            return 1;
+        }
+        return -1;
     }
 }

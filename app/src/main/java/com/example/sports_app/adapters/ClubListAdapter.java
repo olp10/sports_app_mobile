@@ -37,7 +37,7 @@ public class ClubListAdapter extends ArrayAdapter<Club> implements View.OnClickL
             viewHolder = new ClubListAdapter.ViewHolder();
             LayoutInflater i = LayoutInflater.from(getContext());
             convertView = i.inflate(R.layout.clubs_list_row_item, container, false);
-            viewHolder.txtSport = (TextView) convertView.findViewById(R.id.club_sport);
+            // viewHolder.txtSport = (TextView) convertView.findViewById(R.id.club_sport);
             viewHolder.txtName = (TextView) convertView.findViewById(R.id.club_name);
 
             result = convertView;
@@ -50,7 +50,7 @@ public class ClubListAdapter extends ArrayAdapter<Club> implements View.OnClickL
 
         lastPosition = position;
 
-        viewHolder.txtSport.setText(club.getmSport());
+        //viewHolder.txtSport.setText(club.getmSport());
         viewHolder.txtName.setText(club.getmClubName());
 
         viewHolder.txtName.setTag(position);

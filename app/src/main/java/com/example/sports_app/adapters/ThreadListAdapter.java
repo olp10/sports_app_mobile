@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * ThreadListAdapter retrieves a collection of Thread entities and creates a custom view for
@@ -87,6 +88,8 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
 
     public ThreadListAdapter(ArrayList<Thread> threads, @NonNull Context context) {
         super(context, R.layout.thread_list_row_item, threads);
+        Collections.sort(threads);
+        Collections.reverse(threads);
         this.threadList = threads;
         this.mContext = context;
     }

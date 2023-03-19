@@ -39,6 +39,7 @@ public class ThreadsFragment extends Fragment {
     private List<Thread> mThreads;
     private Button mNewThreadButton;
     private FragmentContainerView mFragmentContainerView;
+    String username;
 
     public ThreadsFragment() {
         // Required empty public constructor
@@ -83,9 +84,10 @@ public class ThreadsFragment extends Fragment {
         mFragmentContainerView = (FragmentContainerView) getActivity().findViewById(R.id.fragmentContainerView);
         mNewThreadButton = (Button) view.findViewById(R.id.new_thread_button);
         boolean loggedIn;
-        String username;
         try {
             loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
+            username = getActivity().getIntent().getExtras().getString(EXTRA_USERNAME);
+            System.out.println("Username: " + username);
         } catch (Exception e) {
             loggedIn = false;
         }

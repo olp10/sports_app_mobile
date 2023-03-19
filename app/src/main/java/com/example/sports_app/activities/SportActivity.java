@@ -62,8 +62,8 @@ public class SportActivity extends Activity {
         tabLayout.addTab(eventsTab);
         tabLayout.addTab(clubsTab);
         currentUsername = getIntent().getExtras().getString(EXTRA_USERNAME);
-        System.out.println("SportActivity: currentUsername: " + currentUsername);
 
+        this.setTitle(getIntent().getExtras().getString(EXTRA_SPORT_ID));
 
         fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)

@@ -50,7 +50,6 @@ public class MainActivity extends Activity {
     private ArrayList<Thread> threads;
     ListView mThreadList;
     private static ThreadListAdapter sThreadListAdapter;
-    private ThreadService mThreadService;
     private boolean isAdmin;
 
     private String loggedInUser;
@@ -59,27 +58,29 @@ public class MainActivity extends Activity {
     NetworkManager sNetworkManager;
 
     Handler handler = new Handler();
-    private Runnable runnableCode = new Runnable() {
+    private final Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
-            if (loggedInUser != null && loggedInUser != "") {
-                System.out.println("Inni í lúppu");
+            if (loggedInUser != null && !loggedInUser.equals("")) {
                 sNetworkManager.getMessages(loggedInUser, new NetworkCallback<ArrayList<Message>>() {
                     @Override
                     public void onSuccess(ArrayList<Message> messages) {
                         if (messages != null) {
                             for (Message message : messages) {
-                                if (!message.isRead()) {
+                                if (!message.isRead() && message.getThreadCreator().equals(loggedInUser)) {
                                     notifyNewMessage(message);
+
+                                    // Þarf að merkja skilaboðin sem lesin til þess að fá þau ekki í hvert skipti sem lúppa keyrir
+                                    // Ekki nóg að gera það í minni, þar sem skilaboð eru alltaf sótt í gagnagrunn í hverri lúppu
                                     sNetworkManager.setMessageRead(loggedInUser, message.getmId(), new NetworkCallback<String>() {
                                         @Override
                                         public void onSuccess(String result) {
-                                            System.out.println("Message read");
+                                            Log.d(TAG, "onSuccess: Message marked as read");
                                         }
 
                                         @Override
                                         public void onFailure(String errorString) {
-                                            System.out.println("Error message read");
+                                            Log.e(TAG, "Failed to mark message as read: " + errorString);
                                         }
                                     });
                                 }
@@ -91,7 +92,6 @@ public class MainActivity extends Activity {
                     public void onFailure(String errorString) {
                         Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_SHORT).show();
                     }
-
                 });
             }
             handler.postDelayed(this, 10000);
@@ -104,10 +104,22 @@ public class MainActivity extends Activity {
         sNetworkManager = NetworkManager.getInstance(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
+        // Byrjar lúppu sem sækir skilaboð til notanda
         handler.post(runnableCode);
-        // Breytur fyrir aðalvalmynd //
+
+        checkUserAndPermissions();
+        createThreadList();
+        createNotificationChannel();
+    }
+
+
+    /**
+     *  Sets variables for user and admin/moderator status
+     */
+    private void checkUserAndPermissions() {
         try {
             System.out.println("Mod: " + getIntent().getExtras().getBoolean("com.example.sports_app.isModerator"));
         } catch (Exception e) {
@@ -127,7 +139,13 @@ public class MainActivity extends Activity {
             loggedInUser = "";
             System.out.println("Catch - loggedInUser: " + false);
         }
+    }
 
+
+    /**
+     *  Initializes the UI for the main Thread list
+     */
+    private void createThreadList() {
         mThreadList = (ListView) findViewById(R.id.threadList);
 
         getAllThreads();
@@ -151,13 +169,14 @@ public class MainActivity extends Activity {
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
         });
-
-        createNotificationChannel();
     }
 
+
+    /**
+     * returns all threads from REST service
+     */
     private void getAllThreads() {
         NetworkManager sNetworkManager = NetworkManager.getInstance(this);
-        mThreadService = new ThreadService();
         sNetworkManager.getAllTheThreads(new NetworkCallback<ArrayList<Thread>>() {
             @Override
             public void onSuccess(ArrayList<Thread> result) {
@@ -173,7 +192,11 @@ public class MainActivity extends Activity {
         });
     }
 
-    // Þetta er bara til að prufa að búa til notification
+
+    /**
+     * Creates a new notification when user receives a new message
+     * @param message
+     */
     private void notifyNewMessage(Message message) {
 
         Intent intent = getIntent();
