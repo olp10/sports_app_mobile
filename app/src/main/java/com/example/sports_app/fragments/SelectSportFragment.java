@@ -94,6 +94,7 @@ public class SelectSportFragment extends Fragment {
             j.putExtra("com.example.sports_app.loggedIn", loggedIn);
             j.putExtra("com.example.sports_app.sport_name", sport);
             j.putExtra("com.example.sports_app.username", username);
+            j.putExtra(EXTRA_IS_ADMIN, userIsAdmin);
             startActivity(j);
         });
 
