@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ActionMenuView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -33,6 +34,8 @@ public abstract class Activity extends AppCompatActivity {
     private static final String TAG = "Activity";
     protected FragmentContainerView mFragmentContainerView;
     boolean userIsAdmin;
+
+    ActionMenuView bottomBar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -41,6 +44,10 @@ public abstract class Activity extends AppCompatActivity {
         } catch (Exception e) {
             userIsAdmin = false;
         }
+
+
+
+
     }
 
     @Override
@@ -61,8 +68,14 @@ public abstract class Activity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(TAG, "onCreateOptionsMenu: " + e.getMessage());
         }
+
+        // TODO: Add bottombar to all activity layout files
+        bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
+        Menu bottomMenu = bottomBar.getMenu();
+        getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu);
         return true;
     }
+
     public void logout() {
         if (getIntent().getExtras().getString(EXTRA_USERNAME) != null &&
                 getIntent().getExtras().getString(EXTRA_PASSWORD) != null &&

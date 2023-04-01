@@ -21,8 +21,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sports_app.R;
@@ -32,6 +34,9 @@ import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 //import com.google.android.gms.tasks.OnCompleteListener;
 //import com.google.android.gms.tasks.Task;
 //import com.google.firebase.FirebaseApp;
@@ -52,10 +57,14 @@ public class MainActivity extends Activity {
     private static ThreadListAdapter sThreadListAdapter;
     private boolean isAdmin;
 
+    TextView mThreadCreator;
+
     private String loggedInUser;
 
     ArrayList<Message> mMessages;
     NetworkManager sNetworkManager;
+
+    ActionMenuView bottomBar;
 
     Handler handler = new Handler();
     private final Runnable runnableCode = new Runnable() {
@@ -70,6 +79,8 @@ public class MainActivity extends Activity {
                                 if (!message.isRead() && message.getThreadCreator().equals(loggedInUser)) {
                                     notifyNewMessage(message);
 
+                                    // TODO: Eyða skilaboðum úr gagnagrunni frekar en að merkja sem lesin?
+                                    // TODO: Er einhver ástæða fyrir að geyma notification skilaboð?
                                     // Þarf að merkja skilaboðin sem lesin til þess að fá þau ekki í hvert skipti sem lúppa keyrir
                                     // Ekki nóg að gera það í minni, þar sem skilaboð eru alltaf sótt í gagnagrunn í hverri lúppu
                                     sNetworkManager.setMessageRead(loggedInUser, message.getmId(), new NetworkCallback<String>() {
@@ -260,6 +271,8 @@ public class MainActivity extends Activity {
             }
         }
     }
+
+
 
 
 }

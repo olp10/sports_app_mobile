@@ -1,6 +1,7 @@
 package com.example.sports_app.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.sports_app.R;
+import com.example.sports_app.activities.ThreadActivity;
+import com.example.sports_app.activities.UserProfileActivity;
 import com.example.sports_app.entities.Thread;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -44,8 +47,6 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
         Thread thread = getItem(position);
         ViewHolder viewHolder;
         final View result;
-
-
 
         // Check whether a view object can be reused to improve performance.
         // If not, generate a new view object at this position.
@@ -107,6 +108,9 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
                 Snackbar.make(v, "Þú smelltir á þráð!", Snackbar.LENGTH_LONG)
                         .setAction("No action", null).show();
                 break;
+            // case R.id.thread_creator:
+                // TODO: Fara á user profile þegar klikkað á username
+                //break;
         }
     }
 
