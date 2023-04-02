@@ -178,6 +178,18 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void getAllEvents(final NetworkCallback<ArrayList<Event>> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, BASE_URL + "/allEvents", response -> {
+                    Gson gson = new Gson();
+                    Type arrayListType = new TypeToken<ArrayList<Event>>() {
+                    }.getType();
+                    ArrayList<Event> events = gson.fromJson(response, arrayListType);
+                    callback.onSuccess(events);
+                }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void getAllEventsForSport(String sport, final NetworkCallback<ArrayList<Event>> callback) {
         StringRequest request = new StringRequest(
                 Request.Method.GET, BASE_URL + "/home/" + sport + "/events", response -> {
