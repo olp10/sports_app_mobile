@@ -70,9 +70,10 @@ public abstract class Activity extends AppCompatActivity {
         }
 
         // TODO: Add bottombar to all activity layout files
+        /*
         bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
         Menu bottomMenu = bottomBar.getMenu();
-        getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu);
+        getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu); */
         return true;
     }
 

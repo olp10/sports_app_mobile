@@ -21,6 +21,28 @@ public class Event {
     private LocalDateTime mEventDate;
     @SerializedName("eventStartTime")
     private String mEventStartDate;
+
+    @SerializedName("inLessThan24Hours")
+    private boolean inLessThan24Hours;
+
+    private boolean beenNotified = false;
+
+    public boolean isBeenNotified() {
+        return beenNotified;
+    }
+
+    public void setBeenNotified(boolean beenNotified) {
+        this.beenNotified = beenNotified;
+    }
+
+    public boolean isInLessThan24Hours() {
+        return inLessThan24Hours;
+    }
+
+    public void setInLessThan24Hours(boolean inLessThan24Hours) {
+        this.inLessThan24Hours = inLessThan24Hours;
+    }
+
     private List<Long> mSubscribers;
 
     public Event(long mId, String mEventName, String mEventDescription, String mSport, String startDate) {

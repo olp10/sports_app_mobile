@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.sports_app.R;
 import com.example.sports_app.adapters.ThreadListAdapter;
+import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.Message;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
@@ -66,6 +67,8 @@ public class MainActivity extends Activity {
 
     ActionMenuView bottomBar;
 
+    boolean notificationRead = false;
+
     Handler handler = new Handler();
     private final Runnable runnableCode = new Runnable() {
         @Override
@@ -102,6 +105,23 @@ public class MainActivity extends Activity {
                     @Override
                     public void onFailure(String errorString) {
                         Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                sNetworkManager.getAllEvents(new NetworkCallback<ArrayList<Event>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Event> result) {
+                        for (Event event : result) {
+                            if (event.isInLessThan24Hours() && !notificationRead) {
+                                notifyNewEvent(event);
+                                notificationRead = true;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String errorString) {
+                        System.out.println(errorString);
                     }
                 });
             }
@@ -227,7 +247,27 @@ public class MainActivity extends Activity {
             NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainActivity.this);
             managerCompat.notify(1, builder.build());
         }
+    }
 
+    private void notifyNewEvent(Event event) {
+
+        Intent intent = getIntent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        // Það activity sem á að opnast þegar ýtt er á notificationið
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+        } else {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "myChannel");
+            builder.setContentTitle(event.getEventName());
+            builder.setSmallIcon(R.drawable.ic_launcher_background);
+            builder.setContentIntent(pendingIntent); // Opnar pendingIntent þegar klikkað á notification
+            builder.setAutoCancel(true);
+            NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainActivity.this);
+            managerCompat.notify(1, builder.build());
+        }
     }
 
     private void createNotificationChannel() {
