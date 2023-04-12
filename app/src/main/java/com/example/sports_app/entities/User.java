@@ -6,7 +6,7 @@ import java.util.List;
 
 public class User {
 
-    @SerializedName("userid")
+    @SerializedName("id")
     private Long mId;
 
     @SerializedName("is_moderator")
@@ -73,7 +73,8 @@ public class User {
         this.mComments = mComments;
     }
 
-    public User(String mUsername, String mUserPassword, boolean isAdmin, boolean isLoggedIn, boolean isBanned) {
+    public User(Long id, String mUsername, String mUserPassword, boolean isAdmin, boolean isLoggedIn, boolean isBanned) {
+        this.mId = id;
         this.isLoggedIn = isLoggedIn;
         this.mUsername = mUsername;
         this.mUserPassword = mUserPassword;

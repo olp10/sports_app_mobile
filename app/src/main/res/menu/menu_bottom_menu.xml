@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--  Þetta brotnar ef gert eins og IDE vill gera það => breyta í app:showAsAction   -->
-    <item android:showAsAction="always"
+    <item
         android:title="Testing">
     </item>
 </menu>

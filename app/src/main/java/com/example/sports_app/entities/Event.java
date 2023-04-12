@@ -1,5 +1,7 @@
 package com.example.sports_app.entities;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDateTime;
@@ -21,6 +23,16 @@ public class Event {
     private LocalDateTime mEventDate;
     @SerializedName("eventStartTime")
     private String mEventStartDate;
+    @SerializedName("image")
+    private String mEventImage;
+
+    public String getmEventImage() {
+        return mEventImage;
+    }
+
+    public void setmEventImage(String mEventImage) {
+        this.mEventImage = mEventImage;
+    }
 
     @SerializedName("inLessThan24Hours")
     private boolean inLessThan24Hours;
