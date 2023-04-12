@@ -35,7 +35,7 @@ public abstract class Activity extends AppCompatActivity {
     protected FragmentContainerView mFragmentContainerView;
     boolean userIsAdmin;
 
-    ActionMenuView bottomBar;
+    protected ActionMenuView bottomBar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -44,10 +44,6 @@ public abstract class Activity extends AppCompatActivity {
         } catch (Exception e) {
             userIsAdmin = false;
         }
-
-
-
-
     }
 
     @Override
@@ -68,12 +64,6 @@ public abstract class Activity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d(TAG, "onCreateOptionsMenu: " + e.getMessage());
         }
-
-        // TODO: Add bottombar to all activity layout files
-        /*
-        bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
-        Menu bottomMenu = bottomBar.getMenu();
-        getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu); */
         return true;
     }
 

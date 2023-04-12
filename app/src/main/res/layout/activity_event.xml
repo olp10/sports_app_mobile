@@ -56,5 +56,11 @@
         </Button>
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/event_image"
+        android:maxWidth="100dp"
+        android:maxHeight="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

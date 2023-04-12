@@ -11,6 +11,7 @@ import com.example.sports_app.entities.Club;
 public class ClubActivity extends AppCompatActivity {
 
     private static final String TAG ="ClubActivity";
+    private static final String EXTRA_USER = "com.example.sports_app.username";
 
     private Club mClub;
 

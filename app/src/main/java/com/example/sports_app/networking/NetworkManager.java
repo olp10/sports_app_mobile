@@ -88,6 +88,7 @@ public class NetworkManager {
     }
 
     public void getUserByUsername(String username, final NetworkCallback<User> callback) {
+        System.out.println("Username in NetworkManager: " + username);
         StringRequest request = new StringRequest(
                 Request.Method.GET, BASE_URL + "/userInfo/"+username, response -> {
                     Gson gson = new Gson();
@@ -245,6 +246,9 @@ public class NetworkManager {
     }
 
     public void saveEvent(Event event, final NetworkCallback<String> callback) {
+        if (event.getmEventImage() == null) {
+            event.setmEventImage("");
+        }
         StringRequest request = new StringRequest(
                 Request.Method.POST, BASE_URL + "/saveEvent", callback::onSuccess, error -> callback.onFailure(error.toString())){
             @Override
@@ -254,6 +258,7 @@ public class NetworkManager {
                 params.put("description", event.getEventDescription());
                 params.put("sport", event.getSport());
                 params.put("startingDate", event.getEventStartDate());
+                params.put("image", event.getmEventImage());
                 return params;
             }
         };
@@ -305,7 +310,6 @@ public class NetworkManager {
             protected Map<String,String> getParams() {
                 Map<String,String> params = new HashMap<>();
                 params.put("userId", userId.toString());
-
                 return params;
             }
         };

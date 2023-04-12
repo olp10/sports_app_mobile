@@ -20,10 +20,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +37,6 @@ import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.example.sports_app.services.ThreadService;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 //import com.google.android.gms.tasks.OnCompleteListener;
 //import com.google.android.gms.tasks.Task;
 //import com.google.firebase.FirebaseApp;
@@ -59,15 +58,15 @@ public class MainActivity extends Activity {
     private boolean isAdmin;
 
     TextView mThreadCreator;
-
+    TextView loggedInAsTextview;
     private String loggedInUser;
 
     ArrayList<Message> mMessages;
     NetworkManager sNetworkManager;
 
-    ActionMenuView bottomBar;
-
     boolean notificationRead = false;
+
+    RelativeLayout mBottomBarContainer;
 
     Handler handler = new Handler();
     private final Runnable runnableCode = new Runnable() {
@@ -129,12 +128,16 @@ public class MainActivity extends Activity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sNetworkManager = NetworkManager.getInstance(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loggedInAsTextview = (TextView) findViewById(R.id.logged_in_as_textview);
+        bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
+        Menu bottomMenu = bottomBar.getMenu();
+        getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu);
 
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
@@ -165,13 +168,15 @@ public class MainActivity extends Activity {
 
         try {
             loggedInUser = getIntent().getStringExtra(EXTRA_USER);
-            System.out.println(loggedInUser);
+            mBottomBarContainer.setVisibility(View.VISIBLE);
+            if (loggedInUser != null) {
+                loggedInAsTextview.setText("Logged in as: \n " + loggedInUser);
+            }
         } catch (Exception e) {
             loggedInUser = "";
             System.out.println("Catch - loggedInUser: " + false);
         }
     }
-
 
     /**
      *  Initializes the UI for the main Thread list
@@ -311,8 +316,5 @@ public class MainActivity extends Activity {
             }
         }
     }
-
-
-
 
 }
