@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 
     TextView mThreadCreator;
     TextView loggedInAsTextview;
+    TextView userProfileLink;
     private String loggedInUser;
 
     ArrayList<Message> mMessages;
@@ -135,6 +136,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         loggedInAsTextview = (TextView) findViewById(R.id.logged_in_as_textview);
+        userProfileLink = (TextView) findViewById(R.id.link_to_user_profile);
+        userProfileLink.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+            intent.putExtra("com.example.sports_app.userClicked", loggedInUser);
+            intent.putExtra("com.example.sports_app.loggedInUser", loggedInUser);
+            intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
+            startActivity(intent);
+        });
         bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
         Menu bottomMenu = bottomBar.getMenu();
         getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu);
@@ -147,6 +156,18 @@ public class MainActivity extends Activity {
         checkUserAndPermissions();
         createThreadList();
         createNotificationChannel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkUserAndPermissions();
+        loggedInUser = getIntent().getStringExtra(EXTRA_USER);
+        Log.d(TAG, "onResume - user: " + loggedInUser);
+        if (loggedInUser != null) {
+            loggedInAsTextview.setText("Logged in as: " + loggedInUser);
+            userProfileLink.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -170,7 +191,7 @@ public class MainActivity extends Activity {
             loggedInUser = getIntent().getStringExtra(EXTRA_USER);
             mBottomBarContainer.setVisibility(View.VISIBLE);
             if (loggedInUser != null) {
-                loggedInAsTextview.setText("Logged in as: \n " + loggedInUser);
+                loggedInAsTextview.setText("Logged in as: " + loggedInUser);
             }
         } catch (Exception e) {
             loggedInUser = "";

@@ -62,7 +62,7 @@ public class EventActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                System.out.println("Username: " + username);
+//                System.out.println("Username: " + username);
                 try {
                     networkManager.getUserByUsername(username, new NetworkCallback<User>() {
                         @Override

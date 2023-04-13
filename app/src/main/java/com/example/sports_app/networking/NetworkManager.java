@@ -164,6 +164,25 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void updateUserInfo(String username, String fullName, String emailAddress, final NetworkCallback<User> callback) {
+        StringRequest request = new StringRequest(
+                Request.Method.PUT, BASE_URL + "/updateInfo/"+username, response -> {
+                    Gson gson = new Gson();
+                    Type userType = new TypeToken<User>() {}.getType();
+                    User user = gson.fromJson(response, userType);
+                    callback.onSuccess(user);
+        }, error -> callback.onFailure(error.toString())){
+            @Override
+            protected Map<String,String> getParams() {
+                Map<String,String> params = new HashMap<>();
+                params.put("userFullName", fullName);
+                params.put("userEmail", emailAddress);
+                return params;
+            }
+        };
+        mQueue.add(request);
+    }
+
     public void getAllTheThreads(final NetworkCallback<ArrayList<Thread>> callback) {
         StringRequest request = new StringRequest(
                 Request.Method.GET, BASE_URL + "/allThreads", response -> {
