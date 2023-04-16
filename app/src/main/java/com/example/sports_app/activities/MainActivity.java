@@ -34,14 +34,6 @@ import com.example.sports_app.entities.Message;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
-import com.example.sports_app.services.ThreadService;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
-//import com.google.android.gms.tasks.OnCompleteListener;
-//import com.google.android.gms.tasks.Task;
-//import com.google.firebase.FirebaseApp;
-//import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -50,8 +42,6 @@ public class MainActivity extends Activity {
     private static final String EXTRA_USER = "com.example.sports_app.username";
 
     // Breytur fyrir aðalvalmynd //
-
-    // ------------------------ //
     private static final int REQUEST_THREAD_OPEN = 0;
     private ArrayList<Thread> threads;
     ListView mThreadList;

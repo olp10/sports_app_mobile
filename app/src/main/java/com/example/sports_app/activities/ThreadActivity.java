@@ -178,8 +178,6 @@ public class ThreadActivity extends AppCompatActivity {
             }
         });
 
-
-
         // Smíða layout element fyrir comments
         sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);
         mCommentList = (ListView) findViewById(R.id.commentList);
