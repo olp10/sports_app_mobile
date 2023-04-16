@@ -1,7 +1,12 @@
 package com.example.sports_app.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,7 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.example.sports_app.R;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.networking.NetworkCallback;
@@ -22,6 +31,8 @@ import com.example.sports_app.networking.NetworkManager;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,14 +56,13 @@ public class NewEventFragment extends Fragment {
     private EditText mNewEventTime;
     private String mNewEventDateTimeFormatted;
 
+    Map config = new HashMap();
+    Uri selectedImage;
     private NetworkManager mNetworkManager = NetworkManager.getInstance(getContext());
-
-
 
     public NewEventFragment() {
         // Required empty public constructor
     }
-
 
     public static NewEventFragment newInstance() {
         NewEventFragment fragment = new NewEventFragment();
@@ -64,6 +74,24 @@ public class NewEventFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    // Tilraun til að hægt sé að uploada mynd úr gallery
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            selectedImage = data.getData();
+            ImageView imageView = getActivity().findViewById(R.id.imageView);
+            imageView.setImageURI(selectedImage);
+        }
+    }
+
+    private void configCloudinary() {
+        config.put("cloud_name", "dkrvsmxb8");
+        config.put("api_key", "244743563472284");
+        config.put("api_secret", "jNVEursxT7USBb3HB8BgOQXcQ_o");
+        MediaManager.init(getActivity(), config);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,6 +101,18 @@ public class NewEventFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // Tilraun til að hægt sé að uploada mynd úr gallery
+        Button gallery = getActivity().findViewById(R.id.gallery);
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 3);
+            }
+        });
+
+        configCloudinary();
+
         mNewEventTitleLabel = (TextInputLayout) view.findViewById(R.id.new_event_title_input_layout);
         mNewEventTitleText = (EditText) view.findViewById(R.id.new_event_title);
 
@@ -116,12 +156,46 @@ public class NewEventFragment extends Fragment {
                             .getIntent()
                             .getExtras()
                             .getString(EXTRA_SPORT_NAME));
-                    saveEvent(event);
-                    startActivity(getActivity().getIntent());
+                    uploadImage(event);
                 }
-
+                startActivity(getActivity().getIntent());
             }
+
         });
+    }
+
+
+    public void uploadImage(Event event) {
+        MediaManager.get().upload(selectedImage).option("event_id", event.getId()).callback(new UploadCallback() {
+
+            @Override
+            public void onStart(String requestId) {
+                System.err.println("OnStart: " + requestId);
+            }
+
+            @Override
+            public void onProgress(String requestId, long bytes, long totalBytes) {
+                System.err.println("OnProgress: " + requestId);
+            }
+
+            @Override
+            public void onSuccess(String requestId, Map resultData) {
+                System.err.println("OnSuccess: " + requestId);
+                System.out.println(resultData.get("secure_url"));
+                event.setmEventImage(resultData.get("secure_url").toString());
+                saveEvent(event);
+            }
+
+            @Override
+            public void onError(String requestId, ErrorInfo error) {
+                System.err.println("OnError: " + requestId);
+            }
+
+            @Override
+            public void onReschedule(String requestId, ErrorInfo error) {
+                System.err.println("OnReschedule: " + requestId);
+            }
+        }).dispatch();
     }
 
     private void saveEvent(Event event) {

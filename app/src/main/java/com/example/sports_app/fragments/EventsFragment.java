@@ -64,6 +64,7 @@ public class EventsFragment extends Fragment {
 
         try {
             userIsAdmin = getActivity().getIntent().getExtras().getBoolean(EXTRA_IS_ADMIN);
+            username = getActivity().getIntent().getExtras().getString(EXTRA_USERNAME);
         } catch (Exception e) {
             userIsAdmin = false;
         }
@@ -81,6 +82,7 @@ public class EventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long eventToOpenId = mEvents.get(i).getId();
                 Intent intent = EventActivity.newIntent(getActivity(), eventToOpenId);
+                intent.putExtra(EXTRA_USERNAME, username);
                 startActivity(intent);
             }
         });

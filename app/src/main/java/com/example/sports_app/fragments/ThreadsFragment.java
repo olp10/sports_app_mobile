@@ -87,7 +87,7 @@ public class ThreadsFragment extends Fragment {
         try {
             loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
             username = getActivity().getIntent().getExtras().getString(EXTRA_USERNAME);
-            System.out.println("Username: " + username);
+            //System.out.println("Username: " + username);
         } catch (Exception e) {
             loggedIn = false;
         }

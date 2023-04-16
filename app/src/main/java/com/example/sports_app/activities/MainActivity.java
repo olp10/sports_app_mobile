@@ -20,10 +20,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,15 +51,16 @@ public class MainActivity extends Activity {
     private boolean isAdmin;
 
     TextView mThreadCreator;
-
+    TextView loggedInAsTextview;
+    TextView userProfileLink;
     private String loggedInUser;
 
     ArrayList<Message> mMessages;
     NetworkManager sNetworkManager;
 
-    ActionMenuView bottomBar;
-
     boolean notificationRead = false;
+
+    RelativeLayout mBottomBarContainer;
 
     Handler handler = new Handler();
     private final Runnable runnableCode = new Runnable() {
@@ -119,12 +122,24 @@ public class MainActivity extends Activity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sNetworkManager = NetworkManager.getInstance(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loggedInAsTextview = (TextView) findViewById(R.id.logged_in_as_textview);
+        userProfileLink = (TextView) findViewById(R.id.link_to_user_profile);
+        userProfileLink.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+            intent.putExtra("com.example.sports_app.userClicked", loggedInUser);
+            intent.putExtra("com.example.sports_app.loggedInUser", loggedInUser);
+            intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
+            startActivity(intent);
+        });
+        bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
+        Menu bottomMenu = bottomBar.getMenu();
+        getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu);
 
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
 
@@ -134,6 +149,18 @@ public class MainActivity extends Activity {
         checkUserAndPermissions();
         createThreadList();
         createNotificationChannel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkUserAndPermissions();
+        loggedInUser = getIntent().getStringExtra(EXTRA_USER);
+        Log.d(TAG, "onResume - user: " + loggedInUser);
+        if (loggedInUser != null) {
+            loggedInAsTextview.setText("Logged in as: " + loggedInUser);
+            userProfileLink.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -155,13 +182,15 @@ public class MainActivity extends Activity {
 
         try {
             loggedInUser = getIntent().getStringExtra(EXTRA_USER);
-            System.out.println(loggedInUser);
+            mBottomBarContainer.setVisibility(View.VISIBLE);
+            if (loggedInUser != null) {
+                loggedInAsTextview.setText("Logged in as: " + loggedInUser);
+            }
         } catch (Exception e) {
             loggedInUser = "";
             System.out.println("Catch - loggedInUser: " + false);
         }
     }
-
 
     /**
      *  Initializes the UI for the main Thread list
@@ -301,8 +330,5 @@ public class MainActivity extends Activity {
             }
         }
     }
-
-
-
 
 }

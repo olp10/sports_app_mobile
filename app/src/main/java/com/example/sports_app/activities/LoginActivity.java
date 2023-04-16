@@ -31,6 +31,7 @@ import java.util.List;
 
 public class LoginActivity extends Activity {
     private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
+    private static final String EXTRA_USER = "com.example.sports_app.username";
     boolean doubleBackToExitPressedOnce = false;
     private final String TAG = "LoginActivity";
     ActionMenuView mActionMenuView;
@@ -135,7 +136,7 @@ public class LoginActivity extends Activity {
                             i.putExtra(EXTRA_IS_ADMIN, false);
                         }
                         i.putExtra("com.example.sports_app.loggedIn", true);
-                        i.putExtra("com.example.sports_app.username", user.getmUsername());
+                        i.putExtra(EXTRA_USER, user.getmUsername());
                         i.putExtra("com.example.sports_app.password", user.getmUserPassword());
 
                         startActivity(i);
