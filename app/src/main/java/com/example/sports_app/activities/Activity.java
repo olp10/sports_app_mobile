@@ -28,9 +28,6 @@ import java.util.Objects;
  * Each activity must initialize the mFragmentContainerView variable in their onCreate method.
  */
 public abstract class Activity extends AppCompatActivity {
-    protected static final String EXTRA_USERNAME = "com.example.sports_app.username";
-    protected static final String EXTRA_PASSWORD = "com.example.sports_app.password";
-    protected static final String EXTRA_LOGGED_IN = "com.example.sports_app.loggedIn";
     protected static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private static final String TAG = "Activity";
     protected FragmentContainerView mFragmentContainerView;

@@ -59,8 +59,6 @@ public class ThreadActivity extends AppCompatActivity {
         mThreadHeader = (TextView) findViewById(R.id.thread_head);
         mThreadBody = (TextView) findViewById(R.id.thread_body);
 
-
-
         addCommentSection();
     }
 
@@ -89,22 +87,15 @@ public class ThreadActivity extends AppCompatActivity {
         mNewCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                User fakeUser = new User("FakeCommentUser", "abc", false);
                 String newCommentBody = String.valueOf(mNewCommentText.getText());
-//                newComment newComment = new newComment(fakeUser, newCommentBody, mThread);
                 NetworkManager networkManager = NetworkManager.getInstance(ThreadActivity.this);
-                System.out.println("newCommentBody: " + newCommentBody);
-                System.out.println("loggedIn: " + loggedIn);
-                System.out.println("threadId: " + mThread.getId());
 
-                // FIXME: Send username instead of userid
                 networkManager.postNewComment(loggedIn, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
-
                     @Override
                     public void onSuccess(String result) {
                         Log.d(TAG, result);
                         finish();
-                        startActivity(getIntent());
+                        startActivity(getIntent().putExtra(EXTRA_THREAD_ID, mThread.getId()));
                     }
 
                     @Override
@@ -155,7 +146,7 @@ public class ThreadActivity extends AppCompatActivity {
         mThreadHeader.setText(mThread.getHeader());
         mThreadBody.setText(mThread.getBody());
 
-        // Athuga hvort user sé loggaður inn/admin og senda inn í commentlistadapter til að gefa
+        // Athuga hvort user sé loggaður inn/admin og senda inn í commentlistadapter til að
         // sýna admin takka/actions.
 
         try {
@@ -165,7 +156,7 @@ public class ThreadActivity extends AppCompatActivity {
         }
 
         try {
-            isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
+            isAdmin = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getBoolean("isAdmin", false);
         } catch (Exception e) {
             isAdmin = false;
         }

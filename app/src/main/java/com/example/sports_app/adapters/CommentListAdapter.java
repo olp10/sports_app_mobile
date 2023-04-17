@@ -79,7 +79,8 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
                         public void onSuccess(String result) {
                             //deleteComment(comment.getId());
                             System.out.println("On success: " + comment.getId());
-                            // TODO: Reload UI - Er búinn að reyna eitthvað smá en lendi alltaf á vegg
+                            deleteComment(comment.getId());
+                            // FIXME: Reload UI - Er búinn að reyna eitthvað smá en lendi alltaf á vegg
                         }
 
                         @Override
