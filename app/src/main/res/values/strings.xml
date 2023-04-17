@@ -15,4 +15,5 @@
     <string name="userProfile_your_email_address">Tölvupóstfang</string>
     <string name="user_profile_ban_user">Banna notanda</string>
     <string name="user_profile_infoText">Segðu okkur frá sjálfum þér..</string>
+    <string name="user_banned_link_for_contact">Hafa samband við stjórnanda</string>
 </resources>

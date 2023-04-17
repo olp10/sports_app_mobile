@@ -89,7 +89,14 @@ public class NewEventFragment extends Fragment {
         config.put("cloud_name", "dkrvsmxb8");
         config.put("api_key", "244743563472284");
         config.put("api_secret", "jNVEursxT7USBb3HB8BgOQXcQ_o");
-        MediaManager.init(getActivity(), config);
+
+        // Init MediaManager if not initialized
+        // Veit ekki hvernig ég tjekka á því með if?
+        try {
+            MediaManager.init(getActivity(), config);
+        } catch (Exception e) {
+            Log.e(TAG, "Error initializing MediaManager", e);
+        }
     }
 
     @Override
@@ -156,7 +163,12 @@ public class NewEventFragment extends Fragment {
                             .getIntent()
                             .getExtras()
                             .getString(EXTRA_SPORT_NAME));
-                    uploadImage(event);
+                    if (selectedImage != null) {
+                        uploadImage(event);
+                    } else {
+                        saveEvent(event);
+                    }
+
                 }
                 startActivity(getActivity().getIntent());
             }

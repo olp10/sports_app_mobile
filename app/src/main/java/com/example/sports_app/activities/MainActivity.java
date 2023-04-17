@@ -128,6 +128,8 @@ public class MainActivity extends Activity {
         sNetworkManager = NetworkManager.getInstance(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
+        String user = sharedPreferences.getString("logged_in_user", "");
 
         loggedInAsTextview = (TextView) findViewById(R.id.logged_in_as_textview);
         userProfileLink = (TextView) findViewById(R.id.link_to_user_profile);
@@ -136,10 +138,11 @@ public class MainActivity extends Activity {
             intent.putExtra("com.example.sports_app.userClicked", loggedInUser);
             intent.putExtra("com.example.sports_app.loggedInUser", loggedInUser);
             intent.putExtra("com.example.sports_app.username", loggedInUser);
-            intent.putExtra("com.example.sports_app.loggedIn", loggedInUser);
-            intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
             startActivity(intent);
         });
+
+        mBottomBarContainer = (RelativeLayout) findViewById(R.id.bottom_bar_container);
+
         bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
         Menu bottomMenu = bottomBar.getMenu();
         getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu);
@@ -152,17 +155,13 @@ public class MainActivity extends Activity {
         checkUserAndPermissions();
         createThreadList();
         createNotificationChannel();
-
-        SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
-        String user = sharedPreferences.getString("logged_in_user", "");
-        System.out.println("user í sharedpreferences: " + user);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         checkUserAndPermissions();
-        loggedInUser = getIntent().getStringExtra(EXTRA_USER);
+        loggedInUser = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", "");
         Log.d(TAG, "onResume - user: " + loggedInUser);
         if (loggedInUser != null) {
             loggedInAsTextview.setText("Logged in as: " + loggedInUser);
@@ -176,26 +175,15 @@ public class MainActivity extends Activity {
      */
     private void checkUserAndPermissions() {
         try {
-            System.out.println("Mod: " + getIntent().getExtras().getBoolean("com.example.sports_app.isModerator"));
-        } catch (Exception e) {
-            System.out.println("Catch - Mod: " + false);
-        }
-
-        try {
-            isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
-        } catch (Exception e) {
-            isAdmin = false;
-        }
-
-        try {
-            loggedInUser = getIntent().getStringExtra(EXTRA_USER);
-            mBottomBarContainer.setVisibility(View.VISIBLE);
-            if (loggedInUser != null) {
+            loggedInUser = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", "");
+            if (loggedInUser != null && !loggedInUser.equals("")) {
+                mBottomBarContainer.setVisibility(View.VISIBLE);
                 loggedInAsTextview.setText("Logged in as: " + loggedInUser);
+            } else {
+                mBottomBarContainer.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             loggedInUser = "";
-            System.out.println("Catch - loggedInUser: " + false);
         }
     }
 
@@ -221,7 +209,6 @@ public class MainActivity extends Activity {
 
                 Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
                 intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
-                intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
                 intent.putExtra(EXTRA_USER, loggedInUser);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }

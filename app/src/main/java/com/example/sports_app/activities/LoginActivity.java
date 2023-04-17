@@ -18,10 +18,12 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.sports_app.R;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.entities.User;
+import com.example.sports_app.fragments.BannedUserFragment;
 import com.example.sports_app.fragments.SignupFragment;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
@@ -47,6 +49,7 @@ public class LoginActivity extends Activity {
 
     private List<Thread> mThreadBank;
     private FragmentContainerView mSignupFragmentContainerView;
+    private FragmentContainerView mBannedFragmentContainerView;
 
     private TextInputLayout mUsernameLabel;
 
@@ -67,6 +70,7 @@ public class LoginActivity extends Activity {
         mNewAccountLink = (TextView) findViewById(R.id.new_account_link);
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
         mSignupFragmentContainerView = (FragmentContainerView) findViewById(R.id.sign_up_fragment_container_view);
+        mBannedFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerViewBannedUser);
         createLoginButton();
 
         mUsernameLabel = (TextInputLayout) findViewById(R.id.login_username_input_layout);
@@ -117,14 +121,11 @@ public class LoginActivity extends Activity {
 
 
     public void createLoginButton() {
-
-        // Login virkar á móti bakenda
         mLoginButton.setOnClickListener(v -> {
             mNetworkManager.login(mUsernameTextField.getText().toString(), mPasswordTextField.getText().toString(), new NetworkCallback() {
                 @Override
                 public void onSuccess(Object result) {
                     SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
-                    Log.d(TAG, "onSuccess: " + result);
                     User user = (User) result;
                     Toast t = new Toast(getApplicationContext());
                     t.setDuration(Toast.LENGTH_SHORT);
@@ -133,20 +134,28 @@ public class LoginActivity extends Activity {
                         t.show();
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         if (user.ismIsAdmin()) {
-                            i.putExtra(EXTRA_IS_ADMIN, true);
                             sharedPreferences.edit().putBoolean("isAdmin", true).apply();
-                        } else {
-                            i.putExtra(EXTRA_IS_ADMIN, false);
                         }
-                        i.putExtra("com.example.sports_app.loggedIn", true);
-                        i.putExtra(EXTRA_USER, user.getmUsername());
-                        i.putExtra("com.example.sports_app.password", user.getmUserPassword());
-
                         sharedPreferences.edit().putString("logged_in_user", user.getmUsername()).apply();
-
                         startActivity(i);
                         finish();
-                    } else {
+                    } else if (user != null && user.isBanned()) {
+                        t.setText("You are banned");
+                        t.show();
+                        TextView userBannedContactAdmin = (TextView) findViewById(R.id.link_for_banned_user);
+                        userBannedContactAdmin.setVisibility(View.VISIBLE);
+                        userBannedContactAdmin.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                System.out.println("Clicked on banned user");
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                mBannedFragmentContainerView.setVisibility(View.VISIBLE);
+                                fragmentManager.beginTransaction().replace(R.id.fragmentContainerViewBannedUser, new BannedUserFragment()).commit();
+
+                            }
+                        });
+                    }
+                    else {
                         t.setText("Notendanafn og lykilorð passa ekki");
                         t.show();
                         mUsernameTextField.setText("");

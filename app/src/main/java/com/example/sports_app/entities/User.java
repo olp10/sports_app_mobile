@@ -19,7 +19,7 @@ public class User {
     private List<Comment> mComments;
     @SerializedName("loggedIn")
     private boolean isLoggedIn;
-    @SerializedName("banned")
+    @SerializedName("isBanned")
     private boolean isBanned;
     @SerializedName("userFullName")
     private String mUserFullName;
