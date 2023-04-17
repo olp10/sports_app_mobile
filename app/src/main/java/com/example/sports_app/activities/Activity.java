@@ -53,8 +53,9 @@ public abstract class Activity extends AppCompatActivity {
         MenuItem mMenuItemLogin = menu.findItem(R.id.menu_login);
         MenuItem mMenuItemLogout = menu.findItem(R.id.menu_logout);
 
+        // Show login option if not logged in, and logout option if logged in
         try {
-            if (getIntent().getExtras().getBoolean(EXTRA_LOGGED_IN)) {
+            if (getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", null) != null) {
                 mMenuItemLogin.setVisible(false);
                 mMenuItemLogout.setVisible(true);
             } else {

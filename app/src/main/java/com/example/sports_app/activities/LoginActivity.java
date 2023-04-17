@@ -1,6 +1,7 @@
 package com.example.sports_app.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -122,6 +123,7 @@ public class LoginActivity extends Activity {
             mNetworkManager.login(mUsernameTextField.getText().toString(), mPasswordTextField.getText().toString(), new NetworkCallback() {
                 @Override
                 public void onSuccess(Object result) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
                     Log.d(TAG, "onSuccess: " + result);
                     User user = (User) result;
                     Toast t = new Toast(getApplicationContext());
@@ -132,12 +134,15 @@ public class LoginActivity extends Activity {
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                         if (user.ismIsAdmin()) {
                             i.putExtra(EXTRA_IS_ADMIN, true);
+                            sharedPreferences.edit().putBoolean("isAdmin", true).apply();
                         } else {
                             i.putExtra(EXTRA_IS_ADMIN, false);
                         }
                         i.putExtra("com.example.sports_app.loggedIn", true);
                         i.putExtra(EXTRA_USER, user.getmUsername());
                         i.putExtra("com.example.sports_app.password", user.getmUserPassword());
+
+                        sharedPreferences.edit().putString("logged_in_user", user.getmUsername()).apply();
 
                         startActivity(i);
                         finish();

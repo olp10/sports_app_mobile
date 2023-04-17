@@ -15,6 +15,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -134,6 +135,8 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
             intent.putExtra("com.example.sports_app.userClicked", loggedInUser);
             intent.putExtra("com.example.sports_app.loggedInUser", loggedInUser);
+            intent.putExtra("com.example.sports_app.username", loggedInUser);
+            intent.putExtra("com.example.sports_app.loggedIn", loggedInUser);
             intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
             startActivity(intent);
         });
@@ -149,6 +152,10 @@ public class MainActivity extends Activity {
         checkUserAndPermissions();
         createThreadList();
         createNotificationChannel();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
+        String user = sharedPreferences.getString("logged_in_user", "");
+        System.out.println("user í sharedpreferences: " + user);
     }
 
     @Override

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class UserProfileActivity extends Activity {
     private static final String TAG = "UserProfileActivity";
-    private static final String EXTRA_USER = "com.example.sports_app.userClicked";
+    private static final String EXTRA_USER_CLICKED = "com.example.sports_app.userClicked";
     private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private static final String EXTRA_LOGGED_IN_USER = "com.example.sports_app.loggedInUser";
     private TextView txtUsername;
@@ -41,7 +41,7 @@ public class UserProfileActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        String user = getIntent().getStringExtra(EXTRA_USER);
+        String user = getIntent().getStringExtra(EXTRA_USER_CLICKED);
         String loggedInUser = getIntent().getStringExtra(EXTRA_LOGGED_IN_USER);
 
         txtUsername = (TextView) findViewById(R.id.username);
@@ -62,9 +62,10 @@ public class UserProfileActivity extends Activity {
             mUserEmail.setKeyListener(null);
         }
 
-//        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
+//        mFragmentContainerView = (FragmentContFainerView) findViewById(R.id.fragmentContainerView);
 //        mFragmentContainerView.setVisibility(ViewGroup.GONE);
 
+        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
         sNetworkManager = NetworkManager.getInstance(this);
 
         mUpdateUserProfile.setOnClickListener(view -> {
