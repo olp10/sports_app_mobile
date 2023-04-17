@@ -47,6 +47,8 @@ public class NewThreadFragment extends Fragment {
         mNewThreadTitleText = (EditText) view.findViewById(R.id.new_thread_title);
         mNewThreadBodyText = (EditText) view.findViewById(R.id.new_thread_body);
 
+        String user = getActivity().getSharedPreferences("com.example.sports_app", 0).getString("logged_in_user", "");
+
         mSubmitNewThreadButton = (Button) view.findViewById(R.id.new_thread_submit_button);
         mSubmitNewThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,10 +58,7 @@ public class NewThreadFragment extends Fragment {
                 Thread thread = new Thread();
                 thread.setBody(body);
                 thread.setHeader(title);
-                thread.setUsername(getActivity()
-                        .getIntent()
-                        .getExtras()
-                        .getString(EXTRA_USERNAME));
+                thread.setUsername(user);
                 thread.setSport(getActivity()
                         .getIntent()
                         .getExtras()

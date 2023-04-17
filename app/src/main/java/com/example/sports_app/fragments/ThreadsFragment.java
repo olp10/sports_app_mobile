@@ -1,5 +1,7 @@
 package com.example.sports_app.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -69,7 +71,6 @@ public class ThreadsFragment extends Fragment {
                 long threadToOpenId = mThreads.get(i).getId();
                 boolean loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
                 String sport = mThreads.get(i).getSport();
-                System.out.println(sport);
                 Intent intent = ThreadActivity.newIntent(getActivity(), threadToOpenId);
                 intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
                 intent.putExtra(EXTRA_USERNAME, getActivity().getIntent().getExtras().getString(EXTRA_USERNAME));
@@ -83,23 +84,13 @@ public class ThreadsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mFragmentContainerView = (FragmentContainerView) getActivity().findViewById(R.id.fragmentContainerView);
         mNewThreadButton = (Button) view.findViewById(R.id.new_thread_button);
-        boolean loggedIn;
-        try {
-            loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
-            username = getActivity().getIntent().getExtras().getString(EXTRA_USERNAME);
-            //System.out.println("Username: " + username);
-        } catch (Exception e) {
-            loggedIn = false;
-        }
-        if (loggedIn) {
+        String loggedInUser = getActivity().getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", null);
+        if (loggedInUser != null) {
             mNewThreadButton.setVisibility(View.VISIBLE);
         }
         mNewThreadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = getActivity().getIntent().getExtras().getString(EXTRA_USERNAME);
-                getActivity().getIntent().putExtra(EXTRA_USERNAME, username);
-                System.out.println(username);
                 mFragmentContainerView.setVisibility(View.VISIBLE);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()

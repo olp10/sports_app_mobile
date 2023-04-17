@@ -1,6 +1,7 @@
 package com.example.sports_app.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -53,82 +54,43 @@ public abstract class Activity extends AppCompatActivity {
         MenuItem mMenuItemLogin = menu.findItem(R.id.menu_login);
         MenuItem mMenuItemLogout = menu.findItem(R.id.menu_logout);
 
-        try {
-            if (getIntent().getExtras().getBoolean(EXTRA_LOGGED_IN)) {
-                mMenuItemLogin.setVisible(false);
-                mMenuItemLogout.setVisible(true);
-            } else {
-                mMenuItemLogin.setVisible(true);
-                mMenuItemLogout.setVisible(false);
-            }
-        } catch (Exception e) {
-            Log.d(TAG, "onCreateOptionsMenu: " + e.getMessage());
+        // Show login option if not logged in, and logout option if logged in
+        if (getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", null) != null) {
+            mMenuItemLogin.setVisible(false);
+            mMenuItemLogout.setVisible(true);
+        } else {
+            mMenuItemLogin.setVisible(true);
+            mMenuItemLogout.setVisible(false);
         }
         return true;
     }
 
     public void logout() {
-        if (getIntent().getExtras().getString(EXTRA_USERNAME) != null &&
-                getIntent().getExtras().getString(EXTRA_PASSWORD) != null &&
-                !Objects.equals(getIntent().getExtras().getString(EXTRA_USERNAME), "") &&
-                !Objects.equals(getIntent().getExtras().getString(EXTRA_PASSWORD), "")) {
-
-            NetworkManager sNetworkManager = NetworkManager.getInstance(this);
-            String username = getIntent().getExtras().getString(EXTRA_USERNAME);
-            String password = getIntent().getExtras().getString(EXTRA_PASSWORD);
-            sNetworkManager.logout(username, password, new NetworkCallback<String>() {
-                @Override
-                public void onSuccess(String result) {
-                    Intent intent = new Intent(Activity.this, LoginActivity.class);
-                    intent.putExtra(EXTRA_LOGGED_IN, false);
-                    intent.putExtra(EXTRA_IS_ADMIN, false);
-                    intent.putExtra(EXTRA_USERNAME, "");
-                    intent.putExtra(EXTRA_PASSWORD, "");
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(String errorString) {
-                    Log.e("Threadservice", "Failed to logout via REST");
-                }
-            });
+        if (getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", null) != null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.commit();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
-        boolean loggedIn;
-        try {
-            loggedIn = getIntent().getExtras().getBoolean(EXTRA_LOGGED_IN);
-        } catch (Exception e) {
-            loggedIn = false;
-        }
-        String username;
-        try {
-            username = getIntent().getExtras().getString(EXTRA_USERNAME);
-        } catch (Exception e) {
-            username = "";
-        }
-        System.out.println("Username í Activity klasa: " + username);
         switch (item.getItemId()) {
             case R.id.menu_login:
                 i = new Intent(Activity.this, LoginActivity.class);
-                i.putExtra(EXTRA_LOGGED_IN, loggedIn);
-                i.putExtra(EXTRA_USERNAME, username);
                 startActivity(new Intent(Activity.this, LoginActivity.class));
                 break;
             case R.id.menu_logout:
                 i = new Intent(Activity.this, MainActivity.class);
                 logout();
-                i.putExtra(EXTRA_LOGGED_IN, false);
-                i.removeExtra(EXTRA_USERNAME);
                 startActivity(i);
                 break;
             case R.id.menu_home:
                 i = new Intent(Activity.this, MainActivity.class);
-                i.putExtra(EXTRA_LOGGED_IN, loggedIn);
-                i.putExtra(EXTRA_USERNAME, username);
                 startActivity(i);
                 break;
             case R.id.menu_settings:

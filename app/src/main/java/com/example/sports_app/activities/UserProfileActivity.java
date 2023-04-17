@@ -1,5 +1,6 @@
 package com.example.sports_app.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class UserProfileActivity extends Activity {
     private static final String TAG = "UserProfileActivity";
-    private static final String EXTRA_USER = "com.example.sports_app.userClicked";
+    private static final String EXTRA_USER_CLICKED = "com.example.sports_app.userClicked";
     private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private static final String EXTRA_LOGGED_IN_USER = "com.example.sports_app.loggedInUser";
     private TextView txtUsername;
@@ -36,13 +37,16 @@ public class UserProfileActivity extends Activity {
     boolean isAdmin;
     boolean userIsBanned;
     NetworkManager sNetworkManager;
+    SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        String user = getIntent().getStringExtra(EXTRA_USER);
-        String loggedInUser = getIntent().getStringExtra(EXTRA_LOGGED_IN_USER);
+        sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
+
+        String user = getIntent().getStringExtra(EXTRA_USER_CLICKED);
+        String loggedInUser = sharedPreferences.getString("logged_in_user", null);
 
         txtUsername = (TextView) findViewById(R.id.username);
         banUserButton = (Button) findViewById(R.id.ban_user_button);
@@ -54,17 +58,18 @@ public class UserProfileActivity extends Activity {
         // User info text listeners
         mUserFullNameLabel.getEditText().addTextChangedListener(editProfileTextHandler());
         mUserEmailLabel.getEditText().addTextChangedListener(editProfileTextHandler());
+
         mUpdateUserProfile = (Button) findViewById(R.id.update_user_profile_button);
 
         // Sér til þess að aðrir notendur geti ekki breytt upplýsingunum
-        if (loggedInUser.equals(user) == false) {
+
+        if (!loggedInUser.equals(user)) {
+            mUpdateUserProfile.setVisibility(View.VISIBLE);
             mUserFullName.setKeyListener(null);
             mUserEmail.setKeyListener(null);
         }
 
-//        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
-//        mFragmentContainerView.setVisibility(ViewGroup.GONE);
-
+        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
         sNetworkManager = NetworkManager.getInstance(this);
 
         mUpdateUserProfile.setOnClickListener(view -> {
@@ -82,6 +87,8 @@ public class UserProfileActivity extends Activity {
                         if (result != null) {
                             mUserFullName.setHint(result.getUserFullName());
                             mUserEmail.setHint(result.getUserEmailAddress());
+
+                            Toast.makeText(UserProfileActivity.this, "Upplýsingum breytt", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -115,12 +122,10 @@ public class UserProfileActivity extends Activity {
             }
         });
 
-        try {
-            isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
-        } catch (Exception e) {
-            isAdmin = false;
-        }
-        if (isAdmin) {
+
+        isAdmin = sharedPreferences.getBoolean("isAdmin", false);
+
+        if (isAdmin && !user.equals(loggedInUser)) {
             sNetworkManager.getUserBanned(user, new NetworkCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean result) {

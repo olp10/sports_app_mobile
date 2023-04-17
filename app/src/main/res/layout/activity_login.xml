@@ -26,6 +26,14 @@
         android:padding="20dp"
         android:visibility="gone"
         tools:layout="@layout/fragment_select_sport" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerViewBannedUser"
+        android:name="com.example.sports_app.fragments.SelectSportFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        android:visibility="gone"
+        tools:layout="@layout/fragment_select_sport" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,6 +75,13 @@
             android:background="@color/light_yellow"
             android:text="@string/login_button" />
 
+        <TextView
+            android:id="@+id/link_for_banned_user"
+            android:visibility="gone"
+            android:autoLink="email"
+            android:text="@string/user_banned_link_for_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/new_account_link"
             android:layout_width="wrap_content"

@@ -41,7 +41,7 @@ public class ThreadActivity extends AppCompatActivity {
     TextView mThreadBody;
     private String loggedInUser;
     Button mNewCommentButton;
-    boolean loggedIn;
+    String loggedIn;
     boolean isAdmin;
     private TextInputLayout mNewCommentTextLayout;
     EditText mNewCommentText;
@@ -72,9 +72,10 @@ public class ThreadActivity extends AppCompatActivity {
 
         mNewCommentButton = (Button) findViewById(R.id.newComment_button);
 
-        loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
 
-        if (!loggedIn) {
+        loggedIn = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", null);
+
+        if (loggedIn == null || loggedIn == "") {
             mNewCommentButton.setVisibility(View.GONE);
             mNewCommentText.setVisibility(View.GONE);
         }
@@ -92,9 +93,12 @@ public class ThreadActivity extends AppCompatActivity {
                 String newCommentBody = String.valueOf(mNewCommentText.getText());
 //                newComment newComment = new newComment(fakeUser, newCommentBody, mThread);
                 NetworkManager networkManager = NetworkManager.getInstance(ThreadActivity.this);
+                System.out.println("newCommentBody: " + newCommentBody);
+                System.out.println("loggedIn: " + loggedIn);
+                System.out.println("threadId: " + mThread.getId());
 
                 // FIXME: Send username instead of userid
-                networkManager.postNewComment(loggedInUser, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
+                networkManager.postNewComment(loggedIn, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
 
                     @Override
                     public void onSuccess(String result) {
@@ -156,10 +160,8 @@ public class ThreadActivity extends AppCompatActivity {
 
         try {
             loggedInUser = getIntent().getStringExtra(EXTRA_USER);
-            System.out.println("Logged in user: " + loggedInUser);
         } catch (Exception e) {
             loggedInUser = "";
-            System.out.println("Catch - loggedInUser: " + false);
         }
 
         try {
@@ -177,8 +179,6 @@ public class ThreadActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
 
         // Smíða layout element fyrir comments
         sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);

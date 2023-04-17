@@ -77,7 +77,6 @@ public class SportActivity extends Activity {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        System.out.println("Clicked threads tab");
                         fragmentManager.beginTransaction()
                                 .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
                                 .replace(R.id.tabsFragmentContainerView, ThreadsFragment.class, null)
@@ -86,7 +85,6 @@ public class SportActivity extends Activity {
                                 .commit();
                         break;
                     case 1:
-                        System.out.println("Clicked events tab");
                         fragmentManager.beginTransaction()
                                 .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
                                 .replace(R.id.tabsFragmentContainerView, EventsFragment.class, null)
@@ -95,7 +93,6 @@ public class SportActivity extends Activity {
                                 .commit();
                         break;
                     case 2:
-                        System.out.println("Clicked clubs tab");
                         fragmentManager.beginTransaction()
                                 .setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
                                 .replace(R.id.tabsFragmentContainerView, ClubsFragment.class, null)
