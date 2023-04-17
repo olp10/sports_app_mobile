@@ -28,7 +28,7 @@
             android:id="@+id/threadList"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="8"/>
+            android:layout_weight="8" />
 
         <RelativeLayout
             android:visibility="gone"
@@ -39,35 +39,36 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/logged_in_as_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:textColor="#424242" />
 
-                <TextView
-                    android:id="@+id/link_to_user_profile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="User profile"
-                    android:textColor="#0000EE"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/logged_in_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#424242" />
-            </LinearLayout>
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="12dp"
+                    android:paddingEnd="2dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/rounded_shape">
+                    <ImageView
+                        android:id="@+id/user_profile_icon"
+                        android:src="@drawable/user_img"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"/>
+                </FrameLayout>
+            </RelativeLayout>
 
             <ActionMenuView
                 android:id="@+id/menu_bottom_menu"

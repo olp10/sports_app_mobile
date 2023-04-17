@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ActionMenuView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,6 +59,8 @@ public class MainActivity extends Activity {
 
     ArrayList<Message> mMessages;
     NetworkManager sNetworkManager;
+
+    ImageView mUserProfileIcon;
 
     boolean notificationRead = false;
 
@@ -131,9 +134,19 @@ public class MainActivity extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
         String user = sharedPreferences.getString("logged_in_user", "");
 
+        mUserProfileIcon = (ImageView) findViewById(R.id.user_profile_icon);
+        mUserProfileIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         loggedInAsTextview = (TextView) findViewById(R.id.logged_in_as_textview);
-        userProfileLink = (TextView) findViewById(R.id.link_to_user_profile);
-        userProfileLink.setOnClickListener(view -> {
+        //userProfileLink = (TextView) findViewById(R.id.link_to_user_profile);
+        ImageView userProfileIcon = (ImageView) findViewById(R.id.user_profile_icon);
+        userProfileIcon.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
             intent.putExtra("com.example.sports_app.userClicked", loggedInUser);
             intent.putExtra("com.example.sports_app.loggedInUser", loggedInUser);
@@ -165,7 +178,7 @@ public class MainActivity extends Activity {
         Log.d(TAG, "onResume - user: " + loggedInUser);
         if (loggedInUser != null) {
             loggedInAsTextview.setText("Logged in as: " + loggedInUser);
-            userProfileLink.setVisibility(View.VISIBLE);
+            // userProfileLink.setVisibility(View.VISIBLE);
         }
     }
 
@@ -274,7 +287,7 @@ public class MainActivity extends Activity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
         } else {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "myChannel");
-            builder.setContentTitle(event.getEventName());
+            builder.setContentTitle(event.getEventName() + " happening in less than 24 hours!");
             builder.setSmallIcon(R.drawable.ic_launcher_background);
             builder.setContentIntent(pendingIntent); // Opnar pendingIntent þegar klikkað á notification
             builder.setAutoCancel(true);

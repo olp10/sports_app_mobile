@@ -63,10 +63,12 @@ public class UserProfileActivity extends Activity {
 
         // Sér til þess að aðrir notendur geti ekki breytt upplýsingunum
 
+
         if (!loggedInUser.equals(user)) {
-            mUpdateUserProfile.setVisibility(View.VISIBLE);
             mUserFullName.setKeyListener(null);
             mUserEmail.setKeyListener(null);
+        } else {
+            mUpdateUserProfile.setVisibility(View.VISIBLE);
         }
 
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
@@ -87,7 +89,6 @@ public class UserProfileActivity extends Activity {
                         if (result != null) {
                             mUserFullName.setHint(result.getUserFullName());
                             mUserEmail.setHint(result.getUserEmailAddress());
-
                             Toast.makeText(UserProfileActivity.this, "Upplýsingum breytt", Toast.LENGTH_SHORT).show();
                         }
                     }
