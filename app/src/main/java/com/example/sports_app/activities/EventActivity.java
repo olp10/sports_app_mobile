@@ -50,7 +50,6 @@ public class EventActivity extends AppCompatActivity {
         mSubscribeToEvent = (Button) findViewById(R.id.event_subscribe_button);
 
         // Get image from url
-
         long thisEventId = getIntent().getLongExtra(EXTRA_EVENT_ID, 0);
         getEventById(thisEventId);
 

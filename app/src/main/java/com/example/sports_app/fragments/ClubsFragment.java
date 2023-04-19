@@ -1,5 +1,6 @@
 package com.example.sports_app.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,13 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.example.sports_app.activities.ClubActivity;
 import com.example.sports_app.adapters.ClubListAdapter;
 import com.example.sports_app.R;
 import com.example.sports_app.entities.Club;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +32,8 @@ public class ClubsFragment extends Fragment {
     private final String TAG = "ClubsFragment";
     private static ClubListAdapter sClubListAdapter;
     private ListView mListView;
+    private ArrayList<Club> mClubs = new ArrayList<>();
+
     public ClubsFragment() {
         // Required empty public constructor
     }
@@ -49,12 +55,12 @@ public class ClubsFragment extends Fragment {
         sNetworkManager.getAllClubsForSport(sport, new NetworkCallback<ArrayList<Club>>() {
             @Override
             public void onSuccess(ArrayList<Club> result) {
-                ArrayList<Club> clubs = result;
-                if (clubs != null) {
-                    sClubListAdapter = new ClubListAdapter(clubs, getActivity().getApplicationContext());
+                mClubs = result;
+                if (mClubs != null) {
+                    sClubListAdapter = new ClubListAdapter(mClubs, getActivity().getApplicationContext());
                     mListView.setAdapter(sClubListAdapter);
                 }
-                sClubListAdapter = new ClubListAdapter(clubs, getActivity().getApplicationContext());
+                sClubListAdapter = new ClubListAdapter(mClubs, getActivity().getApplicationContext());
                 mListView.setAdapter(sClubListAdapter);
             }
 
@@ -71,6 +77,12 @@ public class ClubsFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_clubs, container, false);
         mListView = (ListView) rootView.findViewById(R.id.list_of_clubs);
+        mListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            long clubToOpenId = mClubs.get(i).getmId();
+            Intent intent = ClubActivity.newIntent(getActivity(), clubToOpenId);
+            startActivity(intent);
+        });
         return rootView;
     }
+
 }

@@ -9,12 +9,12 @@
     android:orientation="vertical"
     tools:context=".activities.LoginActivity">
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/fragmentContainerView"-->
-<!--        android:name="com.example.sports_app.fragments.ThreadsFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        tools:layout="@layout/fragment_threads" />-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.sports_app.fragments.ThreadsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_threads" />
 
     <TextView
         android:id="@+id/username"
@@ -29,8 +29,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/user_profile_infoText"
         android:textColor="#455A64" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/user_fullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nafn: "
+            android:textSize="20sp"
+            android:minWidth="160dp"
+            android:layout_marginHorizontal="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/change_fullName_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="Breyta"/>
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/user_full_name_input_layout"
@@ -39,14 +64,39 @@
         android:layout_marginHorizontal="20dp">
 
         <EditText
-            android:id="@+id/user_real_name"
+            android:id="@+id/user_real_name_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/userProfile_your_real_name"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck"
+            android:visibility="gone"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/user_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email: "
+            android:textSize="20sp"
+            android:minWidth="160dp"
+            android:layout_marginHorizontal="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/change_email_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="Breyta"/>
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/user_email_address_input_layout"
@@ -55,13 +105,14 @@
         android:layout_marginHorizontal="20dp">
 
         <EditText
-            android:id="@+id/user_email_address"
+            android:id="@+id/user_email_address_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/userProfile_your_email_address"
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck"
+            android:visibility="gone"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

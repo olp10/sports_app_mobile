@@ -19,6 +19,8 @@ import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.w3c.dom.Text;
+
 import java.util.regex.Pattern;
 
 public class UserProfileActivity extends Activity {
@@ -27,10 +29,14 @@ public class UserProfileActivity extends Activity {
     private static final String EXTRA_IS_ADMIN = "com.example.sports_app.isAdmin";
     private static final String EXTRA_LOGGED_IN_USER = "com.example.sports_app.loggedInUser";
     private TextView txtUsername;
-    private EditText mUserFullName;
-    private EditText mUserEmail;
+    private TextView mUserFullName;
+    private TextView mUserEmail;
+    private EditText mUserFullNameEdit;
+    private EditText mUserEmailEdit;
     private TextInputLayout mUserFullNameLabel;
     private TextInputLayout mUserEmailLabel;
+    private Button mChangeFullNameButton;
+    private Button mChangeEmailButton;
     private Button mUpdateUserProfile;
     private Button banUserButton;
     boolean isAdmin;
@@ -45,9 +51,13 @@ public class UserProfileActivity extends Activity {
         String loggedInUser = getIntent().getStringExtra(EXTRA_LOGGED_IN_USER);
 
         txtUsername = (TextView) findViewById(R.id.username);
+        mUserFullName = (TextView) findViewById(R.id.user_fullName);
+        mUserEmail = (TextView) findViewById(R.id.user_email);
+        mChangeFullNameButton = (Button) findViewById(R.id.change_fullName_button);
+        mChangeEmailButton = (Button) findViewById(R.id.change_email_button);
         banUserButton = (Button) findViewById(R.id.ban_user_button);
-        mUserFullName = (EditText) findViewById(R.id.user_real_name);
-        mUserEmail = (EditText) findViewById(R.id.user_email_address);
+        mUserFullNameEdit = (EditText) findViewById(R.id.user_real_name_edit);
+        mUserEmailEdit = (EditText) findViewById(R.id.user_email_address_edit);
         mUserFullNameLabel = (TextInputLayout) findViewById(R.id.user_full_name_input_layout);
         mUserEmailLabel = (TextInputLayout) findViewById(R.id.user_email_address_input_layout);
 
@@ -58,18 +68,26 @@ public class UserProfileActivity extends Activity {
 
         // Sér til þess að aðrir notendur geti ekki breytt upplýsingunum
         if (loggedInUser.equals(user) == false) {
-            mUserFullName.setKeyListener(null);
-            mUserEmail.setKeyListener(null);
+            mChangeFullNameButton.setVisibility(View.GONE);
+            mChangeEmailButton.setVisibility(View.GONE);
+            mUserFullNameEdit.setKeyListener(null);
+            mUserEmailEdit.setKeyListener(null);
         }
 
-//        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
-//        mFragmentContainerView.setVisibility(ViewGroup.GONE);
+        mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
+        mFragmentContainerView.setVisibility(ViewGroup.GONE);
 
         sNetworkManager = NetworkManager.getInstance(this);
 
+
+        // OnClickListeners fyrir buttons
+        mChangeFullNameButton.setOnClickListener(view -> mUserFullNameEdit.setVisibility(View.VISIBLE));
+        mChangeEmailButton.setOnClickListener(view -> mUserEmailEdit.setVisibility(View.VISIBLE));
+
+
         mUpdateUserProfile.setOnClickListener(view -> {
-            String fullName = mUserFullName.getText().toString();
-            String email = mUserEmail.getText().toString();
+            String fullName = mUserFullNameEdit.getText().toString();
+            String email = mUserEmailEdit.getText().toString();
 
             if (!validateEmail(email)) {
                 mUserEmailLabel.setError("Tölvupóstfang verður að vera á réttu formi");
@@ -80,8 +98,8 @@ public class UserProfileActivity extends Activity {
                     @Override
                     public void onSuccess(User result) {
                         if (result != null) {
-                            mUserFullName.setHint(result.getUserFullName());
-                            mUserEmail.setHint(result.getUserEmailAddress());
+                            mUserFullName.setText(mUserFullName.getText() + result.getUserFullName());
+                            mUserEmail.setText(mUserEmail.getText() + result.getUserEmailAddress());
                         }
                     }
 
@@ -99,10 +117,10 @@ public class UserProfileActivity extends Activity {
                 if (result != null) {
                     txtUsername.setText(result.getmUsername());
                     if (result.getUserFullName() != null && result.getUserFullName().length() > 0) {
-                        mUserFullName.setHint(result.getUserFullName());
+                        mUserFullName.setText(mUserFullName.getText() + result.getUserFullName());
                     }
                     if (result.getUserEmailAddress() != null && result.getUserEmailAddress().length() > 0) {
-                        mUserEmail.setHint(result.getUserEmailAddress());
+                        mUserEmail.setText(mUserEmail.getText() + result.getUserEmailAddress());
                     }
                 } else {
                     txtUsername.setText("User does not exist");
@@ -138,7 +156,9 @@ public class UserProfileActivity extends Activity {
                 }
             });
 
-            banUserButton.setVisibility(View.VISIBLE);
+            if (!loggedInUser.equals(user)) {
+                banUserButton.setVisibility(View.VISIBLE);
+            }
             banUserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -316,6 +316,22 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void getClubById(Long id, final NetworkCallback<Club> callback) {
+        String url = Uri.parse(BASE_URL)
+                .buildUpon()
+                .appendPath("club")
+                .appendPath(String.valueOf(id))
+                .build().toString();
+
+        StringRequest request = new StringRequest(
+                Request.Method.GET, url, response -> {
+            Gson gson = new Gson();
+            Club club = gson.fromJson(response, Club.class);
+            callback.onSuccess(club);
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void subscribeToEvent(Long eventId, Long userId, final NetworkCallback<String> callback) {
         String url = Uri.parse(BASE_URL)
                 .buildUpon()
