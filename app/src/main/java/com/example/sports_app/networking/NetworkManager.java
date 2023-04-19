@@ -66,7 +66,6 @@ public class NetworkManager {
             protected Map<String,String> getParams() {
                 Map<String,String> params = new HashMap<>();
                 params.put("id", id.toString());
-                System.out.println("Params: " + params.get("commentId"));
                 Log.d(TAG, "getParams: " + params.get("commentId"));
                 return params;
             }
@@ -81,14 +80,12 @@ public class NetworkManager {
                     Type arrayListType = new TypeToken<ArrayList<String>>() {
                     }.getType();
                     ArrayList<String> sports = gson.fromJson(response, arrayListType);
-                    System.out.println(sports);
                     callback.onSuccess(sports);
                 }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);
     }
 
     public void getUserByUsername(String username, final NetworkCallback<User> callback) {
-        System.out.println("Username in NetworkManager: " + username);
         StringRequest request = new StringRequest(
                 Request.Method.GET, BASE_URL + "/userInfo/"+username, response -> {
                     Gson gson = new Gson();
@@ -190,9 +187,6 @@ public class NetworkManager {
                     Type arrayListType = new TypeToken<ArrayList<Thread>>() {
                     }.getType();
                     ArrayList<Thread> threads = gson.fromJson(response, arrayListType);
-                    for (Thread t : threads) {
-                        System.out.println("Username: " + t.getUsername());
-                    }
                     callback.onSuccess(threads);
                 }, error -> callback.onFailure(error.toString()));
         mQueue.add(request);

@@ -11,10 +11,12 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.example.sports_app.fragments.ThreadsFragment"
+        android:name="com.example.sports_app.fragments.SelectSportFragment"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_threads" />
+        android:padding="20dp"
+        tools:layout="@layout/fragment_select_sport" />
 
     <TextView
         android:id="@+id/username"

@@ -1,5 +1,7 @@
 package com.example.sports_app.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -62,12 +64,7 @@ public class EventsFragment extends Fragment {
         sNetworkManager = NetworkManager.getInstance(getActivity());
         getAllEventsBySport();
 
-        try {
-            userIsAdmin = getActivity().getIntent().getExtras().getBoolean(EXTRA_IS_ADMIN);
-            username = getActivity().getIntent().getExtras().getString(EXTRA_USERNAME);
-        } catch (Exception e) {
-            userIsAdmin = false;
-        }
+        userIsAdmin = getActivity().getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getBoolean("isAdmin", false);
     }
 
     @Override
@@ -82,7 +79,6 @@ public class EventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long eventToOpenId = mEvents.get(i).getId();
                 Intent intent = EventActivity.newIntent(getActivity(), eventToOpenId);
-                intent.putExtra(EXTRA_USERNAME, username);
                 startActivity(intent);
             }
         });
@@ -96,26 +92,14 @@ public class EventsFragment extends Fragment {
         mNewEventButton = (Button) view.findViewById(R.id.new_event_button);
         String sport = getActivity().getIntent().getExtras().getString(EXTRA_SPORT_NAME);
 
-        try {
-            loggedIn = getActivity().getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
-        } catch (Exception e) {
-            loggedIn = false;
-        }
-
-        try {
-            username = getActivity().getIntent().getStringExtra(EXTRA_USERNAME);
-            System.out.println("Username in EventsFragment: " + username);
-        } catch (Exception e) {
-            username = "";
-            System.out.println("Error: Username in EventsFragment: " + username);
-        }
+        username = getActivity().getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", null);
 
         if (username != null && !username.equals("")) {
             sNetworkManager.userModeratesSport(sport, username, new NetworkCallback() {
                 @Override
                 public void onSuccess(Object object) {
                     moderatesSport = (boolean) object;
-                    if (loggedIn && moderatesSport || loggedIn && userIsAdmin) {
+                    if (moderatesSport || userIsAdmin) {
                         mNewEventButton.setVisibility(View.VISIBLE);
                     }
                     mNewEventButton.setOnClickListener(view1 -> {

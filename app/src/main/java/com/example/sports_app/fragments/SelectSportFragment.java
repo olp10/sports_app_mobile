@@ -89,7 +89,6 @@ public class SelectSportFragment extends Fragment {
             } catch (Exception e) {
                 username = "";
             }
-            System.out.println("Username í select sport fragment: " + username);
             Intent j = new Intent(getActivity(), SportActivity.class);
             j.putExtra("com.example.sports_app.loggedIn", loggedIn);
             j.putExtra("com.example.sports_app.sport_name", sport);

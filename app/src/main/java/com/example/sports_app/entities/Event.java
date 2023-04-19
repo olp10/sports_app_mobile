@@ -34,6 +34,54 @@ public class Event {
         this.mEventImage = mEventImage;
     }
 
+    public String getmEventName() {
+        return mEventName;
+    }
+
+    public void setmEventName(String mEventName) {
+        this.mEventName = mEventName;
+    }
+
+    public String getmEventDescription() {
+        return mEventDescription;
+    }
+
+    public void setmEventDescription(String mEventDescription) {
+        this.mEventDescription = mEventDescription;
+    }
+
+    public String getmSport() {
+        return mSport;
+    }
+
+    public void setmSport(String mSport) {
+        this.mSport = mSport;
+    }
+
+    public LocalDateTime getmEventDate() {
+        return mEventDate;
+    }
+
+    public void setmEventDate(LocalDateTime mEventDate) {
+        this.mEventDate = mEventDate;
+    }
+
+    public String getmEventStartDate() {
+        return mEventStartDate;
+    }
+
+    public void setmEventStartDate(String mEventStartDate) {
+        this.mEventStartDate = mEventStartDate;
+    }
+
+    public List<Long> getmSubscribers() {
+        return mSubscribers;
+    }
+
+    public void setmSubscribers(List<Long> mSubscribers) {
+        this.mSubscribers = mSubscribers;
+    }
+
     @SerializedName("inLessThan24Hours")
     private boolean inLessThan24Hours;
 

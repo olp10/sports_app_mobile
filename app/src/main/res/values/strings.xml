@@ -18,4 +18,5 @@
     <string name="clubURLLabel">Heimasíða</string>
     <string name="clubEmailLabel">Tölvupóstur</string>
     <string name="clubLocationLabel">Staðsetning</string>
+    <string name="user_banned_link_for_contact">Hafa samband við stjórnanda</string>
 </resources>

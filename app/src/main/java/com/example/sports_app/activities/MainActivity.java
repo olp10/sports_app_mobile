@@ -15,6 +15,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ActionMenuView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,11 +38,6 @@ import com.example.sports_app.entities.Message;
 import com.example.sports_app.entities.Thread;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
-import com.example.sports_app.services.ThreadService;
-//import com.google.android.gms.tasks.OnCompleteListener;
-//import com.google.android.gms.tasks.Task;
-//import com.google.firebase.FirebaseApp;
-//import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -49,8 +46,6 @@ public class MainActivity extends Activity {
     private static final String EXTRA_USER = "com.example.sports_app.username";
 
     // Breytur fyrir aðalvalmynd //
-
-    // ------------------------ //
     private static final int REQUEST_THREAD_OPEN = 0;
     private ArrayList<Thread> threads;
     ListView mThreadList;
@@ -64,6 +59,8 @@ public class MainActivity extends Activity {
 
     ArrayList<Message> mMessages;
     NetworkManager sNetworkManager;
+
+    ImageView mUserProfileIcon;
 
     boolean notificationRead = false;
 
@@ -134,16 +131,31 @@ public class MainActivity extends Activity {
         sNetworkManager = NetworkManager.getInstance(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
+        String user = sharedPreferences.getString("logged_in_user", "");
+
+        mUserProfileIcon = (ImageView) findViewById(R.id.user_profile_icon);
+        mUserProfileIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         loggedInAsTextview = (TextView) findViewById(R.id.logged_in_as_textview);
-        userProfileLink = (TextView) findViewById(R.id.link_to_user_profile);
-        userProfileLink.setOnClickListener(view -> {
+        //userProfileLink = (TextView) findViewById(R.id.link_to_user_profile);
+        ImageView userProfileIcon = (ImageView) findViewById(R.id.user_profile_icon);
+        userProfileIcon.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
             intent.putExtra("com.example.sports_app.userClicked", loggedInUser);
             intent.putExtra("com.example.sports_app.loggedInUser", loggedInUser);
-            intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
+            intent.putExtra("com.example.sports_app.username", loggedInUser);
             startActivity(intent);
         });
+
+        mBottomBarContainer = (RelativeLayout) findViewById(R.id.bottom_bar_container);
+
         bottomBar = (ActionMenuView) findViewById(R.id.menu_bottom_menu);
         Menu bottomMenu = bottomBar.getMenu();
         getMenuInflater().inflate(R.menu.menu_bottom_menu, bottomMenu);
@@ -162,11 +174,11 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         checkUserAndPermissions();
-        loggedInUser = getIntent().getStringExtra(EXTRA_USER);
+        loggedInUser = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", "");
         Log.d(TAG, "onResume - user: " + loggedInUser);
         if (loggedInUser != null) {
             loggedInAsTextview.setText("Logged in as: " + loggedInUser);
-            userProfileLink.setVisibility(View.VISIBLE);
+            // userProfileLink.setVisibility(View.VISIBLE);
         }
     }
 
@@ -176,26 +188,15 @@ public class MainActivity extends Activity {
      */
     private void checkUserAndPermissions() {
         try {
-            System.out.println("Mod: " + getIntent().getExtras().getBoolean("com.example.sports_app.isModerator"));
-        } catch (Exception e) {
-            System.out.println("Catch - Mod: " + false);
-        }
-
-        try {
-            isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
-        } catch (Exception e) {
-            isAdmin = false;
-        }
-
-        try {
-            loggedInUser = getIntent().getStringExtra(EXTRA_USER);
-            mBottomBarContainer.setVisibility(View.VISIBLE);
-            if (loggedInUser != null) {
+            loggedInUser = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", "");
+            if (loggedInUser != null && !loggedInUser.equals("")) {
+                mBottomBarContainer.setVisibility(View.VISIBLE);
                 loggedInAsTextview.setText("Logged in as: " + loggedInUser);
+            } else {
+                mBottomBarContainer.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             loggedInUser = "";
-            System.out.println("Catch - loggedInUser: " + false);
         }
     }
 
@@ -221,7 +222,6 @@ public class MainActivity extends Activity {
 
                 Intent intent = ThreadActivity.newIntent(MainActivity.this, threadToOpenId);
                 intent.putExtra("com.example.sports_app.loggedIn", loggedIn);
-                intent.putExtra("com.example.sports_app.isAdmin", isAdmin);
                 intent.putExtra(EXTRA_USER, loggedInUser);
                 startActivityForResult(intent, REQUEST_THREAD_OPEN);
             }
@@ -287,7 +287,7 @@ public class MainActivity extends Activity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
         } else {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "myChannel");
-            builder.setContentTitle(event.getEventName());
+            builder.setContentTitle(event.getEventName() + " happening in less than 24 hours!");
             builder.setSmallIcon(R.drawable.ic_launcher_background);
             builder.setContentIntent(pendingIntent); // Opnar pendingIntent þegar klikkað á notification
             builder.setAutoCancel(true);

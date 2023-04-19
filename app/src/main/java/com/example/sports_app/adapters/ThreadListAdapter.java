@@ -74,6 +74,17 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
         viewHolder.txtUsername.setText(thread.getUsername());
         viewHolder.txtHeader.setOnClickListener(this);
 
+        viewHolder.txtUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, UserProfileActivity.class);
+                intent.putExtra(EXTRA_LOGGED_IN, isLoggedIn);
+                intent.putExtra("com.example.sports_app.userClicked", thread.getUsername());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+            }
+        });
+
         // Birta dagsetningu á formi January 01, 2023
         int monthNo = Integer.parseInt(thread.getmDate().substring(5, 7));
         String month = new DateFormatSymbols().getMonths()[monthNo - 1];
@@ -108,9 +119,6 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
                 Snackbar.make(v, "Þú smelltir á þráð!", Snackbar.LENGTH_LONG)
                         .setAction("No action", null).show();
                 break;
-            // case R.id.thread_creator:
-                // TODO: Fara á user profile þegar klikkað á username
-                //break;
         }
     }
 

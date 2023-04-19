@@ -58,8 +58,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
         Comment comment = getItem(position);
         ViewHolder viewHolder;
         final View result;
-        System.out.println(comment.getUser());
-        System.out.println(comment.getmUsername());
 
         if(convertView == null) {
             viewHolder = new ViewHolder();
@@ -81,7 +79,8 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
                         public void onSuccess(String result) {
                             //deleteComment(comment.getId());
                             System.out.println("On success: " + comment.getId());
-                            // TODO: Reload UI - Er búinn að reyna eitthvað smá en lendi alltaf á vegg
+                            deleteComment(comment.getId());
+                            // FIXME: Reload UI - Er búinn að reyna eitthvað smá en lendi alltaf á vegg
                         }
 
                         @Override
@@ -105,7 +104,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
         if (comment != null) {
             Log.d("CommentListAdapter", comment.getTimeCommented());
             viewHolder.txtUsername.setText(comment.getUser());
-            System.out.println("Username: " + comment.getmUsername());
             viewHolder.txtBody.setText(comment.getComment());
             viewHolder.txtDate.setText(comment.getFormattedDate());
         }

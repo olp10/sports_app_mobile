@@ -41,7 +41,7 @@ public class ThreadActivity extends AppCompatActivity {
     TextView mThreadBody;
     private String loggedInUser;
     Button mNewCommentButton;
-    boolean loggedIn;
+    String loggedIn;
     boolean isAdmin;
     private TextInputLayout mNewCommentTextLayout;
     EditText mNewCommentText;
@@ -59,8 +59,6 @@ public class ThreadActivity extends AppCompatActivity {
         mThreadHeader = (TextView) findViewById(R.id.thread_head);
         mThreadBody = (TextView) findViewById(R.id.thread_body);
 
-
-
         addCommentSection();
     }
 
@@ -72,9 +70,10 @@ public class ThreadActivity extends AppCompatActivity {
 
         mNewCommentButton = (Button) findViewById(R.id.newComment_button);
 
-        loggedIn = getIntent().getExtras().getBoolean("com.example.sports_app.loggedIn");
 
-        if (!loggedIn) {
+        loggedIn = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getString("logged_in_user", null);
+
+        if (loggedIn == null || loggedIn == "") {
             mNewCommentButton.setVisibility(View.GONE);
             mNewCommentText.setVisibility(View.GONE);
         }
@@ -88,19 +87,15 @@ public class ThreadActivity extends AppCompatActivity {
         mNewCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                User fakeUser = new User("FakeCommentUser", "abc", false);
                 String newCommentBody = String.valueOf(mNewCommentText.getText());
-//                newComment newComment = new newComment(fakeUser, newCommentBody, mThread);
                 NetworkManager networkManager = NetworkManager.getInstance(ThreadActivity.this);
 
-                // FIXME: Send username instead of userid
-                networkManager.postNewComment(loggedInUser, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
-
+                networkManager.postNewComment(loggedIn, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         Log.d(TAG, result);
                         finish();
-                        startActivity(getIntent());
+                        startActivity(getIntent().putExtra(EXTRA_THREAD_ID, mThread.getId()));
                     }
 
                     @Override
@@ -151,19 +146,17 @@ public class ThreadActivity extends AppCompatActivity {
         mThreadHeader.setText(mThread.getHeader());
         mThreadBody.setText(mThread.getBody());
 
-        // Athuga hvort user sé loggaður inn/admin og senda inn í commentlistadapter til að gefa
+        // Athuga hvort user sé loggaður inn/admin og senda inn í commentlistadapter til að
         // sýna admin takka/actions.
 
         try {
             loggedInUser = getIntent().getStringExtra(EXTRA_USER);
-            System.out.println("Logged in user: " + loggedInUser);
         } catch (Exception e) {
             loggedInUser = "";
-            System.out.println("Catch - loggedInUser: " + false);
         }
 
         try {
-            isAdmin = getIntent().getExtras().getBoolean("com.example.sports_app.isAdmin");
+            isAdmin = getSharedPreferences("com.example.sports_app", MODE_PRIVATE).getBoolean("isAdmin", false);
         } catch (Exception e) {
             isAdmin = false;
         }
@@ -177,8 +170,6 @@ public class ThreadActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
 
         // Smíða layout element fyrir comments
         sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);
