@@ -54,7 +54,7 @@ public class EventActivity extends Activity {
         getEventById(thisEventId);
 
 
-        String username = getIntent().getExtras().getString(EXTRA_USER);
+        String username = getSharedPreferences("com.example.sports_app", Context.MODE_PRIVATE).getString("logged_in_user", "");
 
         mSubscribeToEvent.setOnClickListener(new View.OnClickListener() {
             Long userId;
@@ -73,6 +73,7 @@ public class EventActivity extends Activity {
                                     @Override
                                     public void onSuccess(String result) {
                                         Log.d(TAG, result);
+                                        Toast.makeText(EventActivity.this, "Subscribed to event", Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.R;
+import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.User;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
@@ -22,6 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class UserProfileActivity extends Activity {
@@ -123,6 +125,21 @@ public class UserProfileActivity extends Activity {
             @Override
             public void onSuccess(User result) {
                 if (result != null) {
+                    sNetworkManager.getMySubscriptions(result.getmId(), new NetworkCallback<ArrayList<Event>>() {
+
+
+                        @Override
+                        public void onSuccess(ArrayList<Event> result) {
+                            for (Event e : result) {
+                                System.out.println(e.getmEventName());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(String errorString) {
+
+                        }
+                    });
                     txtUsername.setText(result.getmUsername());
                     if (result.getUserFullName() != null && result.getUserFullName().length() > 0) {
                         mUserFullName.setText(mUserFullName.getText() + result.getUserFullName());
