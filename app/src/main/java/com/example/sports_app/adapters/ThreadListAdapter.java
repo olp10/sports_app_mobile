@@ -100,6 +100,7 @@ public class ThreadListAdapter extends ArrayAdapter<Thread> implements View.OnCl
 
     public ThreadListAdapter(ArrayList<Thread> threads, @NonNull Context context) {
         super(context, R.layout.thread_list_row_item, threads);
+
         Collections.sort(threads);
         Collections.reverse(threads);
         this.threadList = threads;

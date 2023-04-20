@@ -97,8 +97,6 @@ public class Thread implements Comparable<Thread> {
         this.mSport = mSport;
     }
 
-
-
     public Thread() {
 
     }
@@ -114,6 +112,12 @@ public class Thread implements Comparable<Thread> {
 
     @Override
     public int compareTo(Thread o) {
+        // Pinned ekki að virka?
+//        if (this.isIsPinned() && !o.isIsPinned()){
+//            return 1;
+//        } else if (!this.isIsPinned() && o.isIsPinned()) {
+//            return -1;
+//        }
         if (this.mDate.equals(o.getmDate())) {
             return 0;
         } else if (this.mDate.compareTo(o.getmDate()) > 0) {

@@ -26,7 +26,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
-public class ThreadActivity extends AppCompatActivity {
+public class ThreadActivity extends Activity {
     private static final String TAG = "ThreadActivity";
     private static final String EXTRA_USER = "com.example.sports_app.username";
     private Thread mThread;

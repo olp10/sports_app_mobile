@@ -21,7 +21,7 @@ import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.squareup.picasso.Picasso;
 
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends Activity {
 
     private static final String TAG = "EventActivity";
     private static final String EXTRA_EVENT_ID = "com.example.sports_app.event_id";
