@@ -9,19 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.R;
+import com.example.sports_app.adapters.EventListAdapter;
 import com.example.sports_app.entities.Event;
 import com.example.sports_app.entities.User;
 import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -42,6 +43,13 @@ public class UserProfileActivity extends Activity {
     private Button mChangeEmailButton;
     private Button mUpdateUserProfile;
     private Button banUserButton;
+    private Button mShowEventsButton;
+    private boolean showEvents;
+    private LinearLayout mEventsLayout;
+    private TextView mUserEventsText;
+    private ListView mSubscribedEvents;
+    private EventListAdapter mEventListAdapter;
+    private ArrayList<Event> subscribedEventsList = new ArrayList<>();
     boolean isAdmin;
     boolean userIsBanned;
     NetworkManager sNetworkManager;
@@ -56,6 +64,7 @@ public class UserProfileActivity extends Activity {
         String user = getIntent().getStringExtra(EXTRA_USER_CLICKED);
         String loggedInUser = sharedPreferences.getString("logged_in_user", null);
 
+        // User info
         txtUsername = (TextView) findViewById(R.id.username);
         mUserFullName = (TextView) findViewById(R.id.user_fullName);
         mUserEmail = (TextView) findViewById(R.id.user_email);
@@ -68,8 +77,8 @@ public class UserProfileActivity extends Activity {
         mUserEmailLabel = (TextInputLayout) findViewById(R.id.user_email_address_input_layout);
 
         // User info text listeners
-        mUserFullNameLabel.getEditText().addTextChangedListener(editProfileTextHandler());
-        mUserEmailLabel.getEditText().addTextChangedListener(editProfileTextHandler());
+        mUserFullNameLabel.getEditText().addTextChangedListener(editProfileNameHandler());
+        mUserEmailLabel.getEditText().addTextChangedListener(editProfileNameHandler());
         mUpdateUserProfile = (Button) findViewById(R.id.update_user_profile_button);
 
         // Sér til þess að aðrir notendur geti ekki breytt upplýsingunum
@@ -80,9 +89,10 @@ public class UserProfileActivity extends Activity {
             mChangeEmailButton.setVisibility(View.GONE);
             mUserFullName.setKeyListener(null);
             mUserEmail.setKeyListener(null);
-        } else {
-            mUpdateUserProfile.setVisibility(View.VISIBLE);
         }
+//        else {
+//            mUpdateUserProfile.setVisibility(View.VISIBLE);
+//        }
 
         mFragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
         mFragmentContainerView.setVisibility(ViewGroup.GONE);
@@ -99,16 +109,20 @@ public class UserProfileActivity extends Activity {
             String email = mUserEmailEdit.getText().toString();
 
             if (!validateEmail(email)) {
-                mUserEmailLabel.setError("Tölvupóstfang verður að vera á réttu formi");
+                mUserEmailLabel.setError("Tölvupóstfang verður að vera á réttu formi eða tómt!");
             } else if (!validateFullName(fullName)) {
-                mUserFullNameLabel.setError("Fullt nafn verður að vera á réttu formi");
+                mUserFullNameLabel.setError("Fullt nafn verður að vera á réttu formi eða tómt!");
             } else {
+                mUserEmailLabel.setErrorEnabled(false);
+                mUserFullNameLabel.setErrorEnabled(false);
                 sNetworkManager.updateUserInfo(user, fullName, email, new NetworkCallback<User>() {
                     @Override
                     public void onSuccess(User result) {
                         if (result != null) {
                             mUserFullName.setText(mUserFullName.getText() + result.getUserFullName());
                             mUserEmail.setText(mUserEmail.getText() + result.getUserEmailAddress());
+                            mUserFullNameEdit.setVisibility(View.GONE);
+                            mUserEmailEdit.setVisibility(View.GONE);
                             Toast.makeText(UserProfileActivity.this, "Upplýsingum breytt", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -130,8 +144,11 @@ public class UserProfileActivity extends Activity {
 
                         @Override
                         public void onSuccess(ArrayList<Event> result) {
+                            UserProfileActivity.this.subscribedEventsList = result;
+                            UserProfileActivity.this.subscribedEventsSetup(result);
                             for (Event e : result) {
                                 System.out.println(e.getmEventName());
+                                e.getSubscribers().forEach(u -> System.out.println("subId: " + String.valueOf(u.getmUsername())));
                             }
                         }
 
@@ -157,7 +174,6 @@ public class UserProfileActivity extends Activity {
                 Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
             }
         });
-
 
         isAdmin = sharedPreferences.getBoolean("isAdmin", false);
 
@@ -220,9 +236,55 @@ public class UserProfileActivity extends Activity {
                 }
             });
         }
+
     }
 
-    private TextWatcher editProfileTextHandler() {
+    private void subscribedEventsSetup(ArrayList<Event> events) {
+        if (events.size() > 0) {
+            mEventsLayout = (LinearLayout) findViewById(R.id.user_events_layout);
+            mUserEventsText = (TextView) findViewById(R.id.user_events_text);
+            mSubscribedEvents = (ListView) findViewById(R.id.user_events);
+
+            mUserEventsText.setText(mUserEventsText.getText() + " " + String.valueOf(events.size()));
+            mEventsLayout.setVisibility(View.VISIBLE);
+            mEventListAdapter = new EventListAdapter(events, UserProfileActivity.this);
+            mSubscribedEvents.setAdapter(mEventListAdapter);
+
+            showEvents = false;
+            mShowEventsButton = (Button) findViewById(R.id.show_events_button);
+            mShowEventsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showEvents = !showEvents;
+                    if (showEvents) {
+                        mSubscribedEvents.setVisibility(View.VISIBLE);
+                    } else {
+                        mSubscribedEvents.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
+    }
+
+    private TextWatcher editProfileNameHandler() {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mUpdateUserProfile.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+    }
+    private TextWatcher editProfileEmailHandler() {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

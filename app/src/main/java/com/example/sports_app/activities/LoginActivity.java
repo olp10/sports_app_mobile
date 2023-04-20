@@ -140,7 +140,7 @@ public class LoginActivity extends Activity {
                         startActivity(i);
                         finish();
                     } else if (user != null && user.isBanned()) {
-                        t.setText("You are banned");
+                        t.setText("You have been banned");
                         t.show();
                         TextView userBannedContactAdmin = (TextView) findViewById(R.id.link_for_banned_user);
                         userBannedContactAdmin.setVisibility(View.VISIBLE);

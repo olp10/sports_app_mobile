@@ -10,8 +10,8 @@ public class Thread implements Comparable<Thread> {
     private long mId;
     @SerializedName("username")
     private String mUsername;
-    @SerializedName("isPinned")
-    private boolean mIsPinned = false;
+    @SerializedName("pinned")
+    private boolean mIsPinned;
     @SerializedName("header")
     private String mHeader;
     @SerializedName("body")
@@ -112,12 +112,13 @@ public class Thread implements Comparable<Thread> {
 
     @Override
     public int compareTo(Thread o) {
-        // Pinned ekki að virka?
-//        if (this.isIsPinned() && !o.isIsPinned()){
-//            return 1;
-//        } else if (!this.isIsPinned() && o.isIsPinned()) {
-//            return -1;
-//        }
+//         Pinned ekki að virka?
+        System.out.println("Pinned? " + this.isIsPinned());
+        if (this.isIsPinned() && !o.isIsPinned()){
+            return 1;
+        } else if (!this.isIsPinned() && o.isIsPinned()) {
+            return -1;
+        }
         if (this.mDate.equals(o.getmDate())) {
             return 0;
         } else if (this.mDate.compareTo(o.getmDate()) > 0) {

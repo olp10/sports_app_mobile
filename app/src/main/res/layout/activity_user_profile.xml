@@ -27,9 +27,38 @@
         android:textSize="34sp"
         android:layout_marginBottom="32dp"/>
 
+    <LinearLayout
+        android:id="@+id/user_events_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/user_events_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/userProfileEvents"
+            android:textSize="20sp"
+            android:layout_marginEnd="20dp"/>
+
+        <Button
+            android:id="@+id/show_events_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/birta_events_button_text"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/user_events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
         android:text="@string/user_profile_infoText"

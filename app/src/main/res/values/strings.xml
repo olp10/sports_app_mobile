@@ -19,4 +19,6 @@
     <string name="clubEmailLabel">Tölvupóstur</string>
     <string name="clubLocationLabel">Staðsetning</string>
     <string name="user_banned_link_for_contact">Hafa samband við stjórnanda</string>
+    <string name="userProfileEvents">Viðburðir:</string>
+    <string name="birta_events_button_text">Birta</string>
 </resources>

@@ -44,29 +44,28 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private static final String EXTRA_USER = "com.example.sports_app.username";
-
-    // Breytur fyrir aðalvalmynd //
     private static final int REQUEST_THREAD_OPEN = 0;
-    private ArrayList<Thread> threads;
-    ListView mThreadList;
-    private static ThreadListAdapter sThreadListAdapter;
-    private boolean isAdmin;
+
+    // Breytur - UI
 
     TextView mThreadCreator;
     TextView loggedInAsTextview;
     TextView userProfileLink;
-    private String loggedInUser;
-
-    ArrayList<Message> mMessages;
-    NetworkManager sNetworkManager;
-
+    ListView mThreadList;
+    RelativeLayout mBottomBarContainer;
     ImageView mUserProfileIcon;
 
+    // Breytur - Gögn
+    NetworkManager sNetworkManager;
+    SharedPreferences sharedPreferences;
+    private ArrayList<Thread> threads;
+    private ArrayList<Message> mMessages;
+    private static ThreadListAdapter sThreadListAdapter;
+    private boolean isAdmin;
+    private String loggedInUser;
     boolean notificationRead = false;
+    private Handler handler = new Handler();
 
-    RelativeLayout mBottomBarContainer;
-
-    Handler handler = new Handler();
     private final Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
@@ -131,6 +130,8 @@ public class MainActivity extends Activity {
         sNetworkManager = NetworkManager.getInstance(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // User
         SharedPreferences sharedPreferences = getSharedPreferences("com.example.sports_app", MODE_PRIVATE);
         String user = sharedPreferences.getString("logged_in_user", "");
 

@@ -25,6 +25,8 @@ public class Event {
     private String mEventStartDate;
     @SerializedName("image")
     private String mEventImage;
+    @SerializedName("subscribers")
+    private List<User> mSubscribers;
 
     public String getmEventImage() {
         return mEventImage;
@@ -74,11 +76,11 @@ public class Event {
         this.mEventStartDate = mEventStartDate;
     }
 
-    public List<Long> getmSubscribers() {
+    public List<User> getmSubscribers() {
         return mSubscribers;
     }
 
-    public void setmSubscribers(List<Long> mSubscribers) {
+    public void setmSubscribers(List<User> mSubscribers) {
         this.mSubscribers = mSubscribers;
     }
 
@@ -102,8 +104,6 @@ public class Event {
     public void setInLessThan24Hours(boolean inLessThan24Hours) {
         this.inLessThan24Hours = inLessThan24Hours;
     }
-
-    private List<Long> mSubscribers;
 
     public Event(long mId, String mEventName, String mEventDescription, String mSport, String startDate) {
         this.mId = mId;
@@ -178,6 +178,6 @@ public class Event {
         this.mEventStartDate = startDate;
     }
 
-    public List<Long> getSubscribers() { return mSubscribers; }
+    public List<User> getSubscribers() { return mSubscribers; }
 
 }
