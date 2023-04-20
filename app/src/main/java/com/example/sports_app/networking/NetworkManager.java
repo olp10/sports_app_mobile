@@ -326,6 +326,25 @@ public class NetworkManager {
         mQueue.add(request);
     }
 
+    public void getMySubscriptions(long userId, final NetworkCallback<ArrayList<Event>> callback) {
+        String url = Uri.parse(BASE_URL)
+                .buildUpon()
+                .appendPath("userInfo")
+                .appendPath(String.valueOf(userId))
+                .appendPath("myEvents")
+                .build().toString();
+        System.out.println(url);
+        StringRequest request = new StringRequest(
+                Request.Method.GET, url, response -> {
+            Gson gson = new Gson();
+            Type arrayListType = new TypeToken<ArrayList<Event>>() {
+            }.getType();
+            ArrayList<Event> events = gson.fromJson(response, arrayListType);
+            callback.onSuccess(events);
+        }, error -> callback.onFailure(error.toString()));
+        mQueue.add(request);
+    }
+
     public void subscribeToEvent(Long eventId, Long userId, final NetworkCallback<String> callback) {
         String url = Uri.parse(BASE_URL)
                 .buildUpon()

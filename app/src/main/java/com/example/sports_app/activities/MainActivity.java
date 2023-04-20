@@ -168,6 +168,8 @@ public class MainActivity extends Activity {
         checkUserAndPermissions();
         createThreadList();
         createNotificationChannel();
+
+
     }
 
     @Override

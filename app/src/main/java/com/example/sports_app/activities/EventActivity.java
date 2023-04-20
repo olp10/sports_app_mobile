@@ -21,7 +21,7 @@ import com.example.sports_app.networking.NetworkCallback;
 import com.example.sports_app.networking.NetworkManager;
 import com.squareup.picasso.Picasso;
 
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends Activity {
 
     private static final String TAG = "EventActivity";
     private static final String EXTRA_EVENT_ID = "com.example.sports_app.event_id";
@@ -54,7 +54,7 @@ public class EventActivity extends AppCompatActivity {
         getEventById(thisEventId);
 
 
-        String username = getIntent().getExtras().getString(EXTRA_USER);
+        String username = getSharedPreferences("com.example.sports_app", Context.MODE_PRIVATE).getString("logged_in_user", "");
 
         mSubscribeToEvent.setOnClickListener(new View.OnClickListener() {
             Long userId;
@@ -73,6 +73,7 @@ public class EventActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(String result) {
                                         Log.d(TAG, result);
+                                        Toast.makeText(EventActivity.this, "Subscribed to event", Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override

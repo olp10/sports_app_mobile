@@ -15,7 +15,7 @@ import com.example.sports_app.networking.NetworkManager;
 
 import org.w3c.dom.Text;
 
-public class ClubActivity extends AppCompatActivity {
+public class ClubActivity extends Activity {
 
     private static final String TAG ="ClubActivity";
     private static final String EXTRA_CLUB_ID = "com.example.sports_app.club_id";
