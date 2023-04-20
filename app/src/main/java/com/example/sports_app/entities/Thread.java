@@ -112,8 +112,6 @@ public class Thread implements Comparable<Thread> {
 
     @Override
     public int compareTo(Thread o) {
-//         Pinned ekki að virka?
-        System.out.println("Pinned? " + this.isIsPinned());
         if (this.isIsPinned() && !o.isIsPinned()){
             return 1;
         } else if (!this.isIsPinned() && o.isIsPinned()) {

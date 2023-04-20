@@ -146,10 +146,6 @@ public class UserProfileActivity extends Activity {
                         public void onSuccess(ArrayList<Event> result) {
                             UserProfileActivity.this.subscribedEventsList = result;
                             UserProfileActivity.this.subscribedEventsSetup(result);
-                            for (Event e : result) {
-                                System.out.println(e.getmEventName());
-                                e.getSubscribers().forEach(u -> System.out.println("subId: " + String.valueOf(u.getmUsername())));
-                            }
                         }
 
                         @Override

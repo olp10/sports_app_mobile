@@ -11,18 +11,18 @@ import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.R;
 
-public class UserSettingsFragment extends Fragment {
+public class ContactUsFragment extends Fragment {
     private static final String EXTRA_USERNAME = "com.example.sports_app.username";
     private static final String EXTRA_PASSWORD = "com.example.sports_app.password";
     private static final String EXTRA_LOGGED_IN = "com.example.sports_app.loggedIn";
     private static final String TAG = "UserSettingsFragment";
 
-    public UserSettingsFragment() {
+    public ContactUsFragment() {
         // Required empty public constructor
     }
 
-    public static UserSettingsFragment newInstance(String param1, String param2) {
-        UserSettingsFragment fragment = new UserSettingsFragment();
+    public static ContactUsFragment newInstance(String param1, String param2) {
+        ContactUsFragment fragment = new ContactUsFragment();
         return fragment;
     }
 
@@ -44,6 +44,6 @@ public class UserSettingsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_user_settings, container, false);
+        return inflater.inflate(R.layout.fragment_contact_us, container, false);
     }
 }

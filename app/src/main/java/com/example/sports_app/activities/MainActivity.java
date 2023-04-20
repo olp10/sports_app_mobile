@@ -108,9 +108,13 @@ public class MainActivity extends Activity {
                     @Override
                     public void onSuccess(ArrayList<Event> result) {
                         for (Event event : result) {
-                            if (event.isInLessThan24Hours() && !notificationRead) {
-                                notifyNewEvent(event);
-                                notificationRead = true;
+                            if (event.isInLessThan24Hours()) {
+                                event.getSubscribers().forEach(user -> {
+                                    if (user.getmUsername().equals(loggedInUser) && !notificationRead) {
+                                        notifyNewEvent(event);
+                                        notificationRead = true;
+                                    }
+                                });
                             }
                         }
                     }

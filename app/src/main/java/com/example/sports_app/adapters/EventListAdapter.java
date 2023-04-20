@@ -24,6 +24,7 @@ public class EventListAdapter extends ArrayAdapter<Event> implements View.OnClic
     private static class ViewHolder {
         TextView txtSport;
         TextView txtName;
+        TextView txtDate;
     }
 
     @Override
@@ -40,6 +41,7 @@ public class EventListAdapter extends ArrayAdapter<Event> implements View.OnClic
             convertView = i.inflate(R.layout.events_list_row_item, container, false);
             viewHolder.txtSport = (TextView) convertView.findViewById(R.id.event_sport);
             viewHolder.txtName = (TextView) convertView.findViewById(R.id.event_name);
+            viewHolder.txtDate = (TextView) convertView.findViewById(R.id.event_shortDate);
 
             result = convertView;
 
@@ -53,6 +55,7 @@ public class EventListAdapter extends ArrayAdapter<Event> implements View.OnClic
 
         viewHolder.txtSport.setText(HelperMethods.firstLetterUppercase(event.getSport()));
         viewHolder.txtName.setText(HelperMethods.firstLetterUppercase(event.getEventName()));
+        viewHolder.txtDate.setText(event.getFormattedDate());
 
         viewHolder.txtName.setTag(position);
         return convertView;

@@ -125,11 +125,16 @@ public class Event {
 
     public String getFormattedDate() {
         this.mEventDate = createLocalDateTime(mEventStartDate);
+        String min = String.valueOf(mEventDate.getMinute());
+        if (min.length() == 1) {
+            min += "0";
+        }
+
         String date = mEventDate.getYear() + " "
                 + mEventDate.getDayOfMonth() + "."
                 + mEventDate.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " "
                 + mEventDate.getHour() + ":"
-                + mEventDate.getMinute();
+                + min;
 
         return date;
     }

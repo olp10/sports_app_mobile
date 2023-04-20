@@ -3,7 +3,6 @@ package com.example.sports_app.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,11 +15,7 @@ import androidx.fragment.app.FragmentContainerView;
 
 import com.example.sports_app.R;
 import com.example.sports_app.fragments.SelectSportFragment;
-import com.example.sports_app.fragments.UserSettingsFragment;
-import com.example.sports_app.networking.NetworkCallback;
-import com.example.sports_app.networking.NetworkManager;
-
-import java.util.Objects;
+import com.example.sports_app.fragments.ContactUsFragment;
 
 
 /**
@@ -77,6 +72,16 @@ public abstract class Activity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i;
         switch (item.getItemId()) {
+            case R.id.menu_contact:
+                if (mFragmentContainerView.getVisibility() == View.GONE) {
+                    mFragmentContainerView.setVisibility(View.VISIBLE);
+                    Fragment fragment = new ContactUsFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragmentContainerView, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else mFragmentContainerView.setVisibility(View.GONE);
+                break;
             case R.id.menu_login:
                 i = new Intent(Activity.this, LoginActivity.class);
                 startActivity(new Intent(Activity.this, LoginActivity.class));
@@ -91,14 +96,21 @@ public abstract class Activity extends AppCompatActivity {
                 startActivity(i);
                 break;
             case R.id.menu_settings:
-                if (mFragmentContainerView.getVisibility() == View.GONE) {
-                    mFragmentContainerView.setVisibility(View.VISIBLE);
-                    Fragment fragment = new UserSettingsFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragmentContainerView, fragment)
-                            .addToBackStack(null)
-                            .commit();
-                } else mFragmentContainerView.setVisibility(View.GONE);
+                String loggedInUser;
+                try {
+                    loggedInUser = getSharedPreferences(
+                            "com.example.sports_app",
+                            MODE_PRIVATE).getString("logged_in_user", "");
+                    if (loggedInUser != null && !loggedInUser.equals("")) {
+                        i = new Intent(Activity.this, UserProfileActivity.class);
+                        i.putExtra("com.example.sports_app.userClicked", loggedInUser);
+                        i.putExtra("com.example.sports_app.loggedInUser", loggedInUser);
+                        i.putExtra("com.example.sports_app.username", loggedInUser);
+                        startActivity(i);
+                    }
+                } catch (Exception e) {
+                    loggedInUser = "";
+                }
                 break;
             case R.id.menu_sport:
                 if (mFragmentContainerView.getVisibility() == View.GONE) {

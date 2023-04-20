@@ -12,14 +12,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="USER SETTINGS"
+            android:text="@string/contact_title"
             android:textSize="34sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TBD"
-            android:textSize="24sp" />
+            android:text="@string/sportapp_emailAdress"
+            android:textSize="24sp"
+            android:textColor="#3662CF"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -21,4 +21,6 @@
     <string name="user_banned_link_for_contact">Hafa samband við stjórnanda</string>
     <string name="userProfileEvents">Viðburðir:</string>
     <string name="birta_events_button_text">Birta</string>
+    <string name="contact_title">SportApp</string>
+    <string name="sportapp_emailAdress">sportapp@sportapp.is</string>
 </resources>
