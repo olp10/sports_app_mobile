@@ -21,7 +21,8 @@
             android:text="Badminton"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginHorizontal="10dp"/>
 
         <TextView
             android:id="@+id/event_name"

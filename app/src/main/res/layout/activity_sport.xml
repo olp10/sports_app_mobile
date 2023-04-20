@@ -23,7 +23,8 @@
         android:id="@+id/fragmentContainerView"
         android:name="com.example.sports_app.fragments.ThreadsFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_threads">
 
     </androidx.fragment.app.FragmentContainerView>
 
@@ -36,7 +37,8 @@
             android:id="@+id/tabsFragmentContainerView"
             android:name="com.example.sports_app.fragments.ThreadsFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_threads">
 
         </androidx.fragment.app.FragmentContainerView>
     </LinearLayout>

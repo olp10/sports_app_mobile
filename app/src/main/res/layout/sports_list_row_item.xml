@@ -2,25 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layout_margin="20dp">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/sport_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="right"
-        android:layout_centerInParent="true">
-
-        <TextView
-            android:id="@+id/sport_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="Badminton"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:text="Badminton"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
 </RelativeLayout>

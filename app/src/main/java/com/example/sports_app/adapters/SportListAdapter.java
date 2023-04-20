@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.sports_app.R;
+import com.example.sports_app.util.HelperMethods;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,7 @@ public class SportListAdapter extends ArrayAdapter<String> implements View.OnCli
 
         lastPosition = position;
 
-        viewHolder.txtSport.setText(sport);
+        viewHolder.txtSport.setText(HelperMethods.firstLetterUppercase(sport));
         return convertView;
     }
 

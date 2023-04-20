@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.example.sports_app.R;
 import com.example.sports_app.entities.Event;
+import com.example.sports_app.util.HelperMethods;
 
 import java.util.ArrayList;
 
@@ -50,8 +51,8 @@ public class EventListAdapter extends ArrayAdapter<Event> implements View.OnClic
 
         lastPosition = position;
 
-        viewHolder.txtSport.setText(event.getSport());
-        viewHolder.txtName.setText(event.getEventName());
+        viewHolder.txtSport.setText(HelperMethods.firstLetterUppercase(event.getSport()));
+        viewHolder.txtName.setText(HelperMethods.firstLetterUppercase(event.getEventName()));
 
         viewHolder.txtName.setTag(position);
         return convertView;

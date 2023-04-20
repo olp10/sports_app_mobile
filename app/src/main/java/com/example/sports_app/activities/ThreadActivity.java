@@ -27,13 +27,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 
 public class ThreadActivity extends AppCompatActivity {
-
     private static final String TAG = "ThreadActivity";
     private static final String EXTRA_USER = "com.example.sports_app.username";
     private Thread mThread;
-    private ArrayList<Comment> mComments;
-    private ThreadService mThreadService;
-    private static CommentListAdapter sCommentListAdapter;
+    private ArrayList<Comment> mComments = new ArrayList<>();
+    private CommentListAdapter sCommentListAdapter;
     ListView mCommentList;
     TextView mThreadCreator;
     TextView mThreadSport;
@@ -51,6 +49,7 @@ public class ThreadActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "Thread opened, mThread: " + this.mThread);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread);
 
@@ -87,15 +86,17 @@ public class ThreadActivity extends AppCompatActivity {
         mNewCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "AddComment, mThread: " + ThreadActivity.this.mThread);
+                Log.d(TAG, "AddComment, comments: " + ThreadActivity.this.mComments);
                 String newCommentBody = String.valueOf(mNewCommentText.getText());
                 NetworkManager networkManager = NetworkManager.getInstance(ThreadActivity.this);
 
-                networkManager.postNewComment(loggedIn, newCommentBody, mThread.getId(), new NetworkCallback<String>() {
+                networkManager.postNewComment(loggedIn, newCommentBody, ThreadActivity.this.mThread.getId(), new NetworkCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         Log.d(TAG, result);
                         finish();
-                        startActivity(getIntent().putExtra(EXTRA_THREAD_ID, mThread.getId()));
+                        startActivity(getIntent().putExtra(EXTRA_THREAD_ID, ThreadActivity.this.mThread.getId()));
                     }
 
                     @Override
@@ -124,12 +125,10 @@ public class ThreadActivity extends AppCompatActivity {
         networkManager.getThreadById(id, new NetworkCallback<Thread>() {
             @Override
             public void onSuccess(Thread result) {
-                mThread = result;
+                ThreadActivity.this.mThread = result;
                 if (mThread != null) {
-                    mComments = mThread.getComments();
+                    ThreadActivity.this.mComments = mThread.getComments();
                     populateUI();
-                } else {
-                    mComments = new ArrayList<Comment>();
                 }
             }
             @Override
@@ -171,8 +170,11 @@ public class ThreadActivity extends AppCompatActivity {
             }
         });
 
-        // Smíða layout element fyrir comments
-        sCommentListAdapter = new CommentListAdapter(getApplicationContext(), mComments, isAdmin);
+        populateCommentList();
+    }
+
+    public void populateCommentList() {
+        sCommentListAdapter = new CommentListAdapter(ThreadActivity.this, mComments, isAdmin);
         mCommentList = (ListView) findViewById(R.id.commentList);
         mCommentList.setAdapter(sCommentListAdapter);
     }

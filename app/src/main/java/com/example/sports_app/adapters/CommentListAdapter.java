@@ -27,6 +27,7 @@ import java.util.ArrayList;
  * and overrides its getView method.
  */
 public class CommentListAdapter extends ArrayAdapter<Comment> implements View.OnClickListener {
+    private static final String TAG = "CommentListAdapter";
     private static final String EXTRA_USER = "com.example.sports_app.username";
     private ArrayList<Comment> mComments;
     Context mContext;
@@ -51,6 +52,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
 
     private void deleteComment(long id) {
         mComments.remove(id);
+        Log.d(TAG, "Num Comments after delete: " + mComments.size());
         notifyDataSetChanged();
     }
 
@@ -74,13 +76,14 @@ public class CommentListAdapter extends ArrayAdapter<Comment> implements View.On
                 @Override
                 public void onClick(View v) {
                     NetworkManager networkManager = NetworkManager.getInstance(getContext());
+                    Log.d(TAG, "Num Comments before delete: " + mComments.size());
+                    remove(comment);
                     networkManager.deleteComment(comment.getId(), new NetworkCallback<String>() {
                         @Override
                         public void onSuccess(String result) {
                             //deleteComment(comment.getId());
                             System.out.println("On success: " + comment.getId());
                             deleteComment(comment.getId());
-                            // FIXME: Reload UI - Er búinn að reyna eitthvað smá en lendi alltaf á vegg
                         }
 
                         @Override
