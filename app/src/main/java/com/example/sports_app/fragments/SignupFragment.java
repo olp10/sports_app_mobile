@@ -2,6 +2,7 @@ package com.example.sports_app.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,17 +47,15 @@ public class SignupFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_signup, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_signup, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        txtUsername = (EditText) getActivity().findViewById(R.id.txt_username);
-        txtPassword = (EditText) getActivity().findViewById(R.id.txt_password);
-        txtConfirmPassword = (EditText) getActivity().findViewById(R.id.txt_confirm_password);
-        mSignUpButton = (Button) getActivity().findViewById(R.id.sign_up_button);
+        txtUsername = (EditText) view.findViewById(R.id.txt_username);
+        txtPassword = (EditText) view.findViewById(R.id.txt_password);
+        txtConfirmPassword = (EditText) view.findViewById(R.id.txt_confirm_password);
+        mSignUpButton = (Button) view.findViewById(R.id.sign_up_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
